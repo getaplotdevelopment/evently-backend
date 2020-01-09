@@ -1,0 +1,43 @@
+{
+  "name": "evently-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "NODE_ENV=test sequelize db:migrate:undo:all && npm run db:migrate:test && npm run db:migrate:seed:test && NODE_ENV=test --require @babel/register src/tests/index.js",
+    "start": "npm run db:migrate && npm run db:seed --require babel-register index.js",
+    "dev": "NODE_ENV=development sequelize db:seed:undo:all && npm run db:seed && nodemon --require babel-register index.js",
+    "db:migrate": "./node_modules/.bin/sequelize db:migrate",
+    "db:seed": "./node_modules/.bin/sequelize db:seed:all",
+    "db:seed:undo": "./node_modules/.bin/sequelize db:seed:undo:all",
+    "db:migrate:undo:all": "./node_modules/.bin/sequelize db:migrate:undo:all",
+    "db:migrate:test": "NODE_ENV=test ./node_modules/.bin/sequelize db:migrate",
+    "db:migrate:seed:test": "NODE_ENV=test ./node_modules/.bin/sequelize db:seed:all",
+    "db:migrate:undo:all:test": "NODE_ENV=test ./node_modules/.bin/sequelize db:migrate:undo:all"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/getaplotdev/evently-backend.git"
+  },
+  "author": "getaplotdev",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/getaplotdev/evently-backend/issues"
+  },
+  "homepage": "https://github.com/getaplotdev/evently-backend#readme",
+  "dependencies": {
+    "babel-preset-env": "^1.7.0",
+    "babel-register": "^6.26.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "errorhandler": "^1.5.1",
+    "express": "^4.17.1",
+    "pg": "^7.17.0",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^5.21.3",
+    "sequelize-cli": "^5.5.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
+}
