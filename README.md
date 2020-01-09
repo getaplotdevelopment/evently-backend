@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/getaplotdev/evently-backend.svg?token=aZsRVG2qb5Jsv5dQBpJr&branch=develop)](https://travis-ci.com/getaplotdev/evently-backend)
+
 Evently - Get your plot right now.
 =======
 
