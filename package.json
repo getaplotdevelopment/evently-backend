@@ -14,7 +14,7 @@
     "db:migrate:test": "NODE_ENV=test ./node_modules/.bin/sequelize db:migrate",
     "db:migrate:seed:test": "NODE_ENV=test ./node_modules/.bin/sequelize db:seed:all",
     "db:migrate:undo:all:test": "NODE_ENV=test ./node_modules/.bin/sequelize db:migrate:undo:all",
-    "coverage":"nyc report --reporter=text-lcov && codecov"
+    "coverage": "nyc report --reporter=text-lcov && codecov"
   },
   "repository": {
     "type": "git",
@@ -36,14 +36,26 @@
     "pg": "^7.17.0",
     "pg-hstore": "^2.3.3",
     "sequelize": "^5.21.3",
-    "sequelize-cli": "^5.5.1"
+    "sequelize-cli": "^5.5.1",
+    "swagger-ui-express": "^4.1.2"
   },
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
     "codecov": "^3.6.1",
+    "eslint": "^6.1.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-config-node": "^4.0.0",
+    "eslint-config-prettier": "^6.9.0",
+    "eslint-plugin-import": "^2.19.1",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-react": "^7.17.0",
+    "eslint-plugin-react-hooks": "^1.7.0",
     "mocha": "^7.0.0",
     "nodemon": "^2.0.2",
-    "nyc": "^15.0.0"
+    "nyc": "^15.0.0",
+    "prettier": "^1.19.1"
   }
 }
