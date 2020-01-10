@@ -1,6 +1,6 @@
-import express from "express";
-import cors from "cors";
-import router from "./routes/app";
+import express from 'express';
+import cors from 'cors';
+import router from './routes/app';
 
 const app = express();
 app.use(cors());
@@ -15,7 +15,7 @@ app.use(router);
 app.use((req, res) => {
   res.status(404).send({
     status: 404,
-    error: "resource not found"
+    error: 'resource not found'
   });
 });
 app.listen(port, () => {
