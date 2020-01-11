@@ -15,6 +15,10 @@
 #### How Has This Been Tested?
 
 > **Please describe the tests that you ran to verify your changes**
+- After cloning the [repo](https://github.com/getaplotdev/evently-backend.git)
+- Check out this branch by `branch here`
+- Run `yarn or npm install` to install the project dependencies
+- Run 'action to be done`
 
 - [ ] Unit
 - [ ] Integration

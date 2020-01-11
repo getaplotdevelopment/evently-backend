@@ -1,0 +1,58 @@
+{
+  "signupUser": {
+    "firstName": "Jaman",
+    "lastName": "evently",
+    "userName": "user",
+    "email": "getaplotdev@gmail.com",
+    "password": "emabush2015",
+    "isAdmin": "true",
+    "isOrganizer": false,
+    "isActivated": true,
+    "deviceToken": "dkfkfkskdf"
+  },
+  "invalidUser": {
+    "firstName": "",
+    "lastName": "",
+    "userName": "",
+    "email": "getaplotdev",
+    "password": "emabush2015",
+    "isAdmin": "true",
+    "isOrganizer": false,
+    "isActivated": true,
+    "deviceToken": "dkfkfkskdf"
+  },
+  "existingUser": {
+    "firstName": "Jaman",
+    "lastName": "evently",
+    "userName": "user",
+    "email": "getaplotdev@gmail.com",
+    "password": "emabush2015",
+    "isAdmin": "true",
+    "isOrganizer": false,
+    "isActivated": true,
+    "deviceToken": "dkfkfkskdf"
+  },
+  "loginUser": {
+    "email": "getaplotdev@gmail.com",
+    "password": "emabush2015"
+  },
+  "invalidLoginUser": {
+    "email": "jasova3538@",
+    "password": "emabush2015"
+  },
+  "invalidLoginUserPassword": {
+    "email": "getaplotdev@gmail.com",
+    "password": "emabus"
+  },
+  "socialMediaUser": {
+    "user": {
+      "username": "EmaBush"
+    }
+  },
+  "emailToCheck": {
+    "email": "getaplotdev@gmail.com"
+  },
+  "wrongEmailToCheck": {
+    "email": "emabush@gmail.com"
+  }
+}
