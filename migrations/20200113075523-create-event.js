@@ -17,17 +17,31 @@ module.exports = {
       description: {
         type: Sequelize.STRING
       },
-      body: {
+      category: {
         type: Sequelize.STRING
       },
       tagList: {
         type: Sequelize.ARRAY(Sequelize.STRING)
       },
-      createdAt: {
-        type: Sequelize.DATE
+      startDate: {
+        type: Sequelize.DATE,
+        defaultValue: "2020-01-13"
       },
-      updatedAt: {
-        type: Sequelize.DATE
+      finishDate: {
+        type: Sequelize.DATE,
+        defaultValue: "2020-01-13"
+      },
+      startTime: {
+        type: Sequelize.STRING
+      },
+      eventStatus: {
+        type: Sequelize.BOOLEAN
+      },
+      numberDays: {
+        type: Sequelize.STRING
+      },
+      eventImage: {
+        type: Sequelize.STRING
       },
       favorited: {
         type: Sequelize.BOOLEAN,

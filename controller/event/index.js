@@ -1,26 +1,22 @@
 import models from '../../models';
-import random from 'lodash.random'
-import slugify from 'slugify'
+import slugGenerator from '../../helper/slugGenerator'
 const { Event } = models;
 export const createEventController = async (req, res) => {
-  const {title, description, body, tagList } = req.body;
-  const slug = slugify(title) + '-' + random(10000, 20000)
-  const newEvent = {
-      slug,
-    title, description, body, tagList 
-  }
   try {
-  const response = await Event.create(newEvent);
-  
-  if (!response){
-    throw new Error('brr rrr')
-  }
-  res.send(response)
-  
+    const {title, description, body, tagList, category, numberDays, eventImage } = req.body;
+    const slug = slugGenerator(title)
+    const newEvent = {
+      slug,
+      title, description, body, tagList, category, numberDays, eventImage
+    }
+    const response = await Event.create(newEvent);
+
+    res.send(response)
+    
   } catch (error) {
     console.log('error');
     
-    res.send(error)
+    res.status(500).send(error)
     
   }
   

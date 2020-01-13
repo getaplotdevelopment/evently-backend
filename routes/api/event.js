@@ -1,13 +1,11 @@
 import express from 'express';
-import {createEventController} from '../../controller/event'
-import {validateEvent, validations} from '../../middleware/validations/validateAll'
+import { createEventController } from '../../controller/event';
+import {
+  validateEvent,
+  validations
+} from '../../middleware/validations/validateAll';
 const router = express.Router();
 
-router.post(
-  '/event',
-  validateEvent,
-  validations,
-  createEventController
-);
+router.post('/event', createEventController);
 
 export default router;
