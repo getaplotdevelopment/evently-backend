@@ -56,5 +56,8 @@ export {
   validations,
   validateUserLogin,
   validateProfile,
-  validatePassword
+  validateCategory,
+  validateProduct,
+  validatePassword,
+  validateEvent
 };

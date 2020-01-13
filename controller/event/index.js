@@ -9,9 +9,20 @@ export const createEventController = async (req, res) => {
       slug,
     title, description, body, tagList 
   }
-  
+  try {
   const response = await Event.create(newEvent);
-  return res.send(response)
+  
+  if (!response){
+    throw new Error('brr rrr')
+  }
+  res.send(response)
+  
+  } catch (error) {
+    console.log('error');
+    
+    res.send(error)
+    
+  }
   
 };
 
