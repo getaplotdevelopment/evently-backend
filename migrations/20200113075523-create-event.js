@@ -21,7 +21,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       tagList: {
-        type: Sequelize.ARRAY
+        type: Sequelize.ARRAY(Sequelize.STRING)
       },
       createdAt: {
         type: Sequelize.DATE
@@ -33,7 +33,7 @@ module.exports = {
         type: Sequelize.BOOLEAN
       },
       favoritedCount: {
-        type: Sequelize.NUMBER
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,

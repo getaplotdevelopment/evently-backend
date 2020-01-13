@@ -5,11 +5,11 @@ module.exports = (sequelize, DataTypes) => {
     title: DataTypes.STRING,
     description: DataTypes.STRING,
     body: DataTypes.STRING,
-    tagList: DataTypes.ARRAY,
+    tagList: DataTypes.ARRAY("STRING"),
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
     favorited: DataTypes.BOOLEAN,
-    favoritedCount: DataTypes.NUMBER
+    favoritedCount: DataTypes.INTEGER
   }, {});
   Event.associate = function(models) {
     // associations can be defined here
