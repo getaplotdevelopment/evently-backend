@@ -1,10 +1,14 @@
-import chai from "chai";
-import chaiHttp from "chai-http";
-import app from "../index";
+import chai from 'chai';
+import chaiHttp from 'chai-http';
+import models from '../models/index';
 
 chai.use(chaiHttp);
 chai.should();
 
-const beforeFunc = async () => {};
+const { User } = models;
+
+const beforeFunc = async () => {
+  await User.destroy();
+};
 
 export { beforeFunc };

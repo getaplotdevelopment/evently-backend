@@ -6,7 +6,7 @@
   "scripts": {
     "test": "NODE_ENV=test sequelize db:migrate:undo:all && npm run db:migrate:test && npm run db:migrate:seed:test && NODE_ENV=test nyc --reporter=html --reporter=text mocha --require babel-register test/* --exit",
     "start": "npm run db:migrate && npm run db:seed --require babel-register index.js",
-    "dev": "NODE_ENV=development sequelize db:seed:undo:all && npm run db:seed && nodemon --require babel-register index.js",
+    "dev": "NODE_ENV=development nodemon --require babel-register index.js",
     "db:migrate": "./node_modules/.bin/sequelize db:migrate",
     "db:seed": "./node_modules/.bin/sequelize db:seed:all",
     "db:seed:undo": "./node_modules/.bin/sequelize db:seed:undo:all",
@@ -29,10 +29,18 @@
   "dependencies": {
     "babel-preset-env": "^1.7.0",
     "babel-register": "^6.26.0",
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "errorhandler": "^1.5.1",
     "express": "^4.17.1",
+    "express-validator": "^6.3.1",
+    "gravatar": "^1.8.0",
+    "jsonwebtoken": "^8.5.1",
+    "nodemailer": "^6.4.2",
+    "passport": "^0.4.1",
+    "passport-facebook": "^3.0.0",
+    "passport-google-oauth20": "^2.0.0",
     "pg": "^7.17.0",
     "pg-hstore": "^2.3.3",
     "sequelize": "^5.21.3",
@@ -54,8 +62,12 @@
     "eslint-plugin-react": "^7.17.0",
     "eslint-plugin-react-hooks": "^1.7.0",
     "mocha": "^7.0.0",
+    "mockery": "^2.1.0",
+    "nodemailer-mock": "^1.4.4",
     "nodemon": "^2.0.2",
     "nyc": "^15.0.0",
-    "prettier": "^1.19.1"
+    "passport-mock-strategy": "^2.0.0",
+    "prettier": "^1.19.1",
+    "should": "^13.2.3"
   }
 }
