@@ -43,6 +43,19 @@ const validatePassword = [
       min: 6
     })
 ];
+const validateEvent = [
+  check('title', 'Title is required')
+    .not()
+    .isEmpty(),
+  check('description', 'Description is required')
+    .not()
+    .isEmpty(),
+  check('body', 'Body is required')
+    .not()
+    .isEmpty(),
+  check('tagList', 'tagList sbould be any array of strings')
+    .isArray()
+];
 const validations = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -56,8 +69,6 @@ export {
   validations,
   validateUserLogin,
   validateProfile,
-  validateCategory,
-  validateProduct,
   validatePassword,
   validateEvent
 };
