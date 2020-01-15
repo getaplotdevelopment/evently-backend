@@ -10,12 +10,15 @@ module.exports = (sequelize, DataTypes) => {
     startTime: DataTypes.STRING,
     startDate: DataTypes.DATE,
     finishDate: DataTypes.DATE,
-    eventStatus: DataTypes.BOOLEAN,
+    eventType: DataTypes.BOOLEAN,
     favorited: DataTypes.BOOLEAN,
     favoritedCount: DataTypes.INTEGER,
     eventImage: DataTypes.STRING,
+    eventStatus: DataTypes.STRING,
+    organizer: DataTypes.JSON,
     createdAt: DataTypes.DATE,
-    updatedAt: DataTypes.DATE
+    updatedAt: DataTypes.DATE,
+    isDeleted: { type: DataTypes.BOOLEAN, defaultValue: false },
   }, {});
   Event.associate = function(models) {
     // associations can be defined here

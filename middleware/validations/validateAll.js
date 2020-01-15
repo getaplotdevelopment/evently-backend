@@ -52,9 +52,7 @@ const validateEvent = [
     .isEmpty(),
   check('body', 'Body is required')
     .not()
-    .isEmpty(),
-  check('tagList', 'tagList sbould be any array of strings')
-    .isArray()
+    .isEmpty()
 ];
 const validations = (req, res, next) => {
   const errors = validationResult(req);

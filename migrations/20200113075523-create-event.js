@@ -24,17 +24,15 @@ module.exports = {
         type: Sequelize.ARRAY(Sequelize.STRING)
       },
       startDate: {
-        type: Sequelize.DATE,
-        defaultValue: "2020-01-13"
+        type: Sequelize.DATE
       },
       finishDate: {
-        type: Sequelize.DATE,
-        defaultValue: "2020-01-13"
+        type: Sequelize.DATE
       },
       startTime: {
         type: Sequelize.STRING
       },
-      eventStatus: {
+      eventType: {
         type: Sequelize.BOOLEAN
       },
       numberDays: {
@@ -50,6 +48,17 @@ module.exports = {
       favoritedCount: {
         type: Sequelize.INTEGER,
         defaultValue: 0
+      },
+      organizer: {
+        type: Sequelize.JSON,
+        model: 'users',
+        key: 'email'
+      },
+      isDeleted: {
+        type: Sequelize.BOOLEAN
+      },
+      eventStatus: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

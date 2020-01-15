@@ -10,6 +10,28 @@
     "isActivated": true,
     "deviceToken": "dkfkfkskdf"
   },
+  "signupUser2": {
+    "firstName": "Jaman",
+    "lastName": "evently",
+    "userName": "user",
+    "email": "geta@gmail.com",
+    "password": "emabush2015",
+    "isAdmin": "true",
+    "isOrganizer": true,
+    "isActivated": true,
+    "deviceToken": "dkfkfkskdf"
+  },
+  "signupUser3": {
+    "firstName": "Jaman",
+    "lastName": "evently",
+    "userName": "user",
+    "email": "notorganizer@gmail.com",
+    "password": "emabush2015",
+    "isAdmin": "true",
+    "isOrganizer": false,
+    "isActivated": true,
+    "deviceToken": "dkfkfkskdf"
+  },
   "invalidUser": {
     "firstName": "",
     "lastName": "",
@@ -54,5 +76,15 @@
   },
   "wrongEmailToCheck": {
     "email": "emabush@gmail.com"
+  },
+  "createEvent": {
+    "title": "title1 is good",
+    "description": "desc",
+    "body": "big booty",
+    "tagList": "tags, new",
+    "category": "yes",
+    "numberDays": "1 day",
+    "eventImage": "http",
+    "startDate": "2020-01-01"
   }
 }
