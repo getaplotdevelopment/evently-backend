@@ -56,12 +56,11 @@ class UserController {
     newUser.password = await bcrypt.hash(password, salt);
     const { dataValues: createdUser } = await User.create(newUser);
     const payload = {
-      user: {
         id: createdUser.id,
+        email: createdUser.email,
         name: createdUser.firstName,
         avatar: createdUser.avatar,
         isAdmin: createdUser.isAdmin
-      }
     };
     const user = {
       firstName: createdUser.firstName,
@@ -100,12 +99,13 @@ class UserController {
         'isOrganizer'
       ]
     });
+    const { id, name, avatar, isAdmin } = user
     const payload = {
-      user: {
-        id: user.id,
-        name: user.name,
-        avatar: user.avatar
-      }
+        id,
+        name,
+        avatar,
+        email: user.email,
+        isAdmin
     };
     const generatedToken = generateToken(payload);
     const token = generatedToken.generate;
