@@ -51,17 +51,17 @@ class UserController {
       isActivated,
       deviceToken
     };
-
     const salt = await bcrypt.genSalt(10);
     newUser.password = await bcrypt.hash(password, salt);
     const { dataValues: createdUser } = await User.create(newUser);
     const payload = {
-      user: {
-        id: createdUser.id,
-        name: createdUser.firstName,
-        avatar: createdUser.avatar,
-        isAdmin: createdUser.isAdmin
-      }
+      id: createdUser.id,
+      email: createdUser.email,
+      name: createdUser.firstName,
+      avatar: createdUser.avatar,
+      isAdmin: createdUser.isAdmin,
+      isOrganizer: createdUser.isOrganizer,
+      isActivated: createdUser.isActivated
     };
     const user = {
       firstName: createdUser.firstName,
@@ -100,12 +100,15 @@ class UserController {
         'isOrganizer'
       ]
     });
+    const { id, name, avatar, isAdmin, isOrganizer, isActivated } = user;
     const payload = {
-      user: {
-        id: user.id,
-        name: user.name,
-        avatar: user.avatar
-      }
+      id,
+      name,
+      avatar,
+      email: user.email,
+      isAdmin,
+      isOrganizer,
+      isActivated
     };
     const generatedToken = generateToken(payload);
     const token = generatedToken.generate;

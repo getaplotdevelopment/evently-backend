@@ -43,6 +43,17 @@ const validatePassword = [
       min: 6
     })
 ];
+const validateEvent = [
+  check('title', 'Title is required')
+    .not()
+    .isEmpty(),
+  check('description', 'Description is required')
+    .not()
+    .isEmpty(),
+  check('body', 'Body is required')
+    .not()
+    .isEmpty()
+];
 const validations = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -56,5 +67,6 @@ export {
   validations,
   validateUserLogin,
   validateProfile,
-  validatePassword
+  validatePassword,
+  validateEvent
 };
