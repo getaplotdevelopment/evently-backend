@@ -3,16 +3,16 @@
   "info": {
     "version": "1.0.0",
     "title": "Evently",
-    "termsOfService": "http://evently.io/terms/",
+    "termsOfService": "http://localhost:5000/terms/",
     "contact": {
-      "email": "evently@evently.io"
+      "email": "evently@localhost:5000"
     },
     "license": {
       "name": "evently",
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     }
   },
-  "host": "evently.io",
+  "host": "localhost:5000",
   "basePath": "/v1",
   "tags": [
     {
@@ -20,7 +20,7 @@
       "description": "Everything about your Events",
       "externalDocs": {
         "description": "Find out more",
-        "url": "http://evently.io"
+        "url": "http://localhost:5000"
       }
     },
     {
@@ -32,7 +32,7 @@
       "description": "Operations about user",
       "externalDocs": {
         "description": "Find out more about our app",
-        "url": "http://evently.io"
+        "url": "http://localhost:5000"
       }
     }
   ],
@@ -357,6 +357,49 @@
         }
       }
     },
+
+    "/user/check-user": {
+      "post": {
+        "tags": ["user"],
+        "summary": "Checks if a user account exists",
+        "description": "",
+        "operationId": "checkUserAccountExists",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "name": "email",
+            "in": "body",
+            "description": "The user users Email",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User exists",
+            "schema": {
+              "type": "string"
+            },
+            "headers": {
+              "X-Rate-Limit": {
+                "type": "integer",
+                "format": "int32",
+                "description": "calls per hour allowed by the user"
+              },
+              "X-Expires-After": {
+                "type": "string",
+                "format": "date-time",
+                "description": "date in UTC when token expires"
+              }
+            }
+          },
+          "400": {
+            "description": "User with that email does not exist"
+          }
+        }
+      }
+    },
+
     "/user/logout": {
       "get": {
         "tags": ["user"],
@@ -607,6 +650,6 @@
   },
   "externalDocs": {
     "description": "Find out more about evently",
-    "url": "http://evently.io"
+    "url": "http://localhost:5000"
   }
 }

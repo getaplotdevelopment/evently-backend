@@ -177,6 +177,31 @@ class UserController {
   }
 
   /**
+   * Checks if the user with the email exists.
+   * @param {object} req request
+   * @param {object} res response.
+   * @returns {object} response.
+   */
+  async checkUser(req, res) {
+    const { email } = req.body;
+
+    const user = await User.findOne({ where: { email } });
+
+    if (!user) {
+      res.status(404).send({
+        status: 404,
+        message: 'No user found with that email address'
+      });
+    }
+    const foundUser = user.dataValues;
+    res.status(200).send({
+      status: 200,
+      user: { email: foundUser.email },
+      message: 'User exists'
+    });
+  }
+
+  /**
    * Resets password.
    * @param {object} req request.
    * @param {object} res response.
