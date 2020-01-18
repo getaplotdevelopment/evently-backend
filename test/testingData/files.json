@@ -5,9 +5,6 @@
     "userName": "user",
     "email": "getaplotdev@gmail.com",
     "password": "emabush2015",
-    "isAdmin": "true",
-    "isOrganizer": false,
-    "isActivated": true,
     "deviceToken": "dkfkfkskdf"
   },
   "signupUser2": {

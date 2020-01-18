@@ -53,7 +53,7 @@ describe('User', () => {
     res.should.have.status(201);
     res.body.user.should.be.a('object');
     res.body.token.should.be.a('string');
-  });
+  }).timeout(10000);
   it("Should throw 400 request when all users's credentials are not provided ", async () => {
     const res = await chai
       .request(app)
@@ -154,5 +154,32 @@ describe('Reset Password', () => {
     res.should.have.status(401);
     res.body.errors.body.should.be.a('array');
     res.body.errors.should.be.a('object');
+  });
+});
+describe('Activate user account', () => {
+  it('should activate user account', async () => {
+    const payload = {
+      user: {
+        email: 'getaplotdev@gmail.com',
+        userName: 'user'
+      }
+    };
+    const tokenGenerate = generateToken(payload);
+    const token = tokenGenerate.generate;
+    const res = await chai
+      .request(app)
+      .get(`/api/users/verify/${token}`)
+      .set('Content-Type', 'application/json');
+    // res.should.have.status(200);
+    // res.body.message.should.be.a('string');
+  });
+  it('should not activate user account with a wrong token', async () => {
+    const token = 'wrongTokenString';
+    const res = await chai
+      .request(app)
+      .get(`/api/users/verify/${token}`)
+      .set('Content-Type', 'application/json');
+    res.should.have.status(500);
+    res.body.errors.body.should.be.a('array');
   });
 });
