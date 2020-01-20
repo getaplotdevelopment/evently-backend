@@ -16,6 +16,10 @@ app.use(passport.initialize());
 
 // Router configuration
 app.use(router);
+
+// render engine
+app.set('view engine', 'ejs');
+app.use(express.static(`${__dirname}/public`));
 app.use((req, res) => {
   res.status(404).send({
     status: 404,

@@ -57,7 +57,7 @@ class UserController {
     const payload = {
       id: createdUser.id,
       email: createdUser.email,
-      name: createdUser.firstName,
+      userName: createdUser.userName,
       avatar: createdUser.avatar,
       isAdmin: createdUser.isAdmin,
       isOrganizer: createdUser.isOrganizer,
@@ -76,7 +76,8 @@ class UserController {
     };
     const tokenGenerated = generateToken(payload);
     const token = tokenGenerated.generate;
-    res.status(201).json({ status: 201, user, token });
+    const response = await sendEmail(user.email, token);
+    res.status(201).json({ status: 201, user, token, response });
   }
 
   /**
@@ -100,10 +101,10 @@ class UserController {
         'isOrganizer'
       ]
     });
-    const { id, name, avatar, isAdmin, isOrganizer, isActivated } = user;
+    const { id, userName, avatar, isAdmin, isOrganizer, isActivated } = user;
     const payload = {
       id,
-      name,
+      userName,
       avatar,
       email: user.email,
       isAdmin,
@@ -167,7 +168,8 @@ class UserController {
     const payload = {
       email: foundUser.email
     };
-    const token = generateToken(payload);
+    const tokenGenerated = generateToken(payload);
+    const token = tokenGenerated.generate;
     req.body.token = token;
     req.body.template = 'resetPassword';
     const response = await sendEmail(foundUser.email, token, 'resetPassword');
@@ -203,6 +205,33 @@ class UserController {
       }
     }
     throw new httpError(401, 'Invalid token');
+  }
+
+  /**
+   * @param {Object} req - Requests from user
+   * @param {Object} res - Response to the user
+   * @returns {Object} Response
+   */
+  async activateAccount(req, res) {
+    const { token } = req.params;
+    const decoded = jwt.decode(token, secretKey);
+    if (decoded) {
+      const [rowsUpdated, [updatedAccount]] = await User.update(
+        { isActivated: true },
+        {
+          where: { userName: decoded.user.userName },
+          returning: true
+        }
+      );
+      // res.status(200).send({
+      //   status: `<h1> Activated </h1> 200`,
+      //   accountsUpdated: rowsUpdated,
+      //   isActivated: updatedAccount.dataValues.isActivated
+      // });
+      res.render('activated');
+    } else {
+      throw new Error('Token is expired or invalid Token');
+    }
   }
 }
 

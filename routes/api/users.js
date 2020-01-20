@@ -33,6 +33,7 @@ router.put(
   validations,
   asyncHandler(users.resetPassword)
 );
+router.get('/verify/:token', asyncHandler(users.activateAccount));
 router.post('/send-email', asyncHandler(users.checkEmail));
 
 export default router;

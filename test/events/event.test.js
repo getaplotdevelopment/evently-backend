@@ -2,6 +2,7 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../../index';
+import models from '../../models/index';
 import {
   createEvent,
   signupUser2,
@@ -10,6 +11,11 @@ import {
 
 chai.use(chaiHttp);
 chai.should();
+const { Event } = models;
+
+before(async () => {
+  await Event.destroy({ where: {}, truncate: true });
+});
 
 describe('Event', () => {
   it('should create and event', async () => {
@@ -23,12 +29,12 @@ describe('Event', () => {
       .request(app)
       .post('/api/event')
       .set({ Authorization: 'Bearer ' + rex.body.token })
-      .send(createEvent);    
+      .send(createEvent);
     res.should.have.status(200);
     res.body.should.be.a('object');
     res.body.data.organizer.should.be.a('object');
     res.body.data.favorited.should.be.false;
-  });
+  }).timeout(10000);
 
   it('authorized only organizers to create event', async () => {
     const rex = await chai
@@ -46,7 +52,7 @@ describe('Event', () => {
     res.text.should.include(
       "Un-authorized, User role can't perform this action."
     );
-  });
+  }).timeout(10000);
 
   it('token is required', async () => {
     const res = await chai

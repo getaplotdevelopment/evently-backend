@@ -30,7 +30,7 @@ class Mailer {
       const mailOptions = emailTemplates[template];
       mailOptions.from = this.senderEmail;
       mailOptions.to = this.userMail;
-      const addToken = mailOptions.html.replace('$token', token.generate);
+      const addToken = mailOptions.html.replace('$token', token);
       mailOptions.html = addToken;
       try {
         const response = await this.sendEmail(mailOptions);
