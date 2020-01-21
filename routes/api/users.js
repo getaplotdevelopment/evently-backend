@@ -34,6 +34,7 @@ router.put(
   asyncHandler(users.resetPassword)
 );
 router.get('/verify/:token', asyncHandler(users.activateAccount));
+router.post('/check-user', validations, asyncHandler(users.checkUser));
 router.post('/send-email', asyncHandler(users.checkEmail));
 
 export default router;

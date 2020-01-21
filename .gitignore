@@ -39,6 +39,7 @@ node_modules
 
 #package-lock
 package-lock.json
+yarn.lock
 
 #nyc
 .nyc_output
