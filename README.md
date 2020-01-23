@@ -8,6 +8,33 @@ Help people to be happy, gathered happy people
 
 ---
 
+## Docker setup and commands
+
+### Install Docker
+- Steps to [install](https://docs.docker.com/install/)
+- Signup/login with docker hub
+
+### Build the container
+- In the root directory,
+- run `docker-compose build`
+
+### start the container/app
+- Run `docker-compose up`
+- Run container in detached mode(container runs in the background) `docker-compose up -d`
+- In detached mode, run `docker-compose logs -f` to see the logs
+- App is now running at port `5000`
+
+### Check status
+- run `docker-compose images` to list the available images
+- run `docker-compose ps` to list active containers
+
+### Exit the active all containers
+- run `docker-compose down`
+
+### Notes
+- The Container automatically update when you make changes and save, No need of building it over and over..
+- Docker uses `host.docker.internal` as the host URL, to run with NPM change the host url form config.js file
+
 ## API Spec
 The preferred JSON object to be returned by the API should be structured as follows:
 
