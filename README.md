@@ -31,9 +31,14 @@ Help people to be happy, gathered happy people
 ### Exit the active all containers
 - run `docker-compose down`
 
+### Other commands
+- To run any similar npm command, run `docker-compose exec evently-backend npm <command>`
+- Example `docker-compose exec evently-backend npm test` to run tests
+
 ### Notes
 - The Container automatically update when you make changes and save, No need of building it over and over..
-- Docker uses `host.docker.internal` as the host URL, to run with NPM change the host url form config.js file
+- Docker uses `host.docker.internal` as the host URL, to run with NPM change the host url form config.js file.
+- You may be required to restart postgres services sometimes, run `brew services start postgresql`.
 
 ## API Spec
 The preferred JSON object to be returned by the API should be structured as follows:
