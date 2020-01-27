@@ -1,6 +1,6 @@
 import express from 'express';
 import multer from 'multer'
-import { createEventController } from '../../controllers/event';
+import { createEventController, getOrganizerEvents } from '../../controllers/event';
 import asyncHandler from '../../helpers/errorsHandler/asyncHandler';
 import {
   validateEvent,
@@ -17,6 +17,11 @@ router.post(
   validateEvent,
   validations,
   asyncHandler(createEventController)
+);
+router.get(
+  '/event',
+  asyncHandler(authUser),
+  asyncHandler(getOrganizerEvents)
 );
 
 export default router;

@@ -60,3 +60,13 @@ export const createEventController = async (req, res) => {
   const data = await Event.create(newEvent);
   res.send({ status: 201, data });
 };
+
+export const getOrganizerEvents = async(req, res) => {
+  const { email } = req.organizer
+  
+  const data = await Event.findAll({where: {'organizer.email': email}})
+  const count = data.length
+  
+  res.send({status: 200, count, data})
+
+}
