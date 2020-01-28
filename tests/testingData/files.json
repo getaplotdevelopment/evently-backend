@@ -82,6 +82,7 @@
     "category": "yes",
     "numberDays": "1 day",
     "eventImage": "http",
+    "eventStatus": "draft",
     "startDate": "2020-01-01"
   }
 }

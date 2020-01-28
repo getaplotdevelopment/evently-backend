@@ -19,7 +19,7 @@ export const createEventController = async (req, res) => {
     eventStatus,
     eventType
   } = req.body;
-  let eventImage = req.file ? await uploadCloudinary(req.file.buffer): null
+  let eventImage = req.file ? await uploadCloudinary(req.file.buffer): null  
   if (eventStatus) {
     await eventStatuschecker(eventStatus.split(','));
   }
@@ -60,3 +60,17 @@ export const createEventController = async (req, res) => {
   const data = await Event.create(newEvent);
   res.send({ status: 201, data });
 };
+
+export const getOrganizerEvents = async(req, res) => {
+  const { email } = req.organizer
+  const limit = 25
+  const currentPage = req.query.page || 1
+  const offset = limit * currentPage - limit
+  
+  const {count:countAll, rows:data} = await Event.findAndCountAll({where: {'organizer.email': email}, limit, offset})
+  const pages = Math.ceil(countAll/limit)
+  const count = data.length
+  
+  res.send({status: 200, pages, count, data})
+
+}
