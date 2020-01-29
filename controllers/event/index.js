@@ -16,13 +16,14 @@ export const createEventController = async (req, res) => {
     startDate,
     finishDate,
     startTime,
-    eventStatus,
-    eventType
+    currentMode,
+    eventType,
+    location
   } = req.body;
-  const eventImage = req.file ? await uploadCloudinary(req.file.buffer) : null;
-  if (eventStatus) {
-    await eventStatuschecker(eventStatus.split(','));
-  }
+  let eventImage = req.file ? await uploadCloudinary(req.file.buffer): null  
+  if (currentMode) {
+    await eventStatuschecker(currentMode.split(','));
+  }  
   const {
     id,
     firstName,
@@ -45,8 +46,9 @@ export const createEventController = async (req, res) => {
     startDate,
     finishDate,
     startTime,
-    eventStatus,
+    currentMode,
     eventType,
+    location,
     organizer: {
       id,
       firstName,
@@ -76,4 +78,16 @@ export const getOrganizerEvents = async (req, res) => {
   const count = data.length;
 
   res.send({ status: 200, pages, count, data });
+};
+
+export const getAllEvents = async(req, res) => {
+  const limit = 25
+  const currentPage = req.query.page || 1
+  const offset = limit * currentPage - limit
+  
+  const {count:countAll, rows:data} = await Event.findAndCountAll({ where: {}, limit, offset})
+  const pages = Math.ceil(countAll/limit)
+  const count = data.length
+  
+  res.send({status: 200, pages, count, data})
 };

@@ -35,7 +35,8 @@ module.exports = {
         type: Sequelize.STRING
       },
       eventType: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
       },
       numberDays: {
         type: Sequelize.STRING
@@ -59,7 +60,7 @@ module.exports = {
       isDeleted: {
         type: Sequelize.BOOLEAN
       },
-      eventStatus: {
+      currentMode: {
         type: Sequelize.STRING
       },
       createdAt: {
