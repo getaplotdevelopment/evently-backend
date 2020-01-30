@@ -2,7 +2,7 @@ import models from '../../models';
 import slugGenerator from '../../helpers/slugGenerator';
 import eventStatuschecker from '../../helpers/eventHelper/eventStatuschecker';
 import uploadCloudinary from '../../helpers/eventHelper/uploadCloudinary';
-
+import getEvents from '../../helpers/eventHelper/getEvent';
 const { Event } = models;
 
 export const createEventController = async (req, res) => {
@@ -20,10 +20,10 @@ export const createEventController = async (req, res) => {
     eventType,
     location
   } = req.body;
-  let eventImage = req.file ? await uploadCloudinary(req.file.buffer): null  
+  let eventImage = req.file ? await uploadCloudinary(req.file.buffer) : null;
   if (currentMode) {
     await eventStatuschecker(currentMode.split(','));
-  }  
+  }
   const {
     id,
     firstName,
@@ -65,29 +65,15 @@ export const createEventController = async (req, res) => {
 
 export const getOrganizerEvents = async (req, res) => {
   const { email } = req.organizer;
-  const limit = 25;
-  const currentPage = req.query.page || 1;
-  const offset = limit * currentPage - limit;
-
-  const { count: countAll, rows: data } = await Event.findAndCountAll({
-    where: { 'organizer.email': email },
-    limit,
-    offset
-  });
-  const pages = Math.ceil(countAll / limit);
-  const count = data.length;
+  const searchParams = req.query;
+  const filterBy = { 'organizer.email': email };
+  const { pages, count, data } = await getEvents(searchParams, filterBy);
 
   res.send({ status: 200, pages, count, data });
 };
 
-export const getAllEvents = async(req, res) => {
-  const limit = 25
-  const currentPage = req.query.page || 1
-  const offset = limit * currentPage - limit
-  
-  const {count:countAll, rows:data} = await Event.findAndCountAll({ where: {}, limit, offset})
-  const pages = Math.ceil(countAll/limit)
-  const count = data.length
-  
-  res.send({status: 200, pages, count, data})
+export const getAllEvents = async (req, res) => {
+  const searchParams = req.query;
+  const { pages, count, data } = await getEvents(searchParams, searchParams);
+  res.send({ status: 200, pages, count, data });
 };
