@@ -88,7 +88,7 @@ describe('Profile', () => {
     const res = await chai
       .request(app)
       .get('/api/profile/me')
-      .set('Authorization', token);
+      .set('Authorization', ` Bearer ${token}`);
     res.should.have.status(200);
     res.body.should.be.a('object');
   });
@@ -96,7 +96,7 @@ describe('Profile', () => {
     const res = await chai
       .request(app)
       .get('/api/profile/me')
-      .set('Authorization', fakeToken);
+      .set('Authorization', `Bearer ${fakeToken}`);
     res.should.have.status(404);
     res.body.should.be.a('object');
   });

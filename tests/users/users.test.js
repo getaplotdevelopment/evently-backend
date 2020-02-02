@@ -196,7 +196,7 @@ describe('Change current user passowrd', () => {
     const res = await chai
       .request(app)
       .put('/api/users/change-password')
-      .set('Authorization', currentUserToken)
+      .set('Authorization', `Bearer ${currentUserToken}`)
       .send(changePwd);
     res.should.have.status(200);
   });
@@ -209,7 +209,7 @@ describe('Change current user passowrd', () => {
     const res = await chai
       .request(app)
       .put('/api/users/change-password')
-      .set('Authorization', currentUserToken)
+      .set('Authorization', `Bearer ${currentUserToken}`)
       .send(changePwd);
     res.should.have.status(401);
   });
