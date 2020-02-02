@@ -16,7 +16,10 @@ module.exports = (sequelize, DataTypes) => {
     {}
   );
   User.associate = function(models) {
-    // associations can be defined here
+    User.hasMany(models.OrganizerProfile, {
+      foreignKey: 'organizer',
+      allowNull: false
+    });
   };
   return User;
 };

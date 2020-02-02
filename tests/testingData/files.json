@@ -18,6 +18,17 @@
     "isActivated": true,
     "deviceToken": "dkfkfkskdf"
   },
+  "signupUser4": {
+    "firstName": "Jaman",
+    "lastName": "evently",
+    "userName": "user",
+    "email": "geta01@gmail.com",
+    "password": "emabush2015",
+    "isAdmin": "true",
+    "isOrganizer": true,
+    "isActivated": true,
+    "deviceToken": "dkfkfkskdf"
+  },
   "signupUser3": {
     "firstName": "Jaman",
     "lastName": "evently",
@@ -76,7 +87,7 @@
   },
   "createEvent": {
     "title": "title1 is good",
-    "description": "desc",
+    "description": "Bomaye",
     "body": "big booty",
     "tagList": "tags, new",
     "category": "yes",
@@ -84,5 +95,23 @@
     "eventImage": "http",
     "eventStatus": "draft",
     "startDate": "2020-01-01"
+  },
+  "crateProfile": {
+    "accountName": "BomayE",
+    "description": "Bomaye Music",
+    "domain": "music",
+    "location": "Paris",
+    "preferences": ["music", "preferences", "dance"],
+    "accountType": "Brand",
+    "social": ["youtube", "facebook", "linkedin"]
+  },
+  "updatedProfile": {
+    "accountName": "BomayE Music",
+    "description": "Bomaye Music",
+    "domain": "music",
+    "location": "Paris",
+    "preferences": ["music", "preferences", "dance"],
+    "accountType": "Brand",
+    "social": ["youtube", "facebook", "linkedin"]
   }
 }
