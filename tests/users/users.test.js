@@ -22,6 +22,8 @@ import userController from '../../controllers/users';
 const { User } = models;
 const user = new userController();
 
+let currentUserToken;
+
 chai.use(chaiHttp);
 chai.should();
 
@@ -53,6 +55,7 @@ describe('User', () => {
     res.should.have.status(201);
     res.body.user.should.be.a('object');
     res.body.token.should.be.a('string');
+    currentUserToken = res.body.token;
   }).timeout(10000);
   it("Should throw 400 request when all users's credentials are not provided ", async () => {
     const res = await chai
@@ -181,5 +184,33 @@ describe('Activate user account', () => {
       .set('Content-Type', 'application/json');
     res.should.have.status(500);
     res.body.errors.body.should.be.a('array');
+  });
+});
+describe('Change current user passowrd', () => {
+  it('Should change the current user password', async () => {
+    const changePwd = {
+      oldPassword: 'newPassword2020',
+      newPassword: 'jamanBoss2020'
+    };
+
+    const res = await chai
+      .request(app)
+      .put('/api/users/change-password')
+      .set('Authorization', currentUserToken)
+      .send(changePwd);
+    res.should.have.status(200);
+  });
+  it('Should not change the current user password with a wrong old password', async () => {
+    const changePwd = {
+      oldPassword: 'jaman2020',
+      newPassword: 'jamanBoss2020'
+    };
+
+    const res = await chai
+      .request(app)
+      .put('/api/users/change-password')
+      .set('Authorization', currentUserToken)
+      .send(changePwd);
+    res.should.have.status(401);
   });
 });

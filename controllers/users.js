@@ -64,6 +64,7 @@ class UserController {
       isActivated: createdUser.isActivated
     };
     const user = {
+      id: createdUser.id,
       firstName: createdUser.firstName,
       lastName: createdUser.lastName,
       userName: createdUser.userName,
@@ -91,6 +92,7 @@ class UserController {
     const user = await User.findOne({
       where: { email },
       attributes: [
+        'id',
         'firstName',
         'lastName',
         'userName',
@@ -248,15 +250,36 @@ class UserController {
           returning: true
         }
       );
-      // res.status(200).send({
-      //   status: `<h1> Activated </h1> 200`,
-      //   accountsUpdated: rowsUpdated,
-      //   isActivated: updatedAccount.dataValues.isActivated
-      // });
-      res.render('activated');
+      res.status(200).json({
+        status: 200,
+        accountsUpdated: rowsUpdated,
+        isActivated: updatedAccount.dataValues.isActivated
+      });
     } else {
       throw new Error('Token is expired or invalid Token');
     }
+  }
+
+  /**
+   * @param {Object} req - Request form user
+   * @param {Object} res - Response to the user
+   * @returns {Object} Response
+   */
+  async changeCurrentPassword(req, res) {
+    const { id } = req.user;
+    let { newPassword } = req.body;
+    const salt = await bcrypt.genSalt(10);
+    newPassword = await bcrypt.hash(newPassword, salt);
+
+    await User.update(
+      { password: newPassword },
+      {
+        where: { id }
+      }
+    );
+    res
+      .status(200)
+      .json({ status: 200, message: 'Password updated successfully' });
   }
 }
 

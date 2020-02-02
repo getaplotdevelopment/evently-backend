@@ -4,10 +4,17 @@ import {
   validateUser,
   validations,
   validateUserLogin,
-  validatePassword
+  validatePassword,
+  validateChangePassword
 } from '../../middleware/validations/validateAll';
-import { checkUser, checkUserLogin } from '../../middleware/users/checkUser';
+import {
+  checkUser,
+  checkUserLogin,
+  checkPassword
+} from '../../middleware/users/checkUser';
 import asyncHandler from '../../helpers/errorsHandler/asyncHandler';
+import authUser from '../../middleware/users/authUser';
+import auth from '../../middleware/users/auth';
 
 const users = new Users();
 
@@ -36,5 +43,13 @@ router.put(
 router.get('/verify/:token', asyncHandler(users.activateAccount));
 router.post('/check-user', validations, asyncHandler(users.checkUser));
 router.post('/send-email', asyncHandler(users.checkEmail));
+router.put(
+  '/change-password',
+  validateChangePassword,
+  validations,
+  auth,
+  asyncHandler(checkPassword),
+  asyncHandler(users.changeCurrentPassword)
+);
 
 export default router;
