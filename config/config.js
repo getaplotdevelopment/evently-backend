@@ -5,7 +5,7 @@ module.exports = {
     username: process.env.USERNAME_DEV,
     password: process.env.PASSWORD_DEV,
     database: process.env.DB_DEV,
-    host: '127.0.0.1',
+    host: 'host.docker.internal', // use 127.0.0.1 for npm run commands
     dialect: 'postgres',
     logging: false
   },
@@ -13,7 +13,7 @@ module.exports = {
     username: process.env.USERNAME_TEST,
     password: process.env.PASSWORD_TEST,
     database: process.env.DB_TEST,
-    host: '127.0.0.1',
+    host: 'host.docker.internal',
     dialect: 'postgres',
     logging: false
   },

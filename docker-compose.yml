@@ -1,0 +1,24 @@
+version: "3.7"
+services: 
+    evently-backend:
+        build: .
+        command: npm run dev
+        volumes: 
+            - .:/usr/src/app
+            - /usr/src/app/node_modules
+        ports: 
+            - "5000:5000"
+        depends_on: 
+            - evently-db
+        env_file: .env
+    evently-db:
+        image: postgres:12.1-alpine
+        ports:
+            - "5432:5432"
+        environment: 
+            POSTGRES_USER: kasule
+            POSTGRES_DB: evently
+            POSTGRES_PASSWORD: 123
+            
+
+
