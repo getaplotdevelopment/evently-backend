@@ -24,6 +24,14 @@ const checkUserProfile = async (req, res, next) => {
   }
   next();
 };
+const checkProfile = async (req, res, next) => {
+  const { id } = req.organizer;
+  const profile = await OrganizerProfile.findOne({ where: { id } });
+  if (profile) {
+    throw new httpError(409, 'You have already a profile');
+  }
+  next();
+};
 
 const checkUserLogin = async (req, res, next) => {
   const { email, password } = req.body;
@@ -56,4 +64,10 @@ const checkPassword = async (req, res, next) => {
   }
   next();
 };
-export { checkUser, checkUserLogin, checkUserProfile, checkPassword };
+export {
+  checkUser,
+  checkUserLogin,
+  checkUserProfile,
+  checkPassword,
+  checkProfile
+};

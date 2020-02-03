@@ -8,7 +8,10 @@ import {
   validations
 } from '../../middleware/validations/validateAll';
 import upload from '../../helpers/fileUploadConfig/multer';
-import { checkUserProfile } from '../../middleware/users/checkUser';
+import {
+  checkUserProfile,
+  checkProfile
+} from '../../middleware/users/checkUser';
 
 const profile = new Profile();
 
@@ -19,6 +22,7 @@ router.post(
   '/',
   upload.array('profilePhotos', 2),
   asyncHandler(authUser),
+  asyncHandler(checkProfile),
   validateProfile,
   validations,
   asyncHandler(profile.createProfile)
