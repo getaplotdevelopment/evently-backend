@@ -2,7 +2,8 @@ import express from 'express';
 import multer from 'multer';
 import {
   createEventController,
-  getOrganizerEvents
+  getOrganizerEvents,
+  getAllEvents
 } from '../../controllers/event';
 import asyncHandler from '../../helpers/errorsHandler/asyncHandler';
 import {
@@ -15,13 +16,15 @@ const router = express.Router();
 const upload = multer();
 
 router.post(
-  '/event',
+  '/events',
   upload.single('eventImage'),
   asyncHandler(authUser),
   validateEvent,
   validations,
   asyncHandler(createEventController)
 );
-router.get('/event', asyncHandler(authUser), asyncHandler(getOrganizerEvents));
+
+router.get('/events', asyncHandler(authUser), asyncHandler(getOrganizerEvents));
+router.get('/events/all', asyncHandler(getAllEvents));
 
 export default router;
