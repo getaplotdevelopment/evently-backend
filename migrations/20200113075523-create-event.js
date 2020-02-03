@@ -61,7 +61,8 @@ module.exports = {
         type: Sequelize.BOOLEAN
       },
       currentMode: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        defaultValue: 'draft'
       },
       createdAt: {
         allowNull: false,
