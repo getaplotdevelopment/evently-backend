@@ -3,7 +3,8 @@ import multer from 'multer';
 import {
   createEventController,
   getOrganizerEvents,
-  getAllEvents
+  getAllEvents,
+  updateEvents
 } from '../../controllers/event';
 import asyncHandler from '../../helpers/errorsHandler/asyncHandler';
 import {
@@ -26,5 +27,11 @@ router.post(
 
 router.get('/events', asyncHandler(authUser), asyncHandler(getOrganizerEvents));
 router.get('/events/all', asyncHandler(getAllEvents));
+router.patch(
+  '/events/:slug',
+  upload.single('eventImage'),
+  asyncHandler(authUser),
+  asyncHandler(updateEvents)
+);
 
 export default router;
