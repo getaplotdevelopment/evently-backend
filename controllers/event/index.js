@@ -82,10 +82,6 @@ export const updateEvents = async (req, res) => {
   const { email } = req.organizer;
   const { slug } = req.params;
   const updateTo = JSON.parse(JSON.stringify(req.body));
-  const { dataValues } = await Event.findOne({
-    where: { slug }
-  });
-
   if (email !== dataValues.organizer.email) {
     return res.status(403).send({
       status: 403,
@@ -108,3 +104,16 @@ export const updateEvents = async (req, res) => {
     data
   });
 };
+
+export const likeUnlikeEvents = async (req, res) => {
+  const { email } = req.organizer;
+  const { slug } = req.params;
+  const { dataValues } = await Event.findOne({
+    where: { slug }
+  });
+  const { likedUser } = dataValues
+  console.log(likedUser);
+  res.send({
+    likedUser
+  })
+}

@@ -20,6 +20,8 @@ module.exports = (sequelize, DataTypes) => {
       organizer: DataTypes.JSON,
       createdAt: DataTypes.DATE,
       updatedAt: DataTypes.DATE,
+      isLiked: DataTypes.BOOLEAN,
+      likedUser: DataTypes.ARRAY('STRING'),
       isDeleted: { type: DataTypes.BOOLEAN, defaultValue: false }
     },
     {}

@@ -60,6 +60,13 @@ module.exports = {
       isDeleted: {
         type: Sequelize.BOOLEAN
       },
+      isLiked: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
+      likedUser: {
+        type: Sequelize.ARRAY(Sequelize.STRING)
+      },
       currentMode: {
         type: Sequelize.STRING,
         defaultValue: 'draft'
