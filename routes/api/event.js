@@ -13,6 +13,7 @@ import {
   validations
 } from '../../middleware/validations/validateAll';
 import authUser from '../../middleware/users/authUser';
+import auth from '../../middleware/users/auth'
 
 const router = express.Router();
 const upload = multer();
@@ -34,6 +35,6 @@ router.patch(
   asyncHandler(authUser),
   asyncHandler(updateEvents)
 );
-router.patch('/events/:slug/like', asyncHandler(authUser), asyncHandler(likeUnlikeEvents));
+router.patch('/events/:slug/like', asyncHandler(auth), asyncHandler(likeUnlikeEvents));
 
 export default router;

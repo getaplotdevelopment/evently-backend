@@ -1,19 +1,12 @@
-import jwt from 'jsonwebtoken';
 import 'dotenv/config';
-import httpError from '../../helpers/errorsHandler/httpError';
+import models from '../../models/index';
+import authHelper from '../../helpers/authHelper';
 
-const isAuthenticated = (req, res, next) => {
-  const token = req.header('Authorization');
-  if (!token) {
-    throw new httpError(401, 'Access denied, provide a token');
-  }
-  try {
-    const decoded = jwt.verify(token.split(' ')[1], process.env.jwtSecret);
-    req.user = decoded;
-    next();
-  } catch (error) {
-    res.status(401).json({ status: 401, error });
-  }
+const { User } = models;
+
+export default async (req, res, next) => {
+  const email = await authHelper(req);
+  const anyUser = await User.findOne({ where: { email } });
+  req.user = anyUser.dataValues;
+  next();
 };
-
-export default isAuthenticated;
