@@ -77,3 +77,34 @@ export const getAllEvents = async (req, res) => {
   const { pages, count, data } = await getEvents(searchParams, searchParams);
   res.send({ status: 200, pages, count, data });
 };
+
+export const updateEvents = async (req, res) => {
+  const { email } = req.organizer;
+  const { slug } = req.params;
+  const updateTo = JSON.parse(JSON.stringify(req.body));
+  const { dataValues } = await Event.findOne({
+    where: { slug }
+  });
+
+  if (email !== dataValues.organizer.email) {
+    return res.status(403).send({
+      status: 403,
+      message: 'Unathorized to perform this action'
+    });
+  }
+
+  let eventImage = req.file ? await uploadCloudinary(req.file.buffer) : null;
+  if (req.file) {
+    updateTo.eventImage = eventImage;
+  }
+  const [result, [data]] = await Event.update(updateTo, {
+    where: { slug },
+    returning: true
+  });
+
+  res.send({
+    status: 200,
+    message: 'Successfully Updated',
+    data
+  });
+};
