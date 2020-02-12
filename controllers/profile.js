@@ -42,7 +42,7 @@ class ProfileController {
       fs.unlinkSync(path);
     }
     const profilePhoto = files.length ? urls[0].url : undefined;
-    const coverPhoto = files.length ? urls[1].url : undefined;
+    const coverPhoto = files.length > 1 ? urls[1].url : undefined;
     const { id } = req.organizer;
     const newProfile = {
       accountName,
@@ -123,7 +123,7 @@ class ProfileController {
       fs.unlinkSync(path);
     }
     const profilePhoto = files.length ? urls[0].url : undefined;
-    const coverPhoto = files.length ? urls[1].url : undefined;
+    const coverPhoto = files.length > 1 ? urls[1].url : undefined;
     const updatedProfile = {
       accountName,
       description,
