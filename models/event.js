@@ -21,13 +21,18 @@ module.exports = (sequelize, DataTypes) => {
       createdAt: DataTypes.DATE,
       updatedAt: DataTypes.DATE,
       isLiked: DataTypes.BOOLEAN,
-      likedUser: DataTypes.ARRAY('STRING'),
+      likedBy: DataTypes.ARRAY('STRING'),
       isDeleted: { type: DataTypes.BOOLEAN, defaultValue: false }
     },
     {}
   );
   Event.associate = function(models) {
     // associations can be defined here
+    Event.belongsTo(models.User, {
+      as: 'userfkey',
+      foreignKey: 'organizer',
+      onDelete: 'CASCADE'
+    });
   };
   return Event;
 };

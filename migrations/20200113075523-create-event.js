@@ -53,8 +53,8 @@ module.exports = {
         defaultValue: 0
       },
       organizer: {
-        type: Sequelize.JSON,
-        model: 'users',
+        type: Sequelize.INTEGER,
+        model: 'Users',
         key: 'email'
       },
       isDeleted: {
@@ -64,7 +64,7 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         defaultValue: false
       },
-      likedUser: {
+      likedBy: {
         type: Sequelize.ARRAY(Sequelize.STRING),
         defaultValue: []
       },

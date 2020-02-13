@@ -105,7 +105,7 @@ export const updateEvents = async (req, res) => {
   });
 };
 
-export const likeUnlikeEvents = async (req, res) => {
+export const likeUnlikeEvent = async (req, res) => {
   const { email } = req.user;
   const { slug } = req.params;
   const { dataValues } = await Event.findOne({
@@ -114,20 +114,20 @@ export const likeUnlikeEvents = async (req, res) => {
   const { likedUser } = dataValues
   console.log(likedUser);
 
-  let { likedUser, isLiked } = dataValues;
-  const isAlreadyLiked = likedUser.includes(email);
+  let { likedBy, isLiked } = dataValues;
+  const isAlreadyLiked = likedBy.includes(email);
 
   if (!isAlreadyLiked) {
-    likedUser = [...likedUser, email];
+    likedBy = [...likedBy, email];
     isLiked = true;
   } else {
-    const index = likedUser.indexOf(email);
-    likedUser.splice(index, 1);
+    const index = likedBy.indexOf(email);
+    likedBy.splice(index, 1);
     isLiked = false;
   }
 
   await Event.update(
-    { likedUser, isLiked },
+    { likedBy, isLiked },
     {
       where: { slug },
       returning: true
@@ -135,7 +135,8 @@ export const likeUnlikeEvents = async (req, res) => {
   );
 
   res.send({
+    status: 200,
     isLiked,
-    likedUser
+    likedBy
   });
 };

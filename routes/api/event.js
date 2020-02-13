@@ -5,7 +5,7 @@ import {
   getOrganizerEvents,
   getAllEvents,
   updateEvents,
-  likeUnlikeEvents
+  likeUnlikeEvent
 } from '../../controllers/event';
 import asyncHandler from '../../helpers/errorsHandler/asyncHandler';
 import {
@@ -35,6 +35,6 @@ router.patch(
   asyncHandler(authUser),
   asyncHandler(updateEvents)
 );
-router.patch('/events/:slug/like', asyncHandler(auth), asyncHandler(likeUnlikeEvents));
+router.patch('/events/:slug/like', asyncHandler(auth), asyncHandler(likeUnlikeEvent));
 
 export default router;
