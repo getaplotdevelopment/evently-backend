@@ -43,7 +43,7 @@ class ProfileController {
     }
     const profilePhoto = files.length ? urls[0].url : undefined;
     const coverPhoto = files.length > 1 ? urls[1].url : undefined;
-    const { id } = req.organizer;
+    const { id } = req.user;
     const newProfile = {
       accountName,
       description,

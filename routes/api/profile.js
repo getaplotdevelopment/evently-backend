@@ -21,7 +21,7 @@ const router = express.Router();
 router.post(
   '/',
   upload.array('profilePhotos', 2),
-  asyncHandler(authUser),
+  asyncHandler(auth),
   asyncHandler(checkProfile),
   validateProfile,
   validations,
@@ -35,7 +35,7 @@ router.get(
 router.get(
   '/:organizerId',
   asyncHandler(checkUserProfile),
-  asyncHandler(authUser),
+  asyncHandler(auth),
   asyncHandler(profile.getUserProfile)
 );
 router.put(

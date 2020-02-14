@@ -25,8 +25,8 @@ const checkUserProfile = async (req, res, next) => {
   next();
 };
 const checkProfile = async (req, res, next) => {
-  const { id } = req.organizer;
-  const profile = await OrganizerProfile.findOne({ where: { id } });
+  const { id } = req.user;
+  const profile = await OrganizerProfile.findOne({ where: { organizer: id } });
   if (profile) {
     throw new httpError(409, 'You have already a profile');
   }

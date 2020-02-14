@@ -360,7 +360,7 @@
     "/user/login/google": {
       "get": {
         "tags": ["user"],
-        "summary": "Logs user into the system",
+        "summary": "Logs user into the system via google",
         "description": "",
         "operationId": "loginUser",
         "produces": ["application/xml", "application/json"],
@@ -405,7 +405,7 @@
     "/user/login/facebook": {
       "get": {
         "tags": ["user"],
-        "summary": "Logs user into the system",
+        "summary": "Logs user into the system via facebook",
         "description": "",
         "operationId": "loginUser",
         "produces": ["application/xml", "application/json"],
