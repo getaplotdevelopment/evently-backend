@@ -32,7 +32,9 @@ class UserController {
       isAdmin,
       isOrganizer,
       isActivated,
-      deviceToken
+      deviceToken,
+      phoneNumber,
+      location
     } = req.body;
     const avatar = gravatar.url(email, {
       s: 200,
@@ -49,7 +51,9 @@ class UserController {
       isAdmin,
       isOrganizer,
       isActivated,
-      deviceToken
+      deviceToken,
+      phoneNumber,
+      location
     };
     const salt = await bcrypt.genSalt(10);
     newUser.password = await bcrypt.hash(password, salt);
@@ -73,7 +77,9 @@ class UserController {
       isAdmin: createdUser.isAdmin,
       isOrganizer: createdUser.isOrganizer,
       isActivated: createdUser.isActivated,
-      deviceToken: createdUser.deviceToken
+      deviceToken: createdUser.deviceToken,
+      phoneNumber: createdUser.phoneNumber,
+      location: createdUser.location
     };
     const tokenGenerated = generateToken(payload);
     const token = tokenGenerated.generate;

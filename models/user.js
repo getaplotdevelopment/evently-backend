@@ -11,7 +11,9 @@ module.exports = (sequelize, DataTypes) => {
       isAdmin: { type: DataTypes.BOOLEAN, defaultValue: false },
       isOrganizer: { type: DataTypes.BOOLEAN, defaultValue: false },
       isActivated: { type: DataTypes.BOOLEAN, defaultValue: false },
-      deviceToken: { type: DataTypes.STRING }
+      deviceToken: { type: DataTypes.STRING },
+      phoneNumber: { type: DataTypes.STRING },
+      location: { type: DataTypes.STRING }
     },
     {}
   );
