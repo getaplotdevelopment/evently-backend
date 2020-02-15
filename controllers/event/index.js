@@ -75,7 +75,11 @@ export const updateEvents = async (req, res) => {
   const { email } = req.organizer;
   const { slug } = req.params;
   const updateTo = JSON.parse(JSON.stringify(req.body));
-  if (email !== dataValues.organizer.email) {
+  const { dataValues } = await Event.findOne({
+    where: { slug }
+  });
+
+  if (email !== dataValues.organizer) {
     return res.status(403).send({
       status: 403,
       message: 'Unathorized to perform this action'
