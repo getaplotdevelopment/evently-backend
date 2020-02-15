@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       favoritedCount: DataTypes.INTEGER,
       eventImage: DataTypes.STRING,
       currentMode: DataTypes.STRING,
-      organizer: DataTypes.JSON,
+      organizer: DataTypes.STRING,
       createdAt: DataTypes.DATE,
       updatedAt: DataTypes.DATE,
       isLiked: DataTypes.BOOLEAN,
@@ -30,9 +30,12 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     Event.belongsTo(models.User, {
       as: 'userfkey',
-      foreignKey: 'organizer',
+      foreignKey: 'slug',
       onDelete: 'CASCADE'
     });
+    Event.hasMany(models.Likes, {
+      foreignKey: 'slug',
+    })
   };
   return Event;
 };

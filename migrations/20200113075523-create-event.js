@@ -53,7 +53,7 @@ module.exports = {
         defaultValue: 0
       },
       organizer: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         model: 'Users',
         key: 'email'
       },

@@ -3,6 +3,7 @@ import slugGenerator from '../../helpers/slugGenerator';
 import eventStatuschecker from '../../helpers/eventHelper/eventStatuschecker';
 import uploadCloudinary from '../../helpers/eventHelper/uploadCloudinary';
 import getEvents from '../../helpers/eventHelper/getEvent';
+import handleLikeUnlike from '../../helpers/eventHelper/handleLikeUnlike';
 const { Event } = models;
 
 export const createEventController = async (req, res) => {
@@ -49,15 +50,7 @@ export const createEventController = async (req, res) => {
     currentMode,
     eventType,
     location,
-    organizer: {
-      id,
-      firstName,
-      lastName,
-      userName,
-      email,
-      avatar,
-      isOrganizer
-    }
+    organizer: email
   };
   const data = await Event.create(newEvent);
   res.send({ status: 201, data });
@@ -66,7 +59,7 @@ export const createEventController = async (req, res) => {
 export const getOrganizerEvents = async (req, res) => {
   const { email } = req.organizer;
   const searchParams = req.query;
-  const filterBy = { 'organizer.email': email };
+  const filterBy = { organizer: email };
   const { pages, count, data } = await getEvents(searchParams, filterBy);
 
   res.send({ status: 200, pages, count, data });
@@ -108,35 +101,6 @@ export const updateEvents = async (req, res) => {
 export const likeUnlikeEvent = async (req, res) => {
   const { email } = req.user;
   const { slug } = req.params;
-  const { dataValues } = await Event.findOne({
-    where: { slug }
-  });
-  const { likedUser } = dataValues
-  console.log(likedUser);
-
-  let { likedBy, isLiked } = dataValues;
-  const isAlreadyLiked = likedBy.includes(email);
-
-  if (!isAlreadyLiked) {
-    likedBy = [...likedBy, email];
-    isLiked = true;
-  } else {
-    const index = likedBy.indexOf(email);
-    likedBy.splice(index, 1);
-    isLiked = false;
-  }
-
-  await Event.update(
-    { likedBy, isLiked },
-    {
-      where: { slug },
-      returning: true
-    }
-  );
-
-  res.send({
-    status: 200,
-    isLiked,
-    likedBy
-  });
+  const { data, isLiked, likedBy } = await handleLikeUnlike(email, slug);
+  res.send({ status: 200, isLiked, data, likedBy });
 };
