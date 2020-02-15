@@ -13,7 +13,7 @@ chai.should();
 let token;
 const fakeToken =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidXNlck5hbWUiOm51bGwsImF2YXRhciI6Ii8vd3d3LmdyYXZhdGFyLmNvbS9hdmF0YXIvNjU0NWMwNzRhMGUzYjBmNjRmODMzOGJjMGZkMTcyNmU_cz0yMDAmcj1wZyZkPW1tIiwiZW1haWwiOiJwcm9tb3RlckBnbWFpbC5jb20iLCJpc0FkbWluIjp0cnVlLCJpc09yZ2FuaXplciI6dHJ1ZSwiaXNBY3RpdmF0ZWQiOnRydWUsImlhdCI6MTU4MDk5MTQ2NywiZXhwIjoxNTgxMDc3ODY3fQ.B175KtpGkVMundhPk4VKApmQwx3IAqo8WHZzzD2qS7k';
-const organizerId = 5;
+const organizerId = 6;
 let userId;
 const { OrganizerProfile } = models;
 const profile = new OrganizerProfile();

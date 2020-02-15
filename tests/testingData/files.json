@@ -40,6 +40,17 @@
     "isActivated": true,
     "deviceToken": "dkfkfkskdf"
   },
+  "signupUser5": {
+    "firstName": "Ja",
+    "lastName": "eventlys",
+    "userName": "username5",
+    "email": "organizer5@gmail.com",
+    "password": "emabush2015",
+    "isAdmin": "true",
+    "isOrganizer": true,
+    "isActivated": true,
+    "deviceToken": "dkfkfkskdf"
+  },
   "invalidUser": {
     "firstName": "",
     "lastName": "",

@@ -6,7 +6,8 @@ import models from '../../models/index';
 import {
   createEvent,
   signupUser2,
-  signupUser3
+  signupUser3,
+  signupUser5
 } from '../testingData/files.json';
 
 chai.use(chaiHttp);
@@ -32,7 +33,7 @@ describe('Event', () => {
       .send(createEvent);
     res.should.have.status(200);
     res.body.should.be.a('object');
-    res.body.data.organizer.should.be.a('object');
+    res.body.data.organizer.should.be.a('string');
     res.body.data.favorited.should.be.false;
   }).timeout(10000);
 
@@ -148,9 +149,9 @@ describe('Event', () => {
   it('should allow Organizers to update only their events', async () => {
     const user2 = await chai
       .request(app)
-      .post('/api/users/login')
+      .post('/api/users')
       .set('Content-Type', 'application/json')
-      .send(signupUser3);
+      .send(signupUser5);      
 
     const user1 = await chai
       .request(app)
@@ -172,6 +173,71 @@ describe('Event', () => {
       .set({ Authorization: 'Bearer ' + user2.body.token })
       .send({description: 'description is changed'});    
     result.should.have.status(403);    
-    result.text.should.include('User role can\'t perform this action.');
+    result.text.should.include('Unathorized to perform this action');
+  }).timeout(10000);
+
+  it('should allow users to like an event for the first time', async () => {
+    const user2 = await chai
+      .request(app)
+      .post('/api/users/login')
+      .set('Content-Type', 'application/json')
+      .send(signupUser3);
+
+    const user1 = await chai
+      .request(app)
+      .post('/api/users/login')
+      .set('Content-Type', 'application/json')
+      .send(signupUser2);
+
+    const res = await chai
+      .request(app)
+      .post('/api/events')
+      .set({ Authorization: 'Bearer ' + user1.body.token })
+      .send(createEvent);
+
+    const slug = res.body.data.slug
+
+    const result = await chai
+      .request(app)
+      .patch(`/api/events/${slug}/like`)
+      .set({ Authorization: 'Bearer ' + user2.body.token })
+    result.should.have.status(200);    
+    result.body.isLiked.should.be.a('boolean');
+    result.body.likedBy.should.be.a('array');
+  });
+
+  it('should allow users to update the event like', async () => {
+    const user2 = await chai
+      .request(app)
+      .post('/api/users/login')
+      .set('Content-Type', 'application/json')
+      .send(signupUser3);
+
+    const user1 = await chai
+      .request(app)
+      .post('/api/users/login')
+      .set('Content-Type', 'application/json')
+      .send(signupUser2);
+
+    const res = await chai
+      .request(app)
+      .post('/api/events')
+      .set({ Authorization: 'Bearer ' + user1.body.token })
+      .send(createEvent);
+
+    const slug = res.body.data.slug
+
+    await chai
+      .request(app)
+      .patch(`/api/events/${slug}/like`)
+      .set({ Authorization: 'Bearer ' + user2.body.token })
+
+    const result = await chai
+      .request(app)
+      .patch(`/api/events/${slug}/like`)
+      .set({ Authorization: 'Bearer ' + user2.body.token })
+    result.should.have.status(200);    
+    result.body.isLiked.should.be.a('boolean');
+    result.body.likedBy.should.be.a('array');
   });
 });
