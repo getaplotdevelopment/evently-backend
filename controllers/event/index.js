@@ -113,7 +113,18 @@ export const likedEvent = async (req, res) => {
   const { email } = req.user;
   const searchParams = req.query;
   searchParams.sort = 'updatedAt:desc'  
-  const filterBy = { email };
-  const { pages, count, data } = await getEvents(searchParams, filterBy, Likes);
+  const filterBy = { email, isLiked: true };
+  const { pages, count, data:liked } = await getEvents(searchParams, filterBy, Likes);
+  const jsonObj = JSON.parse(JSON.stringify(liked))
+
+  const mapResponse = Promise.all(jsonObj.map(async(item) => {
+  const {slug } = item
+  const event = await Event.findAll({
+    where: {slug}
+  })
+  item.event = event[0]
+  return item
+  }))
+  const data = await mapResponse
   res.send({ status: 200, pages, count, data });
 }
