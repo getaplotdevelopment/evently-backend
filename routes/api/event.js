@@ -4,7 +4,8 @@ import {
   createEventController,
   getOrganizerEvents,
   getAllEvents,
-  updateEvents
+  updateEvents,
+  likeUnlikeEvent
 } from '../../controllers/event';
 import asyncHandler from '../../helpers/errorsHandler/asyncHandler';
 import {
@@ -12,6 +13,7 @@ import {
   validations
 } from '../../middleware/validations/validateAll';
 import authUser from '../../middleware/users/authUser';
+import auth from '../../middleware/users/auth'
 
 const router = express.Router();
 const upload = multer();
@@ -33,5 +35,6 @@ router.patch(
   asyncHandler(authUser),
   asyncHandler(updateEvents)
 );
+router.patch('/events/:slug/like', asyncHandler(auth), asyncHandler(likeUnlikeEvent));
 
 export default router;

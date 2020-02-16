@@ -53,12 +53,20 @@ module.exports = {
         defaultValue: 0
       },
       organizer: {
-        type: Sequelize.JSON,
-        model: 'users',
+        type: Sequelize.STRING,
+        model: 'Users',
         key: 'email'
       },
       isDeleted: {
         type: Sequelize.BOOLEAN
+      },
+      isLiked: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
+      likedBy: {
+        type: Sequelize.ARRAY(Sequelize.STRING),
+        defaultValue: []
       },
       currentMode: {
         type: Sequelize.STRING,

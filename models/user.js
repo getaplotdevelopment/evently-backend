@@ -20,6 +20,13 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'organizer',
       allowNull: false
     });
+    User.hasMany(models.Event, {
+      foreignKey: 'organizer',
+      allowNull: false
+    });
+    User.hasMany(models.Likes, {
+      foreignKey: 'email',
+    })
   };
   return User;
 };

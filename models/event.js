@@ -17,15 +17,25 @@ module.exports = (sequelize, DataTypes) => {
       favoritedCount: DataTypes.INTEGER,
       eventImage: DataTypes.STRING,
       currentMode: DataTypes.STRING,
-      organizer: DataTypes.JSON,
+      organizer: DataTypes.STRING,
       createdAt: DataTypes.DATE,
       updatedAt: DataTypes.DATE,
+      isLiked: DataTypes.BOOLEAN,
+      likedBy: DataTypes.ARRAY('STRING'),
       isDeleted: { type: DataTypes.BOOLEAN, defaultValue: false }
     },
     {}
   );
   Event.associate = function(models) {
     // associations can be defined here
+    Event.belongsTo(models.User, {
+      as: 'userfkey',
+      foreignKey: 'slug',
+      onDelete: 'CASCADE'
+    });
+    Event.hasMany(models.Likes, {
+      foreignKey: 'slug',
+    })
   };
   return Event;
 };
