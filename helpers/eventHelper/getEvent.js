@@ -1,7 +1,7 @@
 import models from '../../models';
-const { Event } = models;
+const { Event, Likes } = models;
 
-export default async (searchParams, filterBy) => {
+export default async (searchParams, filterBy, model) => {
   const limit = 25;
   const currentPage = searchParams.page || 1;
   const offset = limit * currentPage - limit;
@@ -17,8 +17,9 @@ export default async (searchParams, filterBy) => {
   }
 
   delete searchParams.page;
-  delete searchParams.sort;
-  const { count: countAll, rows: data } = await Event.findAndCountAll({
+  delete searchParams.sort;  
+  
+  const { count: countAll, rows: data } = await model.findAndCountAll({
     where: filterBy,
     limit,
     offset,
