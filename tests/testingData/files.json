@@ -14,15 +14,25 @@
     "email": "geta@gmail.com",
     "password": "emabush2015",
     "isAdmin": "true",
-    "isOrganizer": true,
-    "isActivated": true,
-    "deviceToken": "dkfkfkskdf"
+    "deviceToken": "dkfkfkskdf",
+    "role": 2
   },
   "signupUser4": {
     "firstName": "Jaman",
     "lastName": "evently",
     "userName": "user",
     "email": "geta01@gmail.com",
+    "password": "emabush2015",
+    "isAdmin": "true",
+    "isOrganizer": true,
+    "isActivated": true,
+    "deviceToken": "dkfkfkskdf"
+  },
+  "signupUser5": {
+    "firstName": "Jaman",
+    "lastName": "evently",
+    "userName": "user",
+    "email": "geta02@gmail.com",
     "password": "emabush2015",
     "isAdmin": "true",
     "isOrganizer": true,

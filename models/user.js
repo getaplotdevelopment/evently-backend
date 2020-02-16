@@ -8,14 +8,23 @@ module.exports = (sequelize, DataTypes) => {
       email: { type: DataTypes.STRING },
       password: { type: DataTypes.STRING },
       avatar: { type: DataTypes.STRING },
-      isAdmin: { type: DataTypes.BOOLEAN, defaultValue: false },
-      isOrganizer: { type: DataTypes.BOOLEAN, defaultValue: false },
       isActivated: { type: DataTypes.BOOLEAN, defaultValue: false },
       deviceToken: { type: DataTypes.STRING },
       phoneNumber: { type: DataTypes.STRING },
-      location: { type: DataTypes.STRING }
+      location: { type: DataTypes.STRING },
+      role: {
+        type: DataTypes.INTEGER,
+        references: { model: 'Roles', key: 'id' }
+      }
     },
-    {}
+    {},
+    {
+      hooks: {
+        afterCreate(user) {
+          return user.reload();
+        }
+      }
+    }
   );
   User.associate = function(models) {
     User.hasMany(models.OrganizerProfile, {
@@ -27,8 +36,13 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     });
     User.hasMany(models.Likes, {
-      foreignKey: 'email',
-    })
+      foreignKey: 'email'
+    });
+    User.belongsTo(models.Roles, {
+      as: 'roles',
+      foreignKey: 'role',
+      onDelete: 'CASCADE'
+    });
   };
   return User;
 };

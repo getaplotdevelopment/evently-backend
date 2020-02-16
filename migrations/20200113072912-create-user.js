@@ -25,8 +25,6 @@ module.exports = {
       avatar: {
         type: Sequelize.STRING
       },
-      isAdmin: { type: Sequelize.BOOLEAN },
-      isOrganizer: { type: Sequelize.BOOLEAN },
       isActivated: { type: Sequelize.BOOLEAN },
       deviceToken: { type: Sequelize.STRING },
       createdAt: {

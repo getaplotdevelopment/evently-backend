@@ -41,7 +41,7 @@ router.get(
 router.put(
   '/',
   upload.array('profilePhotos', 2),
-  asyncHandler(authUser),
+  asyncHandler(auth),
   asyncHandler(profile.updateYourProfile)
 );
 

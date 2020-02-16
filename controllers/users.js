@@ -8,7 +8,7 @@ import generateToken from '../helpers/generateToken/generateToken';
 import sendEmail from '../helpers/sendEmail/callMailer';
 
 dotenv.config();
-const { User } = models;
+const { User, Roles } = models;
 const { secretKey } = process.env;
 /**
  * @user Controller
@@ -29,18 +29,18 @@ class UserController {
       userName,
       email,
       password,
-      isAdmin,
-      isOrganizer,
       isActivated,
       deviceToken,
       phoneNumber,
       location
     } = req.body;
-    const avatar = gravatar.url(email, {
+    const gavatar = gravatar.url(email, {
       s: 200,
       r: 'pg',
       d: 'mm'
     });
+    const avatar = gavatar.slice(2, gavatar.length);
+    const role = req.body.role ? req.body.role : 1;
     const newUser = {
       firstName,
       lastName,
@@ -48,25 +48,29 @@ class UserController {
       email,
       avatar,
       password,
-      isAdmin,
-      isOrganizer,
       isActivated,
       deviceToken,
       phoneNumber,
-      location
+      location,
+      role
     };
     const salt = await bcrypt.genSalt(10);
     newUser.password = await bcrypt.hash(password, salt);
     const { dataValues: createdUser } = await User.create(newUser);
+    const assignedRole = await Roles.findOne({
+      where: { id: createdUser.role }
+    });
+    const { designation } = assignedRole.dataValues;
+
     const payload = {
       id: createdUser.id,
       email: createdUser.email,
       userName: createdUser.userName,
       avatar: createdUser.avatar,
-      isAdmin: createdUser.isAdmin,
-      isOrganizer: createdUser.isOrganizer,
-      isActivated: createdUser.isActivated
+      isActivated: createdUser.isActivated,
+      role: designation
     };
+
     const user = {
       id: createdUser.id,
       firstName: createdUser.firstName,
@@ -74,12 +78,11 @@ class UserController {
       userName: createdUser.userName,
       email: createdUser.email,
       avatar: createdUser.avatar,
-      isAdmin: createdUser.isAdmin,
-      isOrganizer: createdUser.isOrganizer,
       isActivated: createdUser.isActivated,
       deviceToken: createdUser.deviceToken,
       phoneNumber: createdUser.phoneNumber,
-      location: createdUser.location
+      location: createdUser.location,
+      role: designation
     };
     const tokenGenerated = generateToken(payload);
     const token = tokenGenerated.generate;
@@ -97,6 +100,12 @@ class UserController {
     const { email } = req.body;
     const user = await User.findOne({
       where: { email },
+      include: [
+        {
+          model: Roles,
+          as: 'roles'
+        }
+      ],
       attributes: [
         'id',
         'firstName',
@@ -104,20 +113,22 @@ class UserController {
         'userName',
         'email',
         'avatar',
-        'isAdmin',
         'isActivated',
-        'isOrganizer'
+        'role'
       ]
     });
-    const { id, userName, avatar, isAdmin, isOrganizer, isActivated } = user;
+    const assignedRole = await Roles.findOne({
+      where: { id: user.role }
+    });
+    const { designation } = assignedRole.dataValues;
+    const { id, userName, avatar, isActivated } = user;
     const payload = {
       id,
       userName,
       avatar,
       email: user.email,
-      isAdmin,
-      isOrganizer,
-      isActivated
+      isActivated,
+      designation
     };
     const generatedToken = generateToken(payload);
     const token = generatedToken.generate;
