@@ -18,7 +18,7 @@ const router = express.Router();
 
 router.post(
   '/',
-  auth,
+  asyncHandler(auth),
   validateRole,
   validations,
   asyncHandler(checkRoleDesignation),

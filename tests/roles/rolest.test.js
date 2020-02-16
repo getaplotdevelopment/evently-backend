@@ -4,7 +4,7 @@ import chaitHttp from 'chai-http';
 import app from '../../index';
 import models from '../../models/index';
 
-import { signupUser5 } from '../testingData/files.json';
+import { signupUser6 } from '../testingData/files.json';
 
 chai.use(chaitHttp);
 chai.should();
@@ -16,9 +16,9 @@ let token;
 let roleId;
 const wrongRoleId = 50;
 
-before(async () => {
-  await roles.destroy({ where: {}, truncate: true });
-});
+// before(async () => {
+//   await roles.destroy({ where: {}, truncate: true });
+// });
 
 describe('roles', () => {
   it('should create the roles', async () => {
@@ -26,11 +26,11 @@ describe('roles', () => {
       .request(app)
       .post('/api/users')
       .set('Content-Type', 'application/json')
-      .send(signupUser5);
+      .send(signupUser6);
     token = res.body.token;
 
     const createRoles = {
-      designation: 'USER'
+      designation: 'USERS'
     };
     const response = await chai
       .request(app)

@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import 'dotenv/config';
-import httpError from '../helpers/errorsHandler/httpError';
+import httpError from './errorsHandler/httpError';
 
 export default async req => {
   const token = req.header('Authorization');

@@ -5,7 +5,8 @@
     "userName": "user",
     "email": "getaplotdev@gmail.com",
     "password": "emabush2015",
-    "deviceToken": "dkfkfkskdf"
+    "deviceToken": "dkfkfkskdf",
+    "role": 1
   },
   "signupUser2": {
     "firstName": "Jaman",
@@ -13,7 +14,6 @@
     "userName": "user",
     "email": "geta@gmail.com",
     "password": "emabush2015",
-    "isAdmin": "true",
     "deviceToken": "dkfkfkskdf",
     "role": 2
   },
@@ -23,21 +23,19 @@
     "userName": "user",
     "email": "geta01@gmail.com",
     "password": "emabush2015",
-    "isAdmin": "true",
-    "isOrganizer": true,
     "isActivated": true,
-    "deviceToken": "dkfkfkskdf"
+    "deviceToken": "dkfkfkskdf",
+    "role": 2
   },
-  "signupUser5": {
+  "signupUser6": {
     "firstName": "Jaman",
     "lastName": "evently",
     "userName": "user",
     "email": "geta02@gmail.com",
     "password": "emabush2015",
-    "isAdmin": "true",
-    "isOrganizer": true,
     "isActivated": true,
-    "deviceToken": "dkfkfkskdf"
+    "deviceToken": "dkfkfkskdf",
+    "role": 2
   },
   "signupUser3": {
     "firstName": "Jaman",
@@ -45,10 +43,9 @@
     "userName": "user",
     "email": "notorganizer@gmail.com",
     "password": "emabush2015",
-    "isAdmin": "true",
-    "isOrganizer": false,
     "isActivated": true,
-    "deviceToken": "dkfkfkskdf"
+    "deviceToken": "dkfkfkskdf",
+    "role": 1
   },
   "signupUser5": {
     "firstName": "Ja",
@@ -56,10 +53,9 @@
     "userName": "username5",
     "email": "organizer5@gmail.com",
     "password": "emabush2015",
-    "isAdmin": "true",
-    "isOrganizer": true,
     "isActivated": true,
-    "deviceToken": "dkfkfkskdf"
+    "deviceToken": "dkfkfkskdf",
+    "role": 2
   },
   "invalidUser": {
     "firstName": "",
@@ -67,10 +63,9 @@
     "userName": "",
     "email": "getaplotdev",
     "password": "emabush2015",
-    "isAdmin": "true",
-    "isOrganizer": false,
     "isActivated": true,
-    "deviceToken": "dkfkfkskdf"
+    "deviceToken": "dkfkfkskdf",
+    "role": 1
   },
   "existingUser": {
     "firstName": "Jaman",
@@ -78,10 +73,9 @@
     "userName": "user",
     "email": "getaplotdev@gmail.com",
     "password": "emabush2015",
-    "isAdmin": "true",
-    "isOrganizer": false,
     "isActivated": true,
-    "deviceToken": "dkfkfkskdf"
+    "deviceToken": "dkfkfkskdf",
+    "role": 1
   },
   "loginUser": {
     "email": "getaplotdev@gmail.com",
