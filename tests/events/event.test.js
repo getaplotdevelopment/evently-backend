@@ -240,4 +240,39 @@ describe('Event', () => {
     result.body.isLiked.should.be.a('boolean');
     result.body.likedBy.should.be.a('array');
   });
+
+  it('should allow users retrieve their liked events', async () => {
+    const user2 = await chai
+      .request(app)
+      .post('/api/users/login')
+      .set('Content-Type', 'application/json')
+      .send(signupUser3);
+
+    const user1 = await chai
+      .request(app)
+      .post('/api/users/login')
+      .set('Content-Type', 'application/json')
+      .send(signupUser2);
+
+    const res = await chai
+      .request(app)
+      .post('/api/events')
+      .set({ Authorization: 'Bearer ' + user1.body.token })
+      .send(createEvent);
+
+    const slug = res.body.data.slug
+
+    await chai
+      .request(app)
+      .patch(`/api/events/${slug}/like`)
+      .set({ Authorization: 'Bearer ' + user2.body.token })
+
+    const result = await chai
+      .request(app)
+      .get(`/api/events/liked`)
+      .set({ Authorization: 'Bearer ' + user2.body.token })
+    result.should.have.status(200);    
+    result.body.count.should.equal(1);
+    result.body.data.should.be.a('array');
+  });
 });
