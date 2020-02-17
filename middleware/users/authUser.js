@@ -2,13 +2,13 @@ import jwt from 'jsonwebtoken';
 import 'dotenv/config';
 import httpError from '../../helpers/errorsHandler/httpError';
 import models from '../../models/index';
-import authHelper from '../../helpers/authHelper'
+import authHelper from '../../helpers/authHelper';
 
 const { User } = models;
 
 export default async (req, res, next) => {
-  const email = await authHelper(req)
-  const organizer = await User.findOne({ where: { email, isOrganizer: true } });
+  const email = await authHelper(req);
+  const organizer = await User.findOne({ where: { email, role: 2 } });
   if (!organizer) {
     throw new httpError(
       403,

@@ -6,7 +6,7 @@ import cloudinary from '../helpers/fileUploadConfig/cloudinary';
 import httError from '../helpers/errorsHandler/httpError';
 
 dotenv.config();
-const { OrganizerProfile } = models;
+const { OrganizerProfile, User } = models;
 // const { User } = models;
 /**
  * @user Controller
@@ -42,8 +42,8 @@ class ProfileController {
       fs.unlinkSync(path);
     }
     const profilePhoto = files.length ? urls[0].url : undefined;
-    const coverPhoto = files.length ? urls[1].url : undefined;
-    const { id } = req.organizer;
+    const coverPhoto = files.length > 1 ? urls[1].url : undefined;
+    const { id } = req.user;
     const newProfile = {
       accountName,
       description,
@@ -57,8 +57,19 @@ class ProfileController {
       social,
       organizer: id
     };
+    const role = 2;
     const { dataValues: createdProfile } = await OrganizerProfile.create(
       newProfile
+    );
+    await User.update(
+      {
+        role
+      },
+      {
+        where: {
+          id
+        }
+      }
     );
     res.status(201).json({ status: 201, createdProfile });
   }
@@ -101,7 +112,7 @@ class ProfileController {
    * @returns {Object} Response
    */
   async updateYourProfile(req, res) {
-    const { id } = req.organizer;
+    const { id } = req.user;
     const {
       accountName,
       description,
@@ -123,7 +134,7 @@ class ProfileController {
       fs.unlinkSync(path);
     }
     const profilePhoto = files.length ? urls[0].url : undefined;
-    const coverPhoto = files.length ? urls[1].url : undefined;
+    const coverPhoto = files.length > 1 ? urls[1].url : undefined;
     const updatedProfile = {
       accountName,
       description,

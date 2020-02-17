@@ -10,10 +10,10 @@ export default async (searchParams, filterBy, model) => {
   if (searchParams.sort) {
     const sort = searchParams.sort.split(',');
     sort.forEach(item => {
-        const splitSort = item.split(':');
-        splitSort[1] = splitSort[1].toUpperCase();
-        order.push(splitSort);
-      });
+      const splitSort = item.split(':');
+      splitSort[1] = splitSort[1].toUpperCase();
+      order.push(splitSort);
+    });
   }
 
   delete searchParams.page;

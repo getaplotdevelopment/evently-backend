@@ -71,6 +71,11 @@ const validateEvent = [
     .not()
     .isEmpty()
 ];
+const validateRole = [
+  check('designation', 'Designation is required')
+    .not()
+    .isEmpty()
+];
 const validations = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -86,5 +91,6 @@ export {
   validateProfile,
   validatePassword,
   validateEvent,
-  validateChangePassword
+  validateChangePassword,
+  validateRole
 };

@@ -8,7 +8,10 @@ import {
   validations
 } from '../../middleware/validations/validateAll';
 import upload from '../../helpers/fileUploadConfig/multer';
-import { checkUserProfile } from '../../middleware/users/checkUser';
+import {
+  checkUserProfile,
+  checkProfile
+} from '../../middleware/users/checkUser';
 
 const profile = new Profile();
 
@@ -18,7 +21,8 @@ const router = express.Router();
 router.post(
   '/',
   upload.array('profilePhotos', 2),
-  asyncHandler(authUser),
+  asyncHandler(auth),
+  asyncHandler(checkProfile),
   validateProfile,
   validations,
   asyncHandler(profile.createProfile)
@@ -31,13 +35,13 @@ router.get(
 router.get(
   '/:organizerId',
   asyncHandler(checkUserProfile),
-  asyncHandler(authUser),
+  asyncHandler(auth),
   asyncHandler(profile.getUserProfile)
 );
 router.put(
   '/',
   upload.array('profilePhotos', 2),
-  asyncHandler(authUser),
+  asyncHandler(auth),
   asyncHandler(profile.updateYourProfile)
 );
 
