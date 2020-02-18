@@ -63,7 +63,7 @@ class RolesController {
     const updatedRole = await Roles.update(updateRole, {
       where: { id: roleId }
     });
-    res.status(200).json({ status: 200, updatedRole });
+    res.status(200).json({ status: 200, updateRole });
   }
 }
 

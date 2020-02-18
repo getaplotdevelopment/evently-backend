@@ -6,14 +6,15 @@ const { User } = models;
 
 export default async (req, res, next) => {
   const email = await authHelper(req);
-  const organizer = await User.findOne({ where: { email, role: 2 } });
-  if (!organizer) {
+  const superUser = await User.findOne({ where: { email, role: 3 } });
+  console.log('superUser', superUser);
+  if (!superUser) {
     throw new httpError(
       403,
       "Un-authorized, User role can't perform this action."
     );
   }
-  const { dataValues } = organizer;
-  req.organizer = dataValues;
+  const { dataValues } = superUser;
+  req.superUser = dataValues;
   next();
 };
