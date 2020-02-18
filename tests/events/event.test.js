@@ -146,6 +146,30 @@ describe('Event', () => {
     result.text.should.include('description is changed');
   }).timeout(10000);
 
+  it('should allow organizers to update events with validate currentMode', async () => {
+    const response = await chai
+      .request(app)
+      .post('/api/users/login')
+      .set('Content-Type', 'application/json')
+      .send(signupUser2);
+
+    const res = await chai
+      .request(app)
+      .post('/api/events')
+      .set({ Authorization: 'Bearer ' + response.body.token })
+      .send(createEvent);
+
+    const slug = res.body.data.slug
+    
+    const result = await chai
+      .request(app)
+      .patch(`/api/events/${slug}`)
+      .set({ Authorization: 'Bearer ' + response.body.token })
+      .send({currentMode: "invalid"});    
+    result.should.have.status(422);
+    result.text.should.include("Invalid eventType, try any from this array ['draft','published','cancelled','unpublished']");
+  }).timeout(10000);
+
   it('should allow Organizers to update only their events', async () => {
     const user2 = await chai
       .request(app)
