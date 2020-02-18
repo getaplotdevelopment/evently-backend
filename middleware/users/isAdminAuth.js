@@ -7,7 +7,6 @@ const { User } = models;
 export default async (req, res, next) => {
   const email = await authHelper(req);
   const superUser = await User.findOne({ where: { email, role: 3 } });
-  console.log('superUser', superUser);
   if (!superUser) {
     throw new httpError(
       403,
