@@ -76,6 +76,22 @@ const validateRole = [
     .not()
     .isEmpty()
 ];
+const validateTicketCategory = [
+  check('designation', 'Ticket category designation is required')
+    .not()
+    .isEmpty()
+];
+const validateTicket = [
+  check('price', 'Price is required')
+    .not()
+    .isEmpty(),
+  check('number', 'Number of ticket is required')
+    .not()
+    .isEmpty(),
+  check('category', 'Ticker category is required')
+    .not()
+    .isEmpty()
+];
 const validations = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -92,5 +108,7 @@ export {
   validatePassword,
   validateEvent,
   validateChangePassword,
-  validateRole
+  validateRole,
+  validateTicketCategory,
+  validateTicket
 };

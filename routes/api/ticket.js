@@ -1,0 +1,53 @@
+import express from 'express';
+import asyncHandler from '../../helpers/errorsHandler/asyncHandler';
+import authUser from '../../middleware/users/authUser';
+import auth from '../../middleware/users/auth';
+import Ticket from '../../controllers/ticket';
+import {
+  validations,
+  validateTicket
+} from '../../middleware/validations/validateAll';
+import { checkEvent } from '../../middleware/event/checkEvent';
+import {
+  checkTicketExist,
+  checkTicket,
+  checkAccessTicket
+} from '../../middleware/tickets/ticket';
+
+const ticket = new Ticket();
+
+const router = express.Router();
+
+router.post(
+  '/:slug',
+  asyncHandler(authUser),
+  asyncHandler(checkTicketExist),
+  validateTicket,
+  validations,
+  asyncHandler(checkEvent),
+  asyncHandler(ticket.createTicket)
+);
+router.get('/', asyncHandler(auth), asyncHandler(ticket.getAllTicket));
+router.get(
+  '/:slug',
+  asyncHandler(checkEvent),
+  asyncHandler(auth),
+  asyncHandler(ticket.getAllTicketByEvent)
+);
+router.get(
+  '/:slug/:ticketId',
+  asyncHandler(auth),
+  asyncHandler(checkEvent),
+  asyncHandler(checkTicket),
+  asyncHandler(ticket.getOneTicket)
+);
+router.put(
+  '/:slug/:ticketId',
+  asyncHandler(authUser),
+  asyncHandler(checkEvent),
+  asyncHandler(checkTicket),
+  asyncHandler(checkAccessTicket),
+  asyncHandler(ticket.updateTicket)
+);
+
+export default router;

@@ -17,8 +17,8 @@ export default async (searchParams, filterBy, model) => {
   }
 
   delete searchParams.page;
-  delete searchParams.sort;  
-  
+  delete searchParams.sort;
+
   const { count: countAll, rows: data } = await model.findAndCountAll({
     where: filterBy,
     limit,

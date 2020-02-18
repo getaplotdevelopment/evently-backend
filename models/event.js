@@ -2,7 +2,12 @@ module.exports = (sequelize, DataTypes) => {
   const Event = sequelize.define(
     'Event',
     {
-      slug: DataTypes.STRING,
+      slug: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        primaryKey: true,
+        autoIncrement: true
+      },
       title: DataTypes.STRING,
       description: DataTypes.STRING,
       tagList: DataTypes.ARRAY('STRING'),
@@ -34,8 +39,12 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE'
     });
     Event.hasMany(models.Likes, {
-      foreignKey: 'slug',
-    })
+      foreignKey: 'slug'
+    });
+    Event.hasMany(models.Ticket, {
+      foreignKey: 'event',
+      allowNull: false
+    });
   };
   return Event;
 };
