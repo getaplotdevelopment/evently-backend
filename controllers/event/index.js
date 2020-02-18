@@ -75,6 +75,9 @@ export const updateEvents = async (req, res) => {
   const { email } = req.organizer;
   const { slug } = req.params;
   const updateTo = JSON.parse(JSON.stringify(req.body));
+  if (updateTo.currentMode) {
+    await eventStatuschecker(updateTo.currentMode.split(','));
+  }
   const { dataValues } = await Event.findOne({
     where: { slug }
   });

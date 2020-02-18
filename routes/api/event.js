@@ -39,5 +39,4 @@ router.patch(
 router.patch('/events/:slug/like', asyncHandler(auth), asyncHandler(likeUnlikeEvent));
 router.get('/events/liked', asyncHandler(auth), asyncHandler(likedEvent));
 
-
 export default router;
