@@ -28,7 +28,7 @@ chai.use(chaiHttp);
 chai.should();
 
 before(async () => {
-  await User.destroy({ where: {}, truncate: true });
+  // await User.destroy({ where: {}, truncate: true });
   mockery.enable({
     warnOnUnregistered: false
   });

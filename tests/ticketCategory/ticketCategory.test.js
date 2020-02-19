@@ -1,83 +1,82 @@
 /* eslint-disable no-shadow */
 import chai from 'chai';
-import chaitHttp from 'chai-http';
+import chaiHttp from 'chai-http';
 import app from '../../index';
-import models from '../../models/index';
 
-import { signupUser6 } from '../testingData/files.json';
+import { superUser } from '../testingData/files.json';
 
-chai.use(chaitHttp);
+chai.use(chaiHttp);
 chai.should();
 
 let token;
-let roleId;
-const wrongRoleId = 50;
+let ticketCategoryId;
+const wrongTicketCategoryId = 50;
 
-describe('roles', () => {
-  it('should create the roles', async () => {
+describe('TicketCategory', () => {
+  it('should create the TicketCategory', async () => {
     const res = await chai
       .request(app)
       .post('/api/users')
       .set('Content-Type', 'application/json')
-      .send(signupUser6);
+      .send(superUser);
     token = res.body.token;
 
-    const createRoles = {
-      designation: 'USERS'
+    const createTicketCategory = {
+      designation: 'VIP'
     };
     const response = await chai
       .request(app)
-      .post('/api/roles')
+      .post('/api/ticket/category')
       .set('Authorization', `Bearer ${token}`)
-      .send(createRoles);
+      .send(createTicketCategory);
     response.should.have.status(201);
     response.body.should.be.a('object');
-    roleId = response.body.createdRole.id;
+    ticketCategoryId = response.body.createdTicketCategory.id;
   }).timeout(10000);
-  it("should not create a with an existing role's designation", async () => {
-    const createRole = {
-      designation: 'USER'
+  it('should not create a redundant ticket category', async () => {
+    const createTicketCategory = {
+      designation: 'VIP'
     };
     const res = await chai
       .request(app)
-      .post('/api/roles')
+      .post('/api/ticket/category')
       .set('Authorization', `Bearer ${token}`)
-      .send(createRole);
+      .send(createTicketCategory);
     res.should.have.status(400);
     res.body.should.be.a('object');
   });
-  it('should update a roles', async () => {
-    const updatedRoles = {
-      designation: 'ORGANIZER'
+  it('should update a TicketCategory', async () => {
+    const updatedTicketCategory = {
+      designation: 'VVIP'
     };
     const res = await chai
       .request(app)
-      .put(`/api/roles/${roleId}`)
+      .put(`/api/ticket/category/${ticketCategoryId}`)
       .set('Authorization', `Bearer ${token}`)
-      .send(updatedRoles);
+      .send(updatedTicketCategory);
     res.should.have.status(200);
     res.body.should.be.a('object');
   });
-  it('should get one role', async () => {
+  it('should get one ticket category', async () => {
     const res = await chai
       .request(app)
-      .get(`/api/roles/${roleId}`)
+      .get(`/api/ticket/category/${ticketCategoryId}`)
       .set('Authorization', `Bearer ${token}`);
     res.should.have.status(200);
     res.body.should.be.a('object');
   });
-  it('should not get an unexisting role', async () => {
+  it('should not get an unknown ticket category', async () => {
     const res = await chai
       .request(app)
-      .get(`/api/roles/${wrongRoleId}`)
+      .get(`/api/ticket/category/${wrongTicketCategoryId}`)
       .set('Authorization', `Bearer ${token}`);
     res.should.have.status(404);
     res.body.should.be.a('object');
   });
-  it('should get roles', async () => {
+  it('should get all TicketCategory', async () => {
     const res = await chai
       .request(app)
-      .get('/api/roles')
+      .get('/api/ticket/category')
       .set('Authorization', `Bearer ${token}`);
     res.should.have.status(200);
     res.body.should.be.a('object');

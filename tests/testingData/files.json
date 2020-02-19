@@ -37,6 +37,16 @@
     "deviceToken": "dkfkfkskdf",
     "role": 2
   },
+  "superUser": {
+    "firstName": "Jaman",
+    "lastName": "evently",
+    "userName": "user",
+    "email": "superuser@gmail.com",
+    "password": "emabush2015",
+    "isActivated": true,
+    "deviceToken": "dkfkfkskdf",
+    "role": 3
+  },
   "signupUser3": {
     "firstName": "Jaman",
     "lastName": "evently",
@@ -79,6 +89,10 @@
   },
   "loginUser": {
     "email": "getaplotdev@gmail.com",
+    "password": "emabush2015"
+  },
+  "loginOrganizer": {
+    "email": "geta02@gmail.com",
     "password": "emabush2015"
   },
   "invalidLoginUser": {
