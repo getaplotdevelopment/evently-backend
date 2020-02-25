@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import models from '../models/index';
 
 const { TicketCategory, User } = models;
@@ -16,9 +17,12 @@ class TicketCategoryController {
    */
   async createTicketCategory(req, res) {
     const { designation } = req.body;
-    const { id } = req.user;
+    const { id, role } = req.user;
+    const isDefault = role === 3 ? true : false;
+
     const newTicketCategory = {
       designation,
+      isDefault,
       user: id
     };
 
@@ -30,6 +34,7 @@ class TicketCategoryController {
 
     const category = {
       id: createdTicketCategory.id,
+      isDefault: createdTicketCategory.isDefault,
       designation: createdTicketCategory.designation,
       user: {
         id: user.id,
@@ -48,7 +53,10 @@ class TicketCategoryController {
    * @returns {Object} Response
    */
   async getAllTicketCategory(req, res) {
-    const ticketCategory = await TicketCategory.findAll({});
+    const { id } = req.organizer;
+    const ticketCategory = await TicketCategory.findAll({
+      where: { [Op.or]: [{ user: id }, { isDefault: true }] }
+    });
     res.status(200).json({ status: 200, ticketCategory });
   }
 

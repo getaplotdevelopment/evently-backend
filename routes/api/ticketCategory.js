@@ -27,7 +27,7 @@ router.post(
 );
 router.get(
   '/',
-  asyncHandler(auth),
+  asyncHandler(authUser),
   asyncHandler(category.getAllTicketCategory)
 );
 router.get(

@@ -3,6 +3,10 @@ module.exports = (sequelize, DataTypes) => {
     'TicketCategory',
     {
       designation: DataTypes.STRING,
+      isDefault: {
+        type: DataTypes.BOOLEAN,
+        default: false
+      },
       user: {
         type: DataTypes.INTEGER,
         references: { model: 'User', key: 'id' }

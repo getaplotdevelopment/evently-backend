@@ -21,7 +21,9 @@ export const createEventController = async (req, res) => {
     eventType,
     location
   } = req.body;
-  let eventImage = req.file ? await uploadCloudinary(req.file.buffer) : null;
+  let eventImage = req.file
+    ? await uploadCloudinary(req.file.buffer)
+    : req.body.eventImage;
   if (currentMode) {
     await eventStatuschecker(currentMode.split(','));
   }

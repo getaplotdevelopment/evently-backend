@@ -1,4 +1,3 @@
-'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('TicketCategories', {
@@ -10,6 +9,9 @@ module.exports = {
       },
       designation: {
         type: Sequelize.STRING
+      },
+      isDefault: {
+        type: Sequelize.BOOLEAN
       },
       createdAt: {
         allowNull: false,

@@ -1,5 +1,5 @@
 import models from '../../models';
-const { Event, Likes } = models;
+const { Event, Likes, Ticket } = models;
 
 export default async (searchParams, filterBy, model) => {
   const limit = 25;
@@ -23,7 +23,12 @@ export default async (searchParams, filterBy, model) => {
     where: filterBy,
     limit,
     offset,
-    order
+    order,
+    include: [
+      {
+        model: Ticket
+      }
+    ]
   });
   const pages = Math.ceil(countAll / limit);
   const count = data.length;

@@ -37,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
     });
     User.hasMany(models.TicketCategory, {
       foreignKey: 'user',
-      allowNull: false
+      allowNull: true
     });
     User.belongsTo(models.Roles, {
       as: 'roles',
