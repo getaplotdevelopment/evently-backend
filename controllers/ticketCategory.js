@@ -1,6 +1,6 @@
 import models from '../models/index';
 
-const { TicketCategory } = models;
+const { TicketCategory, User } = models;
 
 /**
  * @ticketCategory controller
@@ -16,14 +16,29 @@ class TicketCategoryController {
    */
   async createTicketCategory(req, res) {
     const { designation } = req.body;
+    const { id } = req.user;
     const newTicketCategory = {
-      designation
+      designation,
+      user: id
     };
 
     const createdTicketCategory = await TicketCategory.create(
       newTicketCategory
     );
-    res.status(201).json({ status: 201, createdTicketCategory });
+
+    const user = await User.findOne({ where: { id } });
+
+    const category = {
+      id: createdTicketCategory.id,
+      designation: createdTicketCategory.designation,
+      user: {
+        id: user.id,
+        firstName: user.firstName,
+        email: user.email,
+        avatar: user.avatar
+      }
+    };
+    res.status(201).json({ status: 201, category });
   }
 
   /**

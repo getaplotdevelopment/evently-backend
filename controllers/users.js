@@ -120,7 +120,7 @@ class UserController {
     const assignedRole = await Roles.findOne({
       where: { id: user.role }
     });
-    const { designation } = assignedRole.dataValues;
+    const { designation: role } = assignedRole.dataValues;
     const { id, userName, avatar, isActivated } = user;
     const payload = {
       id,
@@ -128,11 +128,11 @@ class UserController {
       avatar,
       email: user.email,
       isActivated,
-      designation
+      role
     };
     const generatedToken = generateToken(payload);
     const token = generatedToken.generate;
-    return res.status(200).json({ status: 200, user, token });
+    return res.status(200).json({ status: 200, user: payload, token });
   }
 
   /**

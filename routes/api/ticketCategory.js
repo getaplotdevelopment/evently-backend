@@ -1,7 +1,8 @@
 import express from 'express';
 import asyncHandler from '../../helpers/errorsHandler/asyncHandler';
-import isAdmin from '../../middleware/users/isAdminAuth';
 import auth from '../../middleware/users/auth';
+import authUser from '../../middleware/users/authUser';
+import adminOrOrganizer from '../../middleware/users/adminAndOrganizer';
 import TicketCategory from '../../controllers/ticketCategory';
 import {
   validations,
@@ -18,7 +19,7 @@ const router = express.Router();
 
 router.post(
   '/',
-  asyncHandler(isAdmin),
+  asyncHandler(adminOrOrganizer),
   validateTicketCategory,
   validations,
   asyncHandler(checkCategoryDesignation),
@@ -37,7 +38,7 @@ router.get(
 );
 router.put(
   '/:ticketCategoryId',
-  asyncHandler(isAdmin),
+  asyncHandler(authUser),
   validateTicketCategory,
   validations,
   asyncHandler(checkCategory),
