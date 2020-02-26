@@ -17,7 +17,7 @@ class TicketController {
   async createTicket(req, res) {
     const { slug } = req.params;
     const { price, number, category } = req.body;
-    const { id } = req.user;
+    const { id } = req.organizer;
     const newTicket = {
       price,
       number,

@@ -1,5 +1,5 @@
 import models from '../../models';
-const { Event, Likes, Ticket } = models;
+const { Event, Likes, Ticket, TicketCategory } = models;
 
 export default async (searchParams, filterBy, model) => {
   const limit = 25;
@@ -26,7 +26,8 @@ export default async (searchParams, filterBy, model) => {
     order,
     include: [
       {
-        model: Ticket
+        model: Ticket,
+        include: [{ model: TicketCategory, as: 'ticketCategory' }]
       }
     ]
   });
