@@ -21,7 +21,9 @@ export const createEventController = async (req, res) => {
     eventType,
     location
   } = req.body;
-  let eventImage = req.file ? await uploadCloudinary(req.file.buffer) : null;
+  let eventImage = req.file
+    ? await uploadCloudinary(req.file.buffer)
+    : req.body.eventImage;
   if (currentMode) {
     await eventStatuschecker(currentMode.split(','));
   }
@@ -67,7 +69,11 @@ export const getOrganizerEvents = async (req, res) => {
 
 export const getAllEvents = async (req, res) => {
   const searchParams = req.query;
-  const { pages, count, data } = await getEvents(searchParams, searchParams, Event);
+  const { pages, count, data } = await getEvents(
+    searchParams,
+    searchParams,
+    Event
+  );
   res.send({ status: 200, pages, count, data });
 };
 
@@ -85,7 +91,7 @@ export const updateEvents = async (req, res) => {
   if (email !== dataValues.organizer) {
     return res.status(403).send({
       status: 403,
-      message: 'Unathorized to perform this action'
+      message: 'Unauthorized to perform this action'
     });
   }
 
@@ -115,19 +121,25 @@ export const likeUnlikeEvent = async (req, res) => {
 export const likedEvent = async (req, res) => {
   const { email } = req.user;
   const searchParams = req.query;
-  searchParams.sort = 'updatedAt:desc'  
+  searchParams.sort = 'updatedAt:desc';
   const filterBy = { email, isLiked: true };
-  const { pages, count, data:liked } = await getEvents(searchParams, filterBy, Likes);
-  const jsonObj = JSON.parse(JSON.stringify(liked))
+  const { pages, count, data: liked } = await getEvents(
+    searchParams,
+    filterBy,
+    Likes
+  );
+  const jsonObj = JSON.parse(JSON.stringify(liked));
 
-  const mapResponse = Promise.all(jsonObj.map(async(item) => {
-  const {slug } = item
-  const event = await Event.findAll({
-    where: {slug}
-  })
-  item.event = event[0]
-  return item
-  }))
-  const data = await mapResponse
+  const mapResponse = Promise.all(
+    jsonObj.map(async item => {
+      const { slug } = item;
+      const event = await Event.findAll({
+        where: { slug }
+      });
+      item.event = event[0];
+      return item;
+    })
+  );
+  const data = await mapResponse;
   res.send({ status: 200, pages, count, data });
-}
+};

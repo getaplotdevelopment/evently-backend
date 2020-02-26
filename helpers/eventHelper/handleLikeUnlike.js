@@ -44,5 +44,5 @@ export default async (email, slug) => {
       where: { slug }
     }
   );
-  return {data, likedBy, isLiked}
+  return { data, likedBy, isLiked };
 };

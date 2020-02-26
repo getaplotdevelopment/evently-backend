@@ -17,9 +17,9 @@ let userId;
 const { OrganizerProfile, User } = models;
 const profile = new OrganizerProfile();
 
-before(async () => {
-  await profile.destroy({ where: {}, truncate: true });
-});
+// before(async () => {
+//   await profile.destroy({ where: {}, truncate: true });
+// });
 
 describe('Profile', () => {
   it('should create the profile', async () => {

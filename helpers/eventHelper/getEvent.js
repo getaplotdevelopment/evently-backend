@@ -1,5 +1,5 @@
 import models from '../../models';
-const { Event, Likes } = models;
+const { Event, Likes, Ticket, TicketCategory } = models;
 
 export default async (searchParams, filterBy, model) => {
   const limit = 25;
@@ -17,13 +17,19 @@ export default async (searchParams, filterBy, model) => {
   }
 
   delete searchParams.page;
-  delete searchParams.sort;  
-  
+  delete searchParams.sort;
+
   const { count: countAll, rows: data } = await model.findAndCountAll({
     where: filterBy,
     limit,
     offset,
-    order
+    order,
+    include: [
+      {
+        model: Ticket,
+        include: [{ model: TicketCategory, as: 'ticketCategory' }]
+      }
+    ]
   });
   const pages = Math.ceil(countAll / limit);
   const count = data.length;

@@ -14,9 +14,9 @@ chai.use(chaiHttp);
 chai.should();
 const { Event } = models;
 
-before(async () => {
-  await Event.destroy({ where: {}, truncate: true });
-});
+// before(async () => {
+//   await Event.destroy({ where: {}, truncate: true });
+// });
 
 describe('Event', () => {
   it('should create an event', async () => {
@@ -100,9 +100,7 @@ describe('Event', () => {
   });
 
   it('Get all events', async () => {
-    const res = await chai
-      .request(app)
-      .get('/api/events/all')
+    const res = await chai.request(app).get('/api/events/all');
     res.should.have.status(200);
     res.body.count.should.be.a('number');
     res.body.pages.should.equal(1);
@@ -113,7 +111,7 @@ describe('Event', () => {
     const res = await chai
       .request(app)
       .get('/api/events/all')
-      .query({ sort: 'startDate:asc' })
+      .query({ sort: 'startDate:asc' });
     res.should.have.status(200);
     res.body.count.should.be.a('number');
     res.body.pages.should.equal(1);
@@ -133,13 +131,13 @@ describe('Event', () => {
       .set({ Authorization: 'Bearer ' + response.body.token })
       .send(createEvent);
 
-    const slug = res.body.data.slug
-    
+    const slug = res.body.data.slug;
+
     const result = await chai
       .request(app)
       .patch(`/api/events/${slug}`)
       .set({ Authorization: 'Bearer ' + response.body.token })
-      .send({description: 'description is changed'});    
+      .send({ description: 'description is changed' });
     result.should.have.status(200);
     result.body.message.should.equal('Successfully Updated');
     res.body.data.should.be.a('object');
@@ -159,15 +157,17 @@ describe('Event', () => {
       .set({ Authorization: 'Bearer ' + response.body.token })
       .send(createEvent);
 
-    const slug = res.body.data.slug
-    
+    const slug = res.body.data.slug;
+
     const result = await chai
       .request(app)
       .patch(`/api/events/${slug}`)
       .set({ Authorization: 'Bearer ' + response.body.token })
-      .send({currentMode: "invalid"});    
+      .send({ currentMode: 'invalid' });
     result.should.have.status(422);
-    result.text.should.include("Invalid eventType, try any from this array ['draft','published','cancelled','unpublished']");
+    result.text.should.include(
+      "Invalid eventType, try any from this array ['draft','published','cancelled','unpublished']"
+    );
   }).timeout(10000);
 
   it('should allow Organizers to update only their events', async () => {
@@ -175,7 +175,7 @@ describe('Event', () => {
       .request(app)
       .post('/api/users')
       .set('Content-Type', 'application/json')
-      .send(signupUser5);      
+      .send(signupUser5);
 
     const user1 = await chai
       .request(app)
@@ -189,15 +189,15 @@ describe('Event', () => {
       .set({ Authorization: 'Bearer ' + user1.body.token })
       .send(createEvent);
 
-    const slug = res.body.data.slug
-    
+    const slug = res.body.data.slug;
+
     const result = await chai
       .request(app)
       .patch(`/api/events/${slug}`)
       .set({ Authorization: 'Bearer ' + user2.body.token })
-      .send({description: 'description is changed'});    
-    result.should.have.status(403);    
-    result.text.should.include('Unathorized to perform this action');
+      .send({ description: 'description is changed' });
+    result.should.have.status(403);
+    result.text.should.include('Unauthorized to perform this action');
   }).timeout(10000);
 
   it('should allow users to like an event for the first time', async () => {
@@ -219,13 +219,13 @@ describe('Event', () => {
       .set({ Authorization: 'Bearer ' + user1.body.token })
       .send(createEvent);
 
-    const slug = res.body.data.slug
+    const slug = res.body.data.slug;
 
     const result = await chai
       .request(app)
       .patch(`/api/events/${slug}/like`)
-      .set({ Authorization: 'Bearer ' + user2.body.token })
-    result.should.have.status(200);    
+      .set({ Authorization: 'Bearer ' + user2.body.token });
+    result.should.have.status(200);
     result.body.isLiked.should.be.a('boolean');
     result.body.likedBy.should.be.a('array');
   });
@@ -249,18 +249,18 @@ describe('Event', () => {
       .set({ Authorization: 'Bearer ' + user1.body.token })
       .send(createEvent);
 
-    const slug = res.body.data.slug
+    const slug = res.body.data.slug;
 
     await chai
       .request(app)
       .patch(`/api/events/${slug}/like`)
-      .set({ Authorization: 'Bearer ' + user2.body.token })
+      .set({ Authorization: 'Bearer ' + user2.body.token });
 
     const result = await chai
       .request(app)
       .patch(`/api/events/${slug}/like`)
-      .set({ Authorization: 'Bearer ' + user2.body.token })
-    result.should.have.status(200);    
+      .set({ Authorization: 'Bearer ' + user2.body.token });
+    result.should.have.status(200);
     result.body.isLiked.should.be.a('boolean');
     result.body.likedBy.should.be.a('array');
   });
@@ -284,18 +284,18 @@ describe('Event', () => {
       .set({ Authorization: 'Bearer ' + user1.body.token })
       .send(createEvent);
 
-    const slug = res.body.data.slug
+    const slug = res.body.data.slug;
 
     await chai
       .request(app)
       .patch(`/api/events/${slug}/like`)
-      .set({ Authorization: 'Bearer ' + user2.body.token })
+      .set({ Authorization: 'Bearer ' + user2.body.token });
 
     const result = await chai
       .request(app)
       .get(`/api/events/liked`)
-      .set({ Authorization: 'Bearer ' + user2.body.token })
-    result.should.have.status(200);    
+      .set({ Authorization: 'Bearer ' + user2.body.token });
+    result.should.have.status(200);
     result.body.count.should.equal(1);
     result.body.data.should.be.a('array');
   });

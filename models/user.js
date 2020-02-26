@@ -17,14 +17,7 @@ module.exports = (sequelize, DataTypes) => {
         references: { model: 'Roles', key: 'id' }
       }
     },
-    {},
-    {
-      hooks: {
-        afterCreate(user) {
-          return user.reload();
-        }
-      }
-    }
+    {}
   );
   User.associate = function(models) {
     User.hasMany(models.OrganizerProfile, {
@@ -37,6 +30,14 @@ module.exports = (sequelize, DataTypes) => {
     });
     User.hasMany(models.Likes, {
       foreignKey: 'email'
+    });
+    User.hasMany(models.Ticket, {
+      foreignKey: 'organizer',
+      allowNull: false
+    });
+    User.hasMany(models.TicketCategory, {
+      foreignKey: 'user',
+      allowNull: true
     });
     User.belongsTo(models.Roles, {
       as: 'roles',
