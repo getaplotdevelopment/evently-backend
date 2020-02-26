@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import models from '../../models/index';
 import authHelper from '../../helpers/authHelper';
 

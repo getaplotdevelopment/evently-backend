@@ -1,5 +1,3 @@
-import jwt from 'jsonwebtoken';
-import 'dotenv/config';
 import httpError from '../../helpers/errorsHandler/httpError';
 import models from '../../models/index';
 import authHelper from '../../helpers/authHelper';
