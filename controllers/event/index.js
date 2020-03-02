@@ -162,7 +162,17 @@ export const likedEvent = async (req, res) => {
 export const getSimilarEvents = async (req, res) => {
   const { slug } = req.params
   
-  const events = await Event.findAll({
-    where: { slug }
+  const event = await Event.findOne({
+    where: { slug:'title1-is-to-good-also-12621' }
   })
+  const { location, category, startDate } = event 
+
+  console.log(startDate.getTime() - new Date().getTime())
+  
+  
+  const allEvents = await Event.findAll({
+    where: { category, 'location.country': location.country }
+  })
+  
+  res.send(allEvents)
 }

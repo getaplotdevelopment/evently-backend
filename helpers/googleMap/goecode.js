@@ -17,6 +17,7 @@ export default async (address) => {
   if (results.length === 0) {
     return {
       address: null,
+      country: null,
       place_id: null,
       locations: {
         lat: 0,
@@ -24,8 +25,11 @@ export default async (address) => {
       }
     };
   }
+  const locationArray = results[0].formatted_address.split(',')
+  const country = locationArray[locationArray.length - 1].trim()
   const locationObj = {
     address: results[0].formatted_address,
+    country,
     place_id: results[0].place_id,
     locations: results[0].geometry.location
   };
