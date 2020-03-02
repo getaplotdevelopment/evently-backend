@@ -17,7 +17,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       location: {
-        type: Sequelize.STRING
+        type: Sequelize.JSON
       },
       category: {
         type: Sequelize.STRING

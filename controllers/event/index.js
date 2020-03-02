@@ -37,6 +37,7 @@ export const createEventController = async (req, res) => {
     isOrganizer
   } = req.organizer;
   const slug = slugGenerator(title);
+  const formatted_address = await geocode(location)
   const newEvent = {
     slug,
     title,
@@ -51,7 +52,7 @@ export const createEventController = async (req, res) => {
     startTime,
     currentMode,
     eventType,
-    location,
+    location: formatted_address,
     organizer: email
   };
   const data = await Event.create(newEvent);
@@ -157,3 +158,11 @@ export const likedEvent = async (req, res) => {
   const data = await mapResponse;
   res.send({ status: 200, pages, count, data });
 };
+
+export const getSimilarEvents = async (req, res) => {
+  const { slug } = req.params
+  
+  const events = await Event.findAll({
+    where: { slug }
+  })
+}

@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/getaplotdev/evently-backend#readme",
   "dependencies": {
+    "@googlemaps/google-maps-services-js": "^2.1.1",
     "babel-preset-env": "^1.7.0",
     "babel-register": "^6.26.0",
     "bcryptjs": "^2.4.3",
