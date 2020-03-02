@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       description: DataTypes.STRING,
       tagList: DataTypes.ARRAY('STRING'),
       category: DataTypes.STRING,
-      location: DataTypes.STRING,
+      location: DataTypes.JSON,
       numberDays: DataTypes.STRING,
       startTime: DataTypes.STRING,
       startDate: DataTypes.DATE,
