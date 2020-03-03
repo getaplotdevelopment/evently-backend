@@ -1,9 +1,9 @@
-[![Build Status](https://travis-ci.com/getaplotdev/evently-backend.svg?token=aZsRVG2qb5Jsv5dQBpJr&branch=develop)](https://travis-ci.com/getaplotdev/evently-backend)
+[![Build Status](https://travis-ci.com/getaplotdevelopment/evently-backend.svg?token=aZsRVG2qb5Jsv5dQBpJr&branch=develop)](https://travis-ci.com/getaplotdevelopment/evently-backend)
 
-Evently - Get your plot right now.
-=======
+# Evently - Get your plot right now.
 
 ## Vision
+
 Help people to be happy, gathered happy people
 
 ---
@@ -11,36 +11,44 @@ Help people to be happy, gathered happy people
 ## Docker setup and commands
 
 ### Install Docker
+
 - Steps to [install](https://docs.docker.com/install/)
 - Signup/login with docker hub
 
 ### Build the container
+
 - In the root directory,
 - run `docker-compose build`
 
 ### start the container/app
+
 - Run `docker-compose up`
 - Run container in detached mode(container runs in the background) `docker-compose up -d`
 - In detached mode, run `docker-compose logs -f` to see the logs
 - App is now running at port `5000`
 
 ### Check status
+
 - run `docker-compose images` to list the available images
 - run `docker-compose ps` to list active containers
 
 ### Exit the active all containers
+
 - run `docker-compose down`
 
 ### Other commands
+
 - To run any similar npm command, run `docker-compose exec evently-backend npm <command>`
 - Example `docker-compose exec evently-backend npm test` to run tests
 
 ### Notes
+
 - The Container automatically update when you make changes and save, No need of building it over and over..
 - Docker uses `host.docker.internal` as the host URL, to run with NPM change the host url form config.js file.
 - You may be required to restart postgres services sometimes, run `brew services start postgresql`.
 
 ## API Spec
+
 The preferred JSON object to be returned by the API should be structured as follows:
 
 ### Users (for authentication)
@@ -56,7 +64,9 @@ The preferred JSON object to be returned by the API should be structured as foll
   }
 }
 ```
+
 ### Profile
+
 ```source-json
 {
   "profile": {
@@ -67,7 +77,9 @@ The preferred JSON object to be returned by the API should be structured as foll
   }
 }
 ```
+
 ### Single event
+
 ```source-json
 {
   "event": {
@@ -89,7 +101,9 @@ The preferred JSON object to be returned by the API should be structured as foll
   }
 }
 ```
+
 ### Multiple events
+
 ```source-json
 {
   "events":[{
@@ -129,7 +143,9 @@ The preferred JSON object to be returned by the API should be structured as foll
   "eventsCount": 2
 }
 ```
+
 ### Single Comment
+
 ```source-json
 {
   "comment": {
@@ -146,7 +162,9 @@ The preferred JSON object to be returned by the API should be structured as foll
   }
 }
 ```
+
 ### Multiple Comments
+
 ```source-json
 {
   "comments": [{
@@ -164,7 +182,9 @@ The preferred JSON object to be returned by the API should be structured as foll
   "commentsCount": 1
 }
 ```
+
 ### List of Tags
+
 ```source-json
 {
   "tags": [
@@ -173,7 +193,9 @@ The preferred JSON object to be returned by the API should be structured as foll
   ]
 }
 ```
+
 ### Errors and Status Codes
+
 If a request fails any validations, expect errors in the following format:
 
 ```source-json
@@ -185,16 +207,16 @@ If a request fails any validations, expect errors in the following format:
   }
 }
 ```
+
 ### Other status codes:
+
 401 for Unauthorized requests, when a request requires authentication but it isn't provided
 
 403 for Forbidden requests, when a request may be valid but the user doesn't have permissions to perform the action
 
 404 for Not found requests, when a resource can't be found to fulfill the request
 
-
-Endpoints:
-----------
+## Endpoints:
 
 ### Authentication:
 
