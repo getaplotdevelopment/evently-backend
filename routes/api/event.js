@@ -45,7 +45,7 @@ router.patch(
 router.get('/events/liked', asyncHandler(auth), asyncHandler(likedEvent));
 
 router.get(
-  '/similar/:slug',
+  '/events/:slug/similar',
   asyncHandler(getSimilarEvents)
   )
 export default router;
