@@ -7,7 +7,6 @@ import httError from '../helpers/errorsHandler/httpError';
 
 dotenv.config();
 const { OrganizerProfile, User } = models;
-// const { User } = models;
 /**
  * @user Controller
  * @exports
