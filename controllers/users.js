@@ -87,7 +87,7 @@ class UserController {
     const tokenGenerated = generateToken(payload);
     const token = tokenGenerated.generate;
     const response = await sendEmail(user.email, token);
-    res.status(201).json({ status: 201, user, token, response });
+    res.status(201).json({ status: 201, user, token, response});
   }
 
   /**

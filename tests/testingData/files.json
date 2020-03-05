@@ -117,13 +117,26 @@
   "createEvent": {
     "title": "title1 is good",
     "description": "Bomaye",
-    "body": "big booty",
     "tagList": "tags, new",
-    "category": "yes",
+    "category": "party",
     "numberDays": "1 day",
     "eventImage": "http",
     "eventStatus": "draft",
-    "startDate": "2020-01-01"
+    "startDate": "2020-01-01",
+    "finishDate": "2020-01-03",
+    "location": "gasabo"
+  },
+  "similarEvent": {
+    "title": "similar title",
+    "description": "Enogh is enough",
+    "tagList": "tags, new",
+    "category": "party",
+    "numberDays": "1 day",
+    "eventImage": "http",
+    "eventStatus": "draft",
+    "startDate": "2020-01-01",
+    "finishDate": "2021-12-12",
+    "location": "gasabo"
   },
   "crateProfile": {
     "accountName": "BomayE",
