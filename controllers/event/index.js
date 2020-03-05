@@ -12,7 +12,6 @@ export const createEventController = async (req, res) => {
   const {
     title,
     description,
-    body,
     tagList,
     category,
     numberDays,
@@ -44,7 +43,6 @@ export const createEventController = async (req, res) => {
     slug,
     title,
     description,
-    body,
     tagList: tagList.split(","),
     category,
     numberDays,
@@ -58,7 +56,7 @@ export const createEventController = async (req, res) => {
     organizer: email,
   };
   const data = await Event.create(newEvent);
-  res.send({ status: 201, data });
+  res.status(201).send({ status: 201, data });
 };
 
 export const getOrganizerEvents = async (req, res) => {
