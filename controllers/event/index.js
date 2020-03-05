@@ -5,6 +5,7 @@ import uploadCloudinary from "../../helpers/eventHelper/uploadCloudinary";
 import geocode from "../../helpers/googleMap/goecode";
 import slugGenerator from "../../helpers/slugGenerator";
 import models from "../../models";
+const { Op } = require("sequelize");
 const { Event, Likes, Ticket, TicketCategory } = models;
 
 export const createEventController = async (req, res) => {
@@ -165,12 +166,20 @@ export const getSimilarEvents = async (req, res) => {
   const queryParams = req.query;
   queryParams.sort = "updatedAt:desc";
   const event = await Event.findOne({
-    where: { slug }
+    where: { slug },
   });
+  if (event === null) {
+    return res.status(404).send({
+      status: 404,
+      error: "Event not found",
+    });
+  }
   const { location, category } = event;
+  
   const filterBy = {
     category,
     "location.country": location.country,
+    finishDate: { [Op.gte]: new Date().toISOString() },
   };
   const { pages, count, data } = await getEvents(
     queryParams,
@@ -178,11 +187,5 @@ export const getSimilarEvents = async (req, res) => {
     Event,
     3
   );
-
-  res.send({
-    status: 200,
-    pages,
-    count,
-    data,
-  });
+  res.send({ status: 200, pages, count, data });
 };
