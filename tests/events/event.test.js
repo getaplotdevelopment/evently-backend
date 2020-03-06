@@ -26,6 +26,8 @@ describe('Event', () => {
       .set('Content-Type', 'application/json')
       .send(signupUser2);
 
+  
+
     const res = await chai
       .request(app)
       .post('/api/events')
