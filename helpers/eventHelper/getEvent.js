@@ -1,7 +1,5 @@
-import models from '../../models';
-const { Event, Likes, Ticket, TicketCategory } = models;
 
-export default async (searchParams, filterBy, model) => {
+export default async (searchParams, filterBy, model, include) => {
   const limit = 25;
   const currentPage = searchParams.page || 1;
   const offset = limit * currentPage - limit;
@@ -24,14 +22,7 @@ export default async (searchParams, filterBy, model) => {
     limit,
     offset,
     order,
-    include: null
-
-    // [
-    //   {
-    //     model: Ticket,
-    //     include: [{ model: TicketCategory, as: 'ticketCategory' }]
-    //   }
-    // ]
+    include
   });
   const pages = Math.ceil(countAll / limit);
   const count = data.length;
