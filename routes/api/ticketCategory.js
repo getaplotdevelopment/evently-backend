@@ -27,7 +27,7 @@ router.post(
 );
 router.get(
   '/',
-  asyncHandler(authUser),
+  asyncHandler(auth),
   asyncHandler(category.getAllTicketCategory)
 );
 router.get(
@@ -38,7 +38,7 @@ router.get(
 );
 router.put(
   '/:ticketCategoryId',
-  asyncHandler(authUser),
+  asyncHandler(adminOrOrganizer),
   validateTicketCategory,
   validations,
   asyncHandler(checkCategory),

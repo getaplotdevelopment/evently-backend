@@ -283,7 +283,6 @@ describe('Event', () => {
       .post('/api/events')
       .set({ Authorization: 'Bearer ' + user1.body.token })
       .send(createEvent);
-
     const slug = res.body.data.slug;
 
     await chai

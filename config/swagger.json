@@ -16,7 +16,7 @@
   "basePath": "/v1",
   "tags": [
     {
-      "name": "Event",
+      "name": "Events",
       "description": "Everything about your Events",
       "externalDocs": {
         "description": "Find out more",
@@ -24,11 +24,7 @@
       }
     },
     {
-      "name": "Evently",
-      "description": "Get a plot in real time"
-    },
-    {
-      "name": "user",
+      "name": "users",
       "description": "Operations about user",
       "externalDocs": {
         "description": "Find out more about our app",
@@ -38,9 +34,9 @@
   ],
   "schemes": ["https", "http"],
   "paths": {
-    "api/event": {
+    "api/events": {
       "post": {
-        "tags": ["Event"],
+        "tags": ["Events"],
         "summary": "create new event",
         "description": "",
         "operationId": "addEvent",
@@ -48,10 +44,13 @@
         "produces": ["application/xml", "application/json"],
         "parameters": [
           {
-            "in": "body",
-            "name": "body",
-            "description": "Event object that needs to be added",
-            "required": true,
+            "title": "body",
+            "description": "body",
+            "body": "Event object that needs to be added",
+            "tagList": "tags",
+            "currentMode": "draft",
+            "location": "Kampala",
+            "start date": "Date",
             "schema": {
               "$ref": "#/definitions/Event"
             }
@@ -91,84 +90,15 @@
             "Evently_auth": ["write:Events", "read:Events"]
           }
         ]
-      },
-      "get": {
-        "tags": ["Event"],
-        "summary": "Update an existing Event",
-        "description": "",
-        "operationId": "updateEvent",
-        "consumes": ["application/json", "application/xml"],
-        "produces": ["application/xml", "application/json"],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "Event object that needs to be added to the store",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Event"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successfully",
-            "schema": {
-              "properties": {
-                "event": {
-                  "properties": {
-                    "title": {
-                      "type": "string",
-                      "example": "How to train your dragon"
-                    },
-                    "description": {
-                      "type": "string",
-                      "example": "Ever wonder how?"
-                    },
-                    "body": {
-                      "type": "string",
-                      "example": "you have to believe"
-                    },
-                    "tagList": {
-                      "type": "array",
-                      "example": ["reactjs", "angularjs", "dragons"]
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Event not found"
-          },
-          "405": {
-            "description": "Validation exception"
-          }
-        },
-        "security": [
-          {
-            "Evently_auth": ["write:Events", "read:Events"]
-          }
-        ]
       }
     },
-    "api/event/{EventId}": {
+    "api/events/": {
       "get": {
-        "tags": ["Event"],
-        "summary": "Find Event by ID",
-        "description": "Returns a single Event",
-        "operationId": "getEventById",
+        "tags": ["Events"],
+        "summary": "Get a list of organizer events",
+        "description": "Returns a list of events",
+        "operationId": "all organizer events",
         "produces": ["application/xml", "application/json"],
-        "parameters": [
-          {
-            "name": "EventId",
-            "in": "path",
-            "description": "ID of Event to return",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
         "responses": {
           "200": {
             "description": "successful operation",
@@ -188,9 +118,39 @@
             "api_key": []
           }
         ]
-      },
-      "put": {
-        "tags": ["Event"],
+      }
+    },
+    "api/events/all": {
+      "get": {
+        "tags": ["Events"],
+        "summary": "Get a list of all events",
+        "description": "Returns a list of events",
+        "operationId": "all all events",
+        "produces": ["application/xml", "application/json"],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Event"
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Event not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "api/events/{slug}": {
+      "patch": {
+        "tags": ["Events"],
         "summary": "Updates a Event in the store with form data",
         "description": "",
         "operationId": "updateEventWithForm",
@@ -230,47 +190,11 @@
             "Eventstore_auth": ["write:Events", "read:Events"]
           }
         ]
-      },
-      "delete": {
-        "tags": ["Event"],
-        "summary": "Deletes a Event",
-        "description": "",
-        "operationId": "deleteEvent",
-        "produces": ["application/xml", "application/json"],
-        "parameters": [
-          {
-            "name": "api_key",
-            "in": "header",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "EventId",
-            "in": "path",
-            "description": "Event id to delete",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "400": {
-            "description": "Invalid ID supplied"
-          },
-          "404": {
-            "description": "Event not found"
-          }
-        },
-        "security": [
-          {
-            "Eventstore_auth": ["write:Events", "read:Events"]
-          }
-        ]
       }
     },
-    "/user": {
+    "/users": {
       "post": {
-        "tags": ["user"],
+        "tags": ["users"],
         "summary": "Create user",
         "description": "This can only be done by an Admin.",
         "operationId": "createUser",
@@ -309,9 +233,9 @@
         }
       }
     },
-    "/user/login": {
-      "get": {
-        "tags": ["user"],
+    "/users/login": {
+      "post": {
+        "tags": ["users"],
         "summary": "Logs user into the system",
         "description": "",
         "operationId": "loginUser",
@@ -357,9 +281,9 @@
         }
       }
     },
-    "/user/login/google": {
+    "/users/login/google": {
       "get": {
-        "tags": ["user"],
+        "tags": ["users"],
         "summary": "Logs user into the system via google",
         "description": "",
         "operationId": "loginUser",
@@ -402,9 +326,9 @@
         }
       }
     },
-    "/user/login/facebook": {
+    "/users/login/facebook": {
       "get": {
-        "tags": ["user"],
+        "tags": ["users"],
         "summary": "Logs user into the system via facebook",
         "description": "",
         "operationId": "loginUser",
@@ -451,20 +375,54 @@
       }
     },
 
-    "/user/check-user": {
+    "/users/send-email": {
       "post": {
-        "tags": ["user"],
-        "summary": "Checks if a user account exists",
+        "tags": ["users"],
+        "summary": "Send an email to a user",
         "description": "",
-        "operationId": "checkUserAccountExists",
+        "operationId": "check the user email address",
         "produces": ["application/xml", "application/json"],
         "parameters": [
           {
-            "name": "email",
-            "in": "body",
-            "description": "The user users Email",
-            "required": true,
-            "type": "string"
+            "email": "email@evently.com"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User exists",
+            "schema": {
+              "type": "string"
+            },
+            "headers": {
+              "X-Rate-Limit": {
+                "type": "integer",
+                "format": "int32",
+                "description": "calls per hour allowed by the user"
+              },
+              "X-Expires-After": {
+                "type": "string",
+                "format": "date-time",
+                "description": "date in UTC when token expires"
+              }
+            }
+          },
+          "400": {
+            "description": "User with that email does not exist"
+          }
+        }
+      }
+    },
+    "/users/reset-password": {
+      "post": {
+        "tags": ["users"],
+        "summary": "Send an email to a user",
+        "description": "",
+        "operationId": "check the user email address",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "oldPassword": "OldPassword",
+            "password": "password"
           }
         ],
         "responses": {
@@ -493,39 +451,59 @@
       }
     },
 
-    "/user/logout": {
-      "get": {
-        "tags": ["user"],
-        "summary": "Logs out current logged in user session",
+    "/users/verify": {
+      "post": {
+        "tags": ["users"],
+        "summary": "Verify user's account",
         "description": "",
-        "operationId": "logoutUser",
+        "operationId": "verify user's account",
         "produces": ["application/xml", "application/json"],
-        "parameters": [],
         "responses": {
-          "default": {
-            "description": "successful operation"
+          "200": {
+            "description": "User exists",
+            "schema": {
+              "type": "string"
+            },
+            "headers": {
+              "X-Rate-Limit": {
+                "type": "integer",
+                "format": "int32",
+                "description": "calls per hour allowed by the user"
+              },
+              "X-Expires-After": {
+                "type": "string",
+                "format": "date-time",
+                "description": "date in UTC when token expires"
+              }
+            }
+          },
+          "400": {
+            "description": "User with that email does not exist"
           }
         }
       }
     },
-    "/user/{username}": {
-      "get": {
-        "tags": ["user"],
-        "summary": "Get user by user name",
+    "/profile": {
+      "post": {
+        "tags": ["profile"],
+        "summary": "create user's profile",
         "description": "",
         "operationId": "getUserByName",
         "produces": ["application/xml", "application/json"],
         "parameters": [
           {
-            "name": "username",
-            "in": "path",
-            "description": "The name that needs to be fetched. Use user1 for testing. ",
-            "required": true,
-            "type": "string"
+            "accountTYpe": "Bomaye",
+            "accountName": "music",
+            "description": "How to be famous ",
+            "domain": "music",
+            "location": "string",
+            "profilePhotos": "url",
+            "preferences": "object",
+            "social": "object"
           }
         ],
         "responses": {
-          "200": {
+          "201": {
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/User"
@@ -540,27 +518,21 @@
         }
       },
       "put": {
-        "tags": ["user"],
+        "tags": ["profile"],
         "summary": "Updated user",
         "description": "This can only be done by the logged in user.",
-        "operationId": "updateUser",
+        "operationId": "update profile",
         "produces": ["application/xml", "application/json"],
         "parameters": [
           {
-            "name": "username",
-            "in": "path",
-            "description": "name that need to be updated",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "description": "Updated user object",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
+            "accountTYpe": "Bomaye",
+            "accountName": "music",
+            "description": "How to be famous ",
+            "domain": "music",
+            "location": "string",
+            "profilePhotos": "url",
+            "preferences": "object",
+            "social": "object"
           }
         ],
         "responses": {
@@ -571,23 +543,334 @@
             "description": "User not found"
           }
         }
-      },
-      "delete": {
-        "tags": ["user"],
-        "summary": "Delete user",
-        "description": "This can only be done by the logged in user.",
-        "operationId": "deleteUser",
+      }
+    },
+    "/profile/userId": {
+      "get": {
+        "tags": ["profile"],
+        "summary": "get a given user profile",
+        "description": "",
+        "operationId": "",
+        "produces": ["application/xml", "application/json"],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "404": {
+            "description": "Profile not found"
+          }
+        }
+      }
+    },
+    "/profile/me": {
+      "get": {
+        "tags": ["profile"],
+        "summary": "get my profile",
+        "description": "",
+        "operationId": "",
+        "produces": ["application/xml", "application/json"],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      }
+    },
+    "/roles": {
+      "post": {
+        "tags": ["roles"],
+        "summary": "create a role",
+        "description": "",
+        "operationId": "create a role",
         "produces": ["application/xml", "application/json"],
         "parameters": [
           {
-            "name": "username",
-            "in": "path",
-            "description": "The name that needs to be deleted",
-            "required": true,
-            "type": "string"
+            "designation": "EVENTS"
           }
         ],
         "responses": {
+          "201": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Invalid username supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      },
+      "get": {
+        "tags": ["roles"],
+        "summary": "fetch all roles",
+        "description": "",
+        "operationId": "fetch all roles",
+        "produces": ["application/xml", "application/json"],
+        "responses": {
+          "300": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Invalid username supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/roles/roleId": {
+      "post": {
+        "tags": ["roles"],
+        "summary": "get one role",
+        "description": "",
+        "operationId": "get one role",
+        "produces": ["application/xml", "application/json"],
+        "responses": {
+          "201": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Invalid username supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      },
+      "put": {
+        "tags": ["roles"],
+        "summary": "update a role",
+        "description": "",
+        "operationId": "update a role",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "designation": "EVENTS"
+          }
+        ],
+        "responses": {
+          "300": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Invalid username supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/ticket": {
+      "post": {
+        "tags": ["ticket"],
+        "summary": "create a ticket",
+        "description": "",
+        "operationId": "create a ticket",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "price": 20,
+            "number": 50,
+            "category": 2
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Invalid username supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      },
+      "get": {
+        "tags": ["ticket"],
+        "summary": "fetch all ticket",
+        "description": "",
+        "operationId": "fetch all ticket",
+        "produces": ["application/xml", "application/json"],
+        "responses": {
+          "300": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Invalid username supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/ticket/ticketId": {
+      "post": {
+        "tags": ["ticket"],
+        "summary": "get one ticket",
+        "description": "",
+        "operationId": "get one ticket",
+        "produces": ["application/xml", "application/json"],
+        "responses": {
+          "201": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Invalid username supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      },
+      "put": {
+        "tags": ["ticket"],
+        "summary": "update a ticket",
+        "description": "",
+        "operationId": "update a ticket",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "price": 20,
+            "number": 50,
+            "category": 2
+          }
+        ],
+        "responses": {
+          "300": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Invalid username supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/ticket/category": {
+      "post": {
+        "tags": ["ticket category"],
+        "summary": "create a ticket category",
+        "description": "",
+        "operationId": "create a ticket category",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "designation": "TABLE"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Invalid username supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      },
+      "get": {
+        "tags": ["ticket category"],
+        "summary": "fetch all ticket category",
+        "description": "",
+        "operationId": "fetch all ticket category",
+        "produces": ["application/xml", "application/json"],
+        "responses": {
+          "300": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Invalid username supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/ticket/category/ticketId": {
+      "post": {
+        "tags": ["ticket category"],
+        "summary": "get one ticket",
+        "description": "",
+        "operationId": "get one ticket",
+        "produces": ["application/xml", "application/json"],
+        "responses": {
+          "201": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Invalid username supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      },
+      "put": {
+        "tags": ["ticket category"],
+        "summary": "update a ticket category",
+        "description": "",
+        "operationId": "update a ticket category",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "designation": "EVENTS"
+          }
+        ],
+        "responses": {
+          "300": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
           "400": {
             "description": "Invalid username supplied"
           },
@@ -636,9 +919,6 @@
         "id": {
           "type": "integer",
           "format": "int64"
-        },
-        "username": {
-          "type": "string"
         },
         "firstName": {
           "type": "string"

@@ -24,12 +24,14 @@ export default async (searchParams, filterBy, model) => {
     limit,
     offset,
     order,
-    include: [
-      {
-        model: Ticket,
-        include: [{ model: TicketCategory, as: 'ticketCategory' }]
-      }
-    ]
+    include: null
+
+    // [
+    //   {
+    //     model: Ticket,
+    //     include: [{ model: TicketCategory, as: 'ticketCategory' }]
+    //   }
+    // ]
   });
   const pages = Math.ceil(countAll / limit);
   const count = data.length;
