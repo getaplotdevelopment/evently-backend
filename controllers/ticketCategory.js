@@ -17,6 +17,7 @@ class TicketCategoryController {
    */
   async createTicketCategory(req, res) {
     const { designation } = req.body;
+
     const { id, role } = req.user;
     const isDefault = role === 3 ? true : false;
 
@@ -53,7 +54,7 @@ class TicketCategoryController {
    * @returns {Object} Response
    */
   async getAllTicketCategory(req, res) {
-    const { id } = req.organizer;
+    const { id } = req.user;
     const ticketCategory = await TicketCategory.findAll({
       where: { [Op.or]: [{ user: id }, { isDefault: true }] }
     });

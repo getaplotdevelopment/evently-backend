@@ -35,7 +35,7 @@
     "password": "emabush2015",
     "isActivated": true,
     "deviceToken": "dkfkfkskdf",
-    "role": 2
+    "role": 3
   },
   "superUser": {
     "firstName": "Jaman",
@@ -92,7 +92,7 @@
     "password": "emabush2015"
   },
   "loginOrganizer": {
-    "email": "geta02@gmail.com",
+    "email": "geta01@gmail.com",
     "password": "emabush2015"
   },
   "invalidLoginUser": {

@@ -4,7 +4,7 @@ import eventStatuschecker from '../../helpers/eventHelper/eventStatuschecker';
 import uploadCloudinary from '../../helpers/eventHelper/uploadCloudinary';
 import getEvents from '../../helpers/eventHelper/getEvent';
 import handleLikeUnlike from '../../helpers/eventHelper/handleLikeUnlike';
-const { Event, Likes } = models;
+const { Event, Likes, Ticket, TicketCategory } = models;
 
 export const createEventController = async (req, res) => {
   const {
@@ -62,17 +62,30 @@ export const getOrganizerEvents = async (req, res) => {
   const { email } = req.organizer;
   const searchParams = req.query;
   const filterBy = { organizer: email };
-  const { pages, count, data } = await getEvents(searchParams, filterBy, Event);
+  const include = [
+      {
+        model: Ticket,
+        include: [{ model: TicketCategory, as: 'ticketCategory' }]
+      }
+    ]
+  const { pages, count, data } = await getEvents(searchParams, filterBy, Event, include);
 
   res.send({ status: 200, pages, count, data });
 };
 
 export const getAllEvents = async (req, res) => {
   const searchParams = req.query;
+  const include = [
+      {
+        model: Ticket,
+        include: [{ model: TicketCategory, as: 'ticketCategory' }]
+      }
+    ]
   const { pages, count, data } = await getEvents(
     searchParams,
     searchParams,
-    Event
+    Event,
+    include
   );
   res.send({ status: 200, pages, count, data });
 };
@@ -126,7 +139,8 @@ export const likedEvent = async (req, res) => {
   const { pages, count, data: liked } = await getEvents(
     searchParams,
     filterBy,
-    Likes
+    Likes,
+    null
   );
   const jsonObj = JSON.parse(JSON.stringify(liked));
 

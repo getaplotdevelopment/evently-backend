@@ -31,7 +31,7 @@ describe('TicketCategory', () => {
       .send(createTicketCategory);
     response.should.have.status(201);
     response.body.should.be.a('object');
-    ticketCategoryId = response.body.createdTicketCategory.id;
+    ticketCategoryId = response.body.category.id;
   }).timeout(10000);
   it('should not create a redundant ticket category', async () => {
     const createTicketCategory = {
@@ -55,6 +55,7 @@ describe('TicketCategory', () => {
       .set('Authorization', `Bearer ${token}`)
       .send(updatedTicketCategory);
     res.should.have.status(200);
+
     res.body.should.be.a('object');
   });
   it('should get one ticket category', async () => {
