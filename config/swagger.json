@@ -200,7 +200,35 @@
         ]
       }
     },
-    "api/users": {
+    "api/events/{slug}/similar": {
+      "get": {
+        "tags": ["Events"],
+        "summary": "Retrieve similar events",
+        "description": "Returns a list of similar events",
+        "operationId": "similar events",
+        "produces": ["application/xml", "application/json"],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Event"
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Event not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+  "api/users": {
       "post": {
         "tags": ["users"],
         "summary": "Create user",

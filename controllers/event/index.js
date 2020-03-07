@@ -7,7 +7,12 @@ import slugGenerator from "../../helpers/slugGenerator";
 import models from "../../models";
 const { Op } = require("sequelize");
 const { Event, Likes, Ticket, TicketCategory } = models;
-
+var INCLUDETICKET = [
+  {
+    model: Ticket,
+    include: [{ model: TicketCategory, as: 'ticketCategory' }]
+  }
+]
 export const createEventController = async (req, res) => {
   const {
     title,
@@ -63,30 +68,18 @@ export const getOrganizerEvents = async (req, res) => {
   const { email } = req.organizer;
   const searchParams = req.query;
   const filterBy = { organizer: email };
-  const include = [
-      {
-        model: Ticket,
-        include: [{ model: TicketCategory, as: 'ticketCategory' }]
-      }
-    ]
-  const { pages, count, data } = await getEvents(searchParams, filterBy, Event, include);
+  const { pages, count, data } = await getEvents(searchParams, filterBy, Event, INCLUDETICKET);
 
   res.send({ status: 200, pages, count, data });
 };
 
 export const getAllEvents = async (req, res) => {
   const searchParams = req.query;
-  const include = [
-      {
-        model: Ticket,
-        include: [{ model: TicketCategory, as: 'ticketCategory' }]
-      }
-    ]
   const { pages, count, data } = await getEvents(
     searchParams,
     searchParams,
     Event,
-    include
+    INCLUDETICKET
   );
   res.send({ status: 200, pages, count, data });
 };
@@ -173,7 +166,6 @@ export const getSimilarEvents = async (req, res) => {
     });
   }
   const { location, category } = event;
-  
   const filterBy = {
     category,
     "location.country": location.country,
@@ -183,7 +175,7 @@ export const getSimilarEvents = async (req, res) => {
     queryParams,
     filterBy,
     Event,
-    3
+    INCLUDETICKET
   );
   res.send({ status: 200, pages, count, data });
 };

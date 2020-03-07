@@ -47,7 +47,7 @@ const createEvents = async (userObj, event = createEvent) => {
 describe('Event', () => {
   it('should create an event', async () => {
     const response = await newOrganizer();
-    const res = await createEvents(response);    
+    const res = await createEvents(response);        
     res.should.have.status(201);
     res.body.should.be.a('object');
     res.body.data.organizer.should.be.a('string');
@@ -281,3 +281,4 @@ describe('Event', () => {
     res.should.have.status(201);
   }).timeout(10000);
 });
+
