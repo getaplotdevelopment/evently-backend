@@ -53,4 +53,6 @@ router.put(
 );
 
 router.patch('/location', auth, asyncHandler(users.updateLocation));
+router.get('/logout', auth, asyncHandler(users.logout));
+
 export default router;

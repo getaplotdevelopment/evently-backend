@@ -7,6 +7,7 @@ import httpError from '../helpers/errorsHandler/httpError';
 import generateToken from '../helpers/generateToken/generateToken';
 import sendEmail from '../helpers/sendEmail/callMailer';
 import geocode from '../helpers/googleMap/goecode';
+import { radisClient } from '../helpers/logout/redisClient';
 
 dotenv.config();
 const { User, Roles } = models;
@@ -206,25 +207,6 @@ class UserController {
    * @param {object} res response.
    * @returns {object} response.
    */
-  //TODO: @jaman I don't see this method used anywhere. 
-  async checkUser(req, res) {
-    const { email } = req.body;
-
-    const user = await User.findOne({ where: { email } });
-
-    if (!user) {
-      res.status(404).send({
-        status: 404,
-        message: 'No user found with that email address'
-      });
-    }
-    const foundUser = user.dataValues;
-    res.status(200).send({
-      status: 200,
-      user: { email: foundUser.email },
-      message: 'User exists'
-    });
-  }
 
   /**
    * Resets password.
@@ -318,6 +300,20 @@ class UserController {
     const formated_address = await geocode(location);
     userInstance.location = formated_address;
     await userInstance.save();
+  }
+
+  /**
+   * @param {Object} req - Request from user
+   * @param {Object} res - Response to the user
+   * @returns {Object} Response
+   */
+  async logout(req, res) {
+    const token = req.headers.authorization.split(' ')[1];
+    await radisClient.LPUSH('token', token);
+    return res.status(200).json({
+      status: 200,
+      message: 'You are logged out'
+    });
   }
 }
 
