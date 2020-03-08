@@ -1,6 +1,6 @@
 import express from 'express';
 import asyncHandler from '../../helpers/errorsHandler/asyncHandler';
-import authUser from '../../middleware/users/authUser';
+import checkToken from '../../middleware/users/checkToken';
 import auth from '../../middleware/users/auth';
 import Profile from '../../controllers/profile';
 import {
@@ -16,11 +16,11 @@ import {
 const profile = new Profile();
 
 const router = express.Router();
-// const upload = multer();
 
 router.post(
   '/',
   upload.array('profilePhotos', 2),
+  asyncHandler(checkToken),
   asyncHandler(auth),
   asyncHandler(checkProfile),
   validateProfile,
@@ -29,11 +29,13 @@ router.post(
 );
 router.get(
   '/me',
+  asyncHandler(checkToken),
   asyncHandler(auth),
   asyncHandler(profile.getCurrentUserProfile)
 );
 router.get(
   '/:organizerId',
+  asyncHandler(checkToken),
   asyncHandler(checkUserProfile),
   asyncHandler(auth),
   asyncHandler(profile.getUserProfile)
@@ -41,6 +43,7 @@ router.get(
 router.put(
   '/',
   upload.array('profilePhotos', 2),
+  asyncHandler(checkToken),
   asyncHandler(auth),
   asyncHandler(profile.updateYourProfile)
 );

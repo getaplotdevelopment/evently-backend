@@ -7,7 +7,7 @@ import httpError from '../helpers/errorsHandler/httpError';
 import generateToken from '../helpers/generateToken/generateToken';
 import sendEmail from '../helpers/sendEmail/callMailer';
 import geocode from '../helpers/googleMap/goecode';
-import { radisClient } from '../helpers/logout/redisClient';
+import { redisClient } from '../helpers/logout/redisClient';
 
 dotenv.config();
 const { User, Roles } = models;
@@ -309,7 +309,7 @@ class UserController {
    */
   async logout(req, res) {
     const token = req.headers.authorization.split(' ')[1];
-    await radisClient.LPUSH('token', token);
+    await redisClient.LPUSH('token', token);
     return res.status(200).json({
       status: 200,
       message: 'You are logged out'

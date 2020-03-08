@@ -1,6 +1,7 @@
 import express from 'express';
 import asyncHandler from '../../helpers/errorsHandler/asyncHandler';
 import authUser from '../../middleware/users/authUser';
+import checkToken from '../../middleware/users/checkToken';
 import auth from '../../middleware/users/auth';
 import Ticket from '../../controllers/ticket';
 import {
@@ -20,6 +21,7 @@ const router = express.Router();
 
 router.post(
   '/:slug',
+  asyncHandler(checkToken),
   asyncHandler(authUser),
   asyncHandler(checkTicketExist),
   validateTicket,
@@ -31,11 +33,13 @@ router.get('/', asyncHandler(auth), asyncHandler(ticket.getAllTicket));
 router.get(
   '/:slug',
   asyncHandler(checkEvent),
+  asyncHandler(checkToken),
   asyncHandler(auth),
   asyncHandler(ticket.getAllTicketByEvent)
 );
 router.get(
   '/:slug/:ticketId',
+  asyncHandler(checkToken),
   asyncHandler(auth),
   asyncHandler(checkEvent),
   asyncHandler(checkTicket),
@@ -43,6 +47,7 @@ router.get(
 );
 router.put(
   '/:slug/:ticketId',
+  asyncHandler(checkToken),
   asyncHandler(authUser),
   asyncHandler(checkEvent),
   asyncHandler(checkTicket),

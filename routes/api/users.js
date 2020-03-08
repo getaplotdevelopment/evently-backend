@@ -13,7 +13,6 @@ import {
   checkPassword
 } from '../../middleware/users/checkUser';
 import asyncHandler from '../../helpers/errorsHandler/asyncHandler';
-import authUser from '../../middleware/users/authUser';
 import auth from '../../middleware/users/auth';
 
 const users = new Users();
@@ -47,12 +46,13 @@ router.put(
   '/change-password',
   validateChangePassword,
   validations,
-  auth,
+  asyncHandler(auth),
   asyncHandler(checkPassword),
   asyncHandler(users.changeCurrentPassword)
 );
 
 router.patch('/location', auth, asyncHandler(users.updateLocation));
-router.get('/logout', auth, asyncHandler(users.logout));
+
+router.get('/logout', asyncHandler(auth), asyncHandler(users.logout));
 
 export default router;

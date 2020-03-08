@@ -2,6 +2,7 @@ import express from 'express';
 import asyncHandler from '../../helpers/errorsHandler/asyncHandler';
 import isAdmin from '../../middleware/users/isAdminAuth';
 import Roles from '../../controllers/roles';
+import checkToken from '../../middleware/users/checkToken';
 import {
   validations,
   validateRole
@@ -17,6 +18,7 @@ const router = express.Router();
 
 router.post(
   '/',
+  asyncHandler(checkToken),
   asyncHandler(isAdmin),
   validateRole,
   validations,
@@ -26,12 +28,14 @@ router.post(
 router.get('/', asyncHandler(isAdmin), asyncHandler(roles.getAllRoles));
 router.get(
   '/:roleId',
+  asyncHandler(checkToken),
   asyncHandler(isAdmin),
   asyncHandler(checkRole),
   asyncHandler(roles.getOneRole)
 );
 router.put(
   '/:roleId',
+  asyncHandler(checkToken),
   asyncHandler(isAdmin),
   validateRole,
   validations,
