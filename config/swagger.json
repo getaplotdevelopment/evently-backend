@@ -3,7 +3,7 @@
   "info": {
     "version": "1.0.0",
     "title": "Evently",
-    "termsOfService": "http://localhost:5000/terms/",
+    "termsOfService": "",
     "contact": {
       "email": "evently@localhost:5000"
     },
@@ -12,23 +12,21 @@
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     }
   },
-  "host": "localhost:5000",
-  "basePath": "/v1",
+  "host": "evently-backend.herokuapp.com/",
+  "basePath": "/",
   "tags": [
     {
       "name": "Events",
       "description": "Everything about your Events",
       "externalDocs": {
-        "description": "Find out more",
-        "url": "http://localhost:5000"
+        "description": "Find out more"
       }
     },
     {
       "name": "users",
       "description": "Operations about user",
       "externalDocs": {
-        "description": "Find out more about our app",
-        "url": "http://localhost:5000"
+        "description": "Find out more about our app"
       }
     }
   ],
@@ -44,13 +42,18 @@
         "produces": ["application/xml", "application/json"],
         "parameters": [
           {
-            "title": "body",
-            "description": "body",
-            "body": "Event object that needs to be added",
-            "tagList": "tags",
-            "currentMode": "draft",
-            "location": "Kampala",
-            "start date": "Date",
+            "in": "header",
+            "name": "Authorization",
+            "description": "Provide the organizer token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Created profile object",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/Event"
             }
@@ -99,6 +102,16 @@
         "description": "Returns a list of events",
         "operationId": "all organizer events",
         "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Add the token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          }
+        ],
         "responses": {
           "200": {
             "description": "successful operation",
@@ -158,26 +171,21 @@
         "produces": ["application/xml", "application/json"],
         "parameters": [
           {
-            "name": "EventId",
-            "in": "path",
-            "description": "ID of Event that needs to be updated",
+            "in": "header",
+            "name": "Authorization",
+            "description": "Add the token",
+            "type": "string",
             "required": true,
-            "type": "integer",
-            "format": "int64"
+            "example": "Bearer token"
           },
           {
-            "name": "name",
-            "in": "formData",
-            "description": "Updated name of the Event",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "status",
-            "in": "formData",
-            "description": "Updated status of the Event",
-            "required": false,
-            "type": "string"
+            "in": "body",
+            "name": "body",
+            "description": "Created profile object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Event"
+            }
           }
         ],
         "responses": {
@@ -192,7 +200,7 @@
         ]
       }
     },
-    "/users": {
+    "api/users": {
       "post": {
         "tags": ["users"],
         "summary": "Create user",
@@ -217,14 +225,14 @@
               "properties": {
                 "user": {
                   "properties": {
-                    "email": {
-                      "type": "string",
-                      "example": "jake@jake.jake"
-                    },
-                    "password": {
-                      "type": "string",
-                      "example": "jakejake"
-                    }
+                    "firstName": "techLead",
+                    "lastName": "techLead",
+                    "email": "joe01@gmail.com",
+                    "password": "emabush2015",
+                    "avatar": "dffdfsdf",
+                    "deviceToken": "dkfkfkskdf",
+                    "phoneNumber": "+250783636234",
+                    "location": "Kigali"
                   }
                 }
               }
@@ -233,7 +241,7 @@
         }
       }
     },
-    "/users/login": {
+    "api/users/login": {
       "post": {
         "tags": ["users"],
         "summary": "Logs user into the system",
@@ -242,18 +250,13 @@
         "produces": ["application/xml", "application/json"],
         "parameters": [
           {
-            "name": "username",
-            "in": "query",
-            "description": "The user name for login",
+            "in": "body",
+            "name": "body",
+            "description": "login user object",
             "required": true,
-            "type": "string"
-          },
-          {
-            "name": "password",
-            "in": "query",
-            "description": "The password for login in clear text",
-            "required": true,
-            "type": "string"
+            "schema": {
+              "$ref": "#/definitions/Login"
+            }
           }
         ],
         "responses": {
@@ -281,7 +284,7 @@
         }
       }
     },
-    "/users/login/google": {
+    "api/users/login/google": {
       "get": {
         "tags": ["users"],
         "summary": "Logs user into the system via google",
@@ -290,18 +293,13 @@
         "produces": ["application/xml", "application/json"],
         "parameters": [
           {
-            "name": "socialAuth",
-            "in": "query",
-            "description": "click on the social media button",
+            "in": "body",
+            "name": "body",
+            "description": "login user object",
             "required": true,
-            "type": "string"
-          },
-          {
-            "name": "password",
-            "in": "query",
-            "description": "The process will be done in background",
-            "required": true,
-            "type": "string"
+            "schema": {
+              "$ref": "#/definitions/Login"
+            }
           }
         ],
         "responses": {
@@ -326,7 +324,7 @@
         }
       }
     },
-    "/users/login/facebook": {
+    "api/users/login/facebook": {
       "get": {
         "tags": ["users"],
         "summary": "Logs user into the system via facebook",
@@ -335,18 +333,13 @@
         "produces": ["application/xml", "application/json"],
         "parameters": [
           {
-            "name": "username",
-            "in": "query",
-            "description": "Login with socialAuth",
+            "in": "body",
+            "name": "body",
+            "description": "login user object",
             "required": true,
-            "type": "string"
-          },
-          {
-            "name": "password",
-            "in": "query",
-            "description": "",
-            "required": true,
-            "type": "string"
+            "schema": {
+              "$ref": "#/definitions/Login"
+            }
           }
         ],
         "responses": {
@@ -375,7 +368,7 @@
       }
     },
 
-    "/users/send-email": {
+    "api/users/send-email": {
       "post": {
         "tags": ["users"],
         "summary": "Send an email to a user",
@@ -384,7 +377,13 @@
         "produces": ["application/xml", "application/json"],
         "parameters": [
           {
-            "email": "email@evently.com"
+            "in": "body",
+            "name": "body",
+            "description": "login user object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Send-email"
+            }
           }
         ],
         "responses": {
@@ -412,7 +411,7 @@
         }
       }
     },
-    "/users/reset-password": {
+    "api/users/reset-password": {
       "post": {
         "tags": ["users"],
         "summary": "Send an email to a user",
@@ -451,7 +450,7 @@
       }
     },
 
-    "/users/verify": {
+    "api/users/verify": {
       "post": {
         "tags": ["users"],
         "summary": "Verify user's account",
@@ -483,7 +482,7 @@
         }
       }
     },
-    "/profile": {
+    "api/profile": {
       "post": {
         "tags": ["profile"],
         "summary": "create user's profile",
@@ -492,14 +491,21 @@
         "produces": ["application/xml", "application/json"],
         "parameters": [
           {
-            "accountTYpe": "Bomaye",
-            "accountName": "music",
-            "description": "How to be famous ",
-            "domain": "music",
-            "location": "string",
-            "profilePhotos": "url",
-            "preferences": "object",
-            "social": "object"
+            "in": "header",
+            "name": "Authorization",
+            "description": "Add the token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Created profile object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Profile"
+            }
           }
         ],
         "responses": {
@@ -525,14 +531,21 @@
         "produces": ["application/xml", "application/json"],
         "parameters": [
           {
-            "accountTYpe": "Bomaye",
-            "accountName": "music",
-            "description": "How to be famous ",
-            "domain": "music",
-            "location": "string",
-            "profilePhotos": "url",
-            "preferences": "object",
-            "social": "object"
+            "in": "header",
+            "name": "Authorization",
+            "description": "Add the token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Created profile object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Profile"
+            }
           }
         ],
         "responses": {
@@ -545,13 +558,23 @@
         }
       }
     },
-    "/profile/userId": {
+    "api/profile/userId": {
       "get": {
         "tags": ["profile"],
         "summary": "get a given user profile",
         "description": "",
         "operationId": "",
         "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Add the token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          }
+        ],
         "responses": {
           "200": {
             "description": "successful operation",
@@ -565,13 +588,23 @@
         }
       }
     },
-    "/profile/me": {
+    "api/profile/me": {
       "get": {
         "tags": ["profile"],
         "summary": "get my profile",
         "description": "",
         "operationId": "",
         "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Add the token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          }
+        ],
         "responses": {
           "200": {
             "description": "successful operation",
@@ -582,7 +615,7 @@
         }
       }
     },
-    "/roles": {
+    "api/roles": {
       "post": {
         "tags": ["roles"],
         "summary": "create a role",
@@ -591,14 +624,28 @@
         "produces": ["application/xml", "application/json"],
         "parameters": [
           {
-            "designation": "EVENTS"
+            "in": "header",
+            "name": "Authorization",
+            "description": "Add the token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Created role object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Role"
+            }
           }
         ],
         "responses": {
           "201": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/User"
+              "$ref": "#/definitions/Role"
             }
           },
           "400": {
@@ -615,12 +662,19 @@
         "description": "",
         "operationId": "fetch all roles",
         "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Add the token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          }
+        ],
         "responses": {
           "300": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
+            "description": "successful operation"
           },
           "400": {
             "description": "Invalid username supplied"
@@ -631,19 +685,26 @@
         }
       }
     },
-    "/roles/roleId": {
+    "api/roles/roleId": {
       "post": {
         "tags": ["roles"],
         "summary": "get one role",
         "description": "",
         "operationId": "get one role",
         "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Add the token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          }
+        ],
         "responses": {
-          "201": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
+          "200": {
+            "description": "successful operation"
           },
           "400": {
             "description": "Invalid username supplied"
@@ -661,7 +722,21 @@
         "produces": ["application/xml", "application/json"],
         "parameters": [
           {
-            "designation": "EVENTS"
+            "in": "header",
+            "name": "Authorization",
+            "description": "Add the token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Update role object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Role"
+            }
           }
         ],
         "responses": {
@@ -680,7 +755,7 @@
         }
       }
     },
-    "/ticket": {
+    "api/ticket": {
       "post": {
         "tags": ["ticket"],
         "summary": "create a ticket",
@@ -689,9 +764,21 @@
         "produces": ["application/xml", "application/json"],
         "parameters": [
           {
-            "price": 20,
-            "number": 50,
-            "category": 2
+            "in": "header",
+            "name": "Authorization",
+            "description": "Add the token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Created ticket object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Ticket"
+            }
           }
         ],
         "responses": {
@@ -715,6 +802,16 @@
         "description": "",
         "operationId": "fetch all ticket",
         "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Add the token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          }
+        ],
         "responses": {
           "300": {
             "description": "successful operation",
@@ -731,25 +828,41 @@
         }
       }
     },
-    "/ticket/ticketId": {
+    "api/ticket/ticketId": {
       "post": {
         "tags": ["ticket"],
         "summary": "get one ticket",
         "description": "",
         "operationId": "get one ticket",
         "produces": ["application/xml", "application/json"],
-        "responses": {
-          "201": {
-            "description": "successful operation",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Add the token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Created ticket object",
+            "required": true,
             "schema": {
-              "$ref": "#/definitions/User"
+              "$ref": "#/definitions/Ticket"
             }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
           },
           "400": {
-            "description": "Invalid username supplied"
+            "description": "Invalid userId supplied"
           },
           "404": {
-            "description": "User not found"
+            "description": "Ticket not found"
           }
         }
       },
@@ -761,9 +874,21 @@
         "produces": ["application/xml", "application/json"],
         "parameters": [
           {
-            "price": 20,
-            "number": 50,
-            "category": 2
+            "in": "header",
+            "name": "Authorization",
+            "description": "Add the token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "update ticket object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Ticket"
+            }
           }
         ],
         "responses": {
@@ -782,7 +907,7 @@
         }
       }
     },
-    "/ticket/category": {
+    "api/ticket/category": {
       "post": {
         "tags": ["ticket category"],
         "summary": "create a ticket category",
@@ -791,21 +916,29 @@
         "produces": ["application/xml", "application/json"],
         "parameters": [
           {
-            "designation": "TABLE"
+            "in": "header",
+            "name": "Authorization",
+            "description": "Add the token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Created category object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Category"
+            }
           }
         ],
         "responses": {
           "201": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
+            "description": "successful operation"
           },
           "400": {
-            "description": "Invalid username supplied"
-          },
-          "404": {
-            "description": "User not found"
+            "description": "Bad request"
           }
         }
       },
@@ -815,6 +948,16 @@
         "description": "",
         "operationId": "fetch all ticket category",
         "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Add the token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          }
+        ],
         "responses": {
           "300": {
             "description": "successful operation",
@@ -822,34 +965,35 @@
               "$ref": "#/definitions/User"
             }
           },
-          "400": {
-            "description": "Invalid username supplied"
-          },
           "404": {
-            "description": "User not found"
+            "description": "Item not found"
           }
         }
       }
     },
-    "/ticket/category/ticketId": {
-      "post": {
+    "api/ticket/category/ticketId": {
+      "get": {
         "tags": ["ticket category"],
         "summary": "get one ticket",
         "description": "",
         "operationId": "get one ticket",
         "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Add the token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          }
+        ],
         "responses": {
-          "201": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          },
-          "400": {
-            "description": "Invalid username supplied"
+          "200": {
+            "description": "successful operation"
           },
           "404": {
-            "description": "User not found"
+            "description": "Item not found"
           }
         }
       },
@@ -861,7 +1005,21 @@
         "produces": ["application/xml", "application/json"],
         "parameters": [
           {
-            "designation": "EVENTS"
+            "in": "header",
+            "name": "Authorization",
+            "description": "Add the token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Created category object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Category"
+            }
           }
         ],
         "responses": {
@@ -905,8 +1063,32 @@
           "type": "integer",
           "format": "int64"
         },
-        "name": {
+        "designation": {
           "type": "string"
+        }
+      },
+      "xml": {
+        "name": "Category"
+      }
+    },
+    "Ticket": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "price": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "number": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "category": {
+          "type": "integer",
+          "format": "int64"
         }
       },
       "xml": {
@@ -935,14 +1117,58 @@
         "phone": {
           "type": "string"
         },
-        "userStatus": {
-          "type": "integer",
-          "format": "int32",
-          "description": "User Status"
+        "location": {
+          "type": "string"
         }
       },
       "xml": {
         "name": "User"
+      }
+    },
+    "Login": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "Login"
+      }
+    },
+    "Profile": {
+      "type": "object",
+      "properties": {
+        "accountType": {
+          "type": "string"
+        },
+        "accountName": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "domain": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "profilePhotos": {
+          "type": "string"
+        },
+        "preferences": {
+          "type": "string"
+        },
+        "social": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "Profile"
       }
     },
     "Tag": {
@@ -960,6 +1186,14 @@
         "name": "Tag"
       }
     },
+    "Send-email": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        }
+      }
+    },
     "Event": {
       "type": "object",
       "required": ["name", "photoUrls"],
@@ -968,22 +1202,17 @@
           "type": "integer",
           "format": "int64"
         },
-        "category": {
-          "$ref": "#/definitions/Category"
-        },
-        "name": {
+        "title": {
           "type": "string",
-          "example": "doggie"
+          "example": "Youssoupha in Kigali"
         },
-        "photoUrls": {
-          "type": "array",
-          "xml": {
-            "name": "photoUrl",
-            "wrapped": true
-          },
-          "items": {
-            "type": "string"
-          }
+        "description": {
+          "type": "string",
+          "example": "Bomaye Music"
+        },
+        "body": {
+          "type": "string",
+          "example": "bg body"
         },
         "tags": {
           "type": "array",
@@ -995,34 +1224,22 @@
             "$ref": "#/definitions/Tag"
           }
         },
-        "status": {
+        "location": {
           "type": "string",
-          "description": "Event status in the store",
-          "enum": ["available", "pending", "sold"]
+          "example": "Kigali"
+        },
+        "startDate": {
+          "type": "date",
+          "example": "12-08-2020"
         }
       },
       "xml": {
         "name": "Event"
       }
-    },
-    "ApiResponse": {
-      "type": "object",
-      "properties": {
-        "code": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "type": {
-          "type": "string"
-        },
-        "message": {
-          "type": "string"
-        }
-      }
     }
   },
   "externalDocs": {
     "description": "Find out more about evently",
-    "url": "http://localhost:5000"
+    "url": "https://evently-backend.herokuapp.com/"
   }
 }
