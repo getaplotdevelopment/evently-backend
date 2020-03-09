@@ -148,7 +148,7 @@ class ProfileController {
       preferences,
       lastLogin,
       accountType,
-      social,
+      social: social.split(','),
       organizer: id
     };
 
