@@ -1,4 +1,3 @@
-
 export default async (searchParams, filterBy, model, include) => {
   const limit = 25;
   const currentPage = searchParams.page || 1;
