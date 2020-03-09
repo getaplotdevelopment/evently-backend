@@ -158,26 +158,29 @@
         "produces": ["application/xml", "application/json"],
         "parameters": [
           {
-            "name": "EventId",
-            "in": "path",
-            "description": "ID of Event that needs to be updated",
+            "in": "header",
+            "name": "Authorization",
+            "description": "Add the token",
+            "type": "string",
             "required": true,
-            "type": "integer",
-            "format": "int64"
+            "example": "Bearer token"
           },
           {
-            "name": "name",
-            "in": "formData",
-            "description": "Updated name of the Event",
-            "required": false,
-            "type": "string"
+            "in": "path",
+            "name": "slug",
+            "description": "Provide the event slug",
+            "type": "string",
+            "required": true,
+            "example": "slug-123456789"
           },
           {
-            "name": "status",
-            "in": "formData",
-            "description": "Updated status of the Event",
-            "required": false,
-            "type": "string"
+            "in": "body",
+            "name": "body",
+            "description": "Created profile object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Event"
+            }
           }
         ],
         "responses": {
