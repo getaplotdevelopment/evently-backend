@@ -215,6 +215,24 @@
         "description": "Returns a list of similar events",
         "operationId": "similar events",
         "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Add the token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "path",
+            "name": "slug",
+            "description": "Provide the event slug",
+            "type": "string",
+            "required": true,
+            "example": "slug-123456789"
+          }
+        ],
         "responses": {
           "200": {
             "description": "successful operation",
@@ -236,7 +254,7 @@
         ]
       }
     },
-  "api/users": {
+    "api/users": {
       "post": {
         "tags": ["users"],
         "summary": "Create user",
