@@ -16,7 +16,7 @@ const emailTemplates = {
     subject: 'Password Reset',
     html: `<h1 style="color: #444; margin-left: 20px;"> Welcome back to Evently </br> Reset your password </h1>
     <p style="color: #555; margin-left: 20px; font-size 14px"> Lost your password? click on the link below to reset it </p>
-    <a style="background-color: #61a46e; padding: 12px 15px 12px; color: #eee; font-size: 16px; text-decoration:none; margin-left:20px; cursor: pointer" href="${clientUrl}/admin/auth/set-new-password/$token"> Reset Password </a>`
+    <a style="background-color: #61a46e; padding: 12px 15px 12px; color: #eee; font-size: 16px; text-decoration:none; margin-left:20px; cursor: pointer" href="${clientUrl}/admin/auth/set-new-password?token=$token"> Reset Password </a>`
   },
   verification: {
     from: '',
