@@ -1,16 +1,22 @@
-import models from '../../models';
-import slugGenerator from '../../helpers/slugGenerator';
-import eventStatuschecker from '../../helpers/eventHelper/eventStatuschecker';
-import uploadCloudinary from '../../helpers/eventHelper/uploadCloudinary';
-import getEvents from '../../helpers/eventHelper/getEvent';
-import handleLikeUnlike from '../../helpers/eventHelper/handleLikeUnlike';
+import eventStatuschecker from "../../helpers/eventHelper/eventStatuschecker";
+import getEvents from "../../helpers/eventHelper/getEvent";
+import handleLikeUnlike from "../../helpers/eventHelper/handleLikeUnlike";
+import uploadCloudinary from "../../helpers/eventHelper/uploadCloudinary";
+import geocode from "../../helpers/googleMap/goecode";
+import slugGenerator from "../../helpers/slugGenerator";
+import models from "../../models";
+const { Op } = require("sequelize");
 const { Event, Likes, Ticket, TicketCategory } = models;
-
+var INCLUDETICKET = [
+  {
+    model: Ticket,
+    include: [{ model: TicketCategory, as: 'ticketCategory' }]
+  }
+]
 export const createEventController = async (req, res) => {
   const {
     title,
     description,
-    body,
     tagList,
     category,
     numberDays,
@@ -19,13 +25,13 @@ export const createEventController = async (req, res) => {
     startTime,
     currentMode,
     eventType,
-    location
+    location,
   } = req.body;
   let eventImage = req.file
     ? await uploadCloudinary(req.file.buffer)
     : req.body.eventImage;
   if (currentMode) {
-    await eventStatuschecker(currentMode.split(','));
+    await eventStatuschecker(currentMode.split(","));
   }
   const {
     id,
@@ -34,15 +40,15 @@ export const createEventController = async (req, res) => {
     userName,
     email,
     avatar,
-    isOrganizer
+    isOrganizer,
   } = req.organizer;
   const slug = slugGenerator(title);
+  const formatted_address = await geocode(location);
   const newEvent = {
     slug,
     title,
     description,
-    body,
-    tagList: tagList.split(','),
+    tagList: tagList.split(","),
     category,
     numberDays,
     eventImage,
@@ -51,41 +57,29 @@ export const createEventController = async (req, res) => {
     startTime,
     currentMode,
     eventType,
-    location,
-    organizer: email
+    location: formatted_address,
+    organizer: email,
   };
   const data = await Event.create(newEvent);
-  res.send({ status: 201, data });
+  res.status(201).send({ status: 201, data });
 };
 
 export const getOrganizerEvents = async (req, res) => {
   const { email } = req.organizer;
   const searchParams = req.query;
   const filterBy = { organizer: email };
-  const include = [
-      {
-        model: Ticket,
-        include: [{ model: TicketCategory, as: 'ticketCategory' }]
-      }
-    ]
-  const { pages, count, data } = await getEvents(searchParams, filterBy, Event, include);
+  const { pages, count, data } = await getEvents(searchParams, filterBy, Event, INCLUDETICKET);
 
   res.send({ status: 200, pages, count, data });
 };
 
 export const getAllEvents = async (req, res) => {
   const searchParams = req.query;
-  const include = [
-      {
-        model: Ticket,
-        include: [{ model: TicketCategory, as: 'ticketCategory' }]
-      }
-    ]
   const { pages, count, data } = await getEvents(
     searchParams,
     searchParams,
     Event,
-    include
+    INCLUDETICKET
   );
   res.send({ status: 200, pages, count, data });
 };
@@ -95,16 +89,16 @@ export const updateEvents = async (req, res) => {
   const { slug } = req.params;
   const updateTo = JSON.parse(JSON.stringify(req.body));
   if (updateTo.currentMode) {
-    await eventStatuschecker(updateTo.currentMode.split(','));
+    await eventStatuschecker(updateTo.currentMode.split(","));
   }
   const { dataValues } = await Event.findOne({
-    where: { slug }
+    where: { slug },
   });
 
   if (email !== dataValues.organizer) {
     return res.status(403).send({
       status: 403,
-      message: 'Unauthorized to perform this action'
+      message: "Unauthorized to perform this action",
     });
   }
 
@@ -114,13 +108,13 @@ export const updateEvents = async (req, res) => {
   }
   const [result, [data]] = await Event.update(updateTo, {
     where: { slug },
-    returning: true
+    returning: true,
   });
 
   res.send({
     status: 200,
-    message: 'Successfully Updated',
-    data
+    message: "Successfully Updated",
+    data,
   });
 };
 
@@ -134,7 +128,7 @@ export const likeUnlikeEvent = async (req, res) => {
 export const likedEvent = async (req, res) => {
   const { email } = req.user;
   const searchParams = req.query;
-  searchParams.sort = 'updatedAt:desc';
+  searchParams.sort = "updatedAt:desc";
   const filterBy = { email, isLiked: true };
   const { pages, count, data: liked } = await getEvents(
     searchParams,
@@ -148,12 +142,40 @@ export const likedEvent = async (req, res) => {
     jsonObj.map(async item => {
       const { slug } = item;
       const event = await Event.findAll({
-        where: { slug }
+        where: { slug },
       });
       item.event = event[0];
       return item;
     })
   );
   const data = await mapResponse;
+  res.send({ status: 200, pages, count, data });
+};
+
+export const getSimilarEvents = async (req, res) => {
+  const { slug } = req.params;
+  const queryParams = req.query;
+  queryParams.sort = "updatedAt:desc";
+  const event = await Event.findOne({
+    where: { slug },
+  });
+  if (event === null) {
+    return res.status(404).send({
+      status: 404,
+      error: "Event not found",
+    });
+  }
+  const { location, category } = event;
+  const filterBy = {
+    category,
+    "location.country": location.country,
+    finishDate: { [Op.gte]: new Date().toISOString() },
+  };
+  const { pages, count, data } = await getEvents(
+    queryParams,
+    filterBy,
+    Event,
+    INCLUDETICKET
+  );
   res.send({ status: 200, pages, count, data });
 };

@@ -67,7 +67,10 @@ const validateEvent = [
   check('description', 'Description is required')
     .not()
     .isEmpty(),
-  check('body', 'Body is required')
+  check('startDate', 'startDate is required')
+    .not()
+    .isEmpty(),
+  check('finishDate', 'finishDate is required')
     .not()
     .isEmpty()
 ];
