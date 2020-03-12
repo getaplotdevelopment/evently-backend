@@ -186,10 +186,10 @@ export const getSimilarEvents = async (req, res) => {
 
 export const getEventsNearCities = async (req, res) => {
   const { slug } = req.params;
-  const event = await getSingleEvent(slug);
+  const event = await getSingleEvent(slug);  
   const { location } = event;
   const origins = [location.locations];
-  if (origins[0].lat == 0 && origins[0].Lng == 0) {
+  if (origins[0].lat == 0 && origins[0].lng == 0) {
     return res.send({
       status: 200,
       data: []

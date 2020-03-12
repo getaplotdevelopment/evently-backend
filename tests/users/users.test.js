@@ -73,8 +73,7 @@ describe('User', () => {
       .set('Content-Type', 'application/json')
       .send(existingUser);
     res.should.have.status(409);
-    res.body.errors.body.should.be.a('array');
-    res.body.errors.should.be.a('object');
+    res.body.error.should.be.a('string');
   });
   it('Should login a user and return the status 200', async () => {
     const res = await chai
@@ -93,8 +92,7 @@ describe('User', () => {
       .set('Content-Type', 'application/json')
       .send(invalidLoginUser);
     res.should.have.status(401);
-    res.body.errors.body.should.be.a('array');
-    res.body.errors.should.be.a('object');
+    res.body.error.should.be.a('string');
   });
   it('Should not login with wrong password', async () => {
     const res = await chai
@@ -103,8 +101,7 @@ describe('User', () => {
       .set('Content-Type', 'application/json')
       .send(invalidLoginUserPassword);
     res.should.have.status(401);
-    res.body.errors.body.should.be.a('array');
-    res.body.errors.should.be.a('object');
+    res.body.error.should.be.a('string');
   });
   it('Should let the user signup via Social media platforms', async () => {
     const result = await user.loginViaSocialMedia(socialMediaUser);
@@ -119,8 +116,7 @@ describe('Check email', () => {
       .set('Content-Type', 'application/json')
       .send(wrongEmailToCheck);
     res.should.have.status(404);
-    res.body.errors.body.should.be.a('array');
-    res.body.errors.should.be.a('object');
+    res.body.error.should.be.a('string');
   });
   it('should send an email using nodemailer-mock', async () => {
     // call a service that uses nodemailer
@@ -155,8 +151,7 @@ describe('Reset Password', () => {
       .set('Content-Type', 'application/json')
       .send({ token, password: 'newPassword2020' });
     res.should.have.status(401);
-    res.body.errors.body.should.be.a('array');
-    res.body.errors.should.be.a('object');
+    res.body.error.should.be.a('string');
   });
 });
 describe('Activate user account', () => {
@@ -183,7 +178,7 @@ describe('Activate user account', () => {
       .get(`/api/users/verify/${token}`)
       .set('Content-Type', 'application/json');
     res.should.have.status(500);
-    res.body.errors.body.should.be.a('array');
+    res.body.error.should.be.a('string');
   });
 });
 describe('Change current user passowrd', () => {
