@@ -21,7 +21,7 @@ export default async (address) => {
       place_id: null,
       locations: {
         lat: 0,
-        Lng: 0
+        lng: 0
       }
     };
   }

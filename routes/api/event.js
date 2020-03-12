@@ -7,7 +7,8 @@ import {
   updateEvents,
   likeUnlikeEvent,
   likedEvent,
-  getSimilarEvents
+  getSimilarEvents,
+  getEventsNearCities
 } from '../../controllers/event';
 import asyncHandler from '../../helpers/errorsHandler/asyncHandler';
 import {
@@ -48,4 +49,8 @@ router.get(
   '/events/:slug/similar',
   asyncHandler(getSimilarEvents)
   )
+router.get(
+  '/events/:slug/nearbycity',
+  asyncHandler(getEventsNearCities)
+)
 export default router;
