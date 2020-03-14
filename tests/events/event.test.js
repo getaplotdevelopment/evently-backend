@@ -2,18 +2,18 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../../index';
-import models from '../../models/index';
 import {
   createEvent,
   signupUser2,
   signupUser3,
   signupUser5,
-  similarEvent
+  similarEvent,
+  nearByCity,
+  invalidLoc
 } from '../testingData/files.json';
 
 chai.use(chaiHttp);
 chai.should();
-const { Event } = models;
 
 // before(async () => {
 //   await Event.destroy({ where: {}, truncate: true });
@@ -263,21 +263,34 @@ describe('Event', () => {
   });
 
   it('Should return null for invalid google location', async () => {
-    const invalidLoc = {
-      title: 'title1 is good',
-      description: 'Bomaye',
-      body: 'event body',
-      tagList: 'tags, new',
-      category: 'party',
-      numberDays: '1 day',
-      eventImage: 'http',
-      eventStatus: 'draft',
-      startDate: '2020-01-01',
-      finishDate: '2020-01-03',
-      location: 't6666-0no'
-    };
     const response = await loginOrganizer();
     const res = await createEvents(response, invalidLoc);
     res.should.have.status(201);
   }).timeout(10000);
+
+  it('should retrieve event from the near by city', async() => {
+    const user1 = await loginOrganizer();
+    const eventResp = await createEvents(user1, nearByCity);    
+    const { slug } = eventResp.body.data;
+    const result = await chai.request(app).get(`/api/events/${slug}/nearbycity`);
+    result.should.have.status(200);
+    result.body.data[0].should.have.property('distance')
+    result.body.data[0].should.have.property('duration')
+  })
+
+  it('should return 404 if slug is invalid', async () => {
+    const slug = 'invalid-slug-1234'
+    const result = await chai.request(app).get(`/api/events/${slug}/nearbycity`);
+    result.should.have.status(404);
+    result.body.should.have.property('error').eql('Event not found')
+
+  })
+  it('should return [] if no available events near by', async () => {
+    const response = await loginOrganizer();
+    const res = await createEvents(response, invalidLoc);
+    const { slug } = res.body.data;
+    const result = await chai.request(app).get(`/api/events/${slug}/nearbycity`);
+    result.should.have.status(200);
+    result.body.should.have.property('data').eql([])
+  } )
 });

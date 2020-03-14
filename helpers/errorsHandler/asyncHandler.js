@@ -9,9 +9,7 @@ const asyncHandler = callback => async (req, res, next) => {
         : err.message;
     res.status(errStatus).send({
       status: errStatus,
-      errors: {
-        body: [errMsg]
-      }
+      error: errMsg
     });
   }
 };

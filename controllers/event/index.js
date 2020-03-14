@@ -1,18 +1,25 @@
-import eventStatuschecker from "../../helpers/eventHelper/eventStatuschecker";
-import getEvents from "../../helpers/eventHelper/getEvent";
-import handleLikeUnlike from "../../helpers/eventHelper/handleLikeUnlike";
-import uploadCloudinary from "../../helpers/eventHelper/uploadCloudinary";
-import geocode from "../../helpers/googleMap/goecode";
-import slugGenerator from "../../helpers/slugGenerator";
-import models from "../../models";
-const { Op } = require("sequelize");
+import eventStatuschecker from '../../helpers/eventHelper/eventStatuschecker';
+import getEvents from '../../helpers/eventHelper/getEvent';
+import handleLikeUnlike from '../../helpers/eventHelper/handleLikeUnlike';
+import uploadCloudinary from '../../helpers/eventHelper/uploadCloudinary';
+import geocode from '../../helpers/googleMap/goecode';
+import slugGenerator from '../../helpers/slugGenerator';
+import nearByCity from '../../helpers/googleMap/nearByCity';
+import models from '../../models';
+import getSingleEvent from '../../helpers/eventHelper/getSingleEvent';
+const { Op } = require('sequelize');
 const { Event, Likes, Ticket, TicketCategory } = models;
-var INCLUDETICKET = [
-  {
-    model: Ticket,
-    include: [{ model: TicketCategory, as: 'ticketCategory' }]
-  }
-]
+
+const includeTicket = () => {
+  // Functions are garbage collected after their scope
+  // Global variables don't
+  return [
+    {
+      model: Ticket,
+      include: [{ model: TicketCategory, as: 'ticketCategory' }]
+    }
+  ];
+};
 export const createEventController = async (req, res) => {
   const {
     title,
@@ -25,13 +32,13 @@ export const createEventController = async (req, res) => {
     startTime,
     currentMode,
     eventType,
-    location,
+    location
   } = req.body;
   let eventImage = req.file
     ? await uploadCloudinary(req.file.buffer)
     : req.body.eventImage;
   if (currentMode) {
-    await eventStatuschecker(currentMode.split(","));
+    await eventStatuschecker(currentMode.split(','));
   }
   const {
     id,
@@ -40,7 +47,7 @@ export const createEventController = async (req, res) => {
     userName,
     email,
     avatar,
-    isOrganizer,
+    isOrganizer
   } = req.organizer;
   const slug = slugGenerator(title);
   const formatted_address = await geocode(location);
@@ -48,7 +55,7 @@ export const createEventController = async (req, res) => {
     slug,
     title,
     description,
-    tagList: tagList.split(","),
+    tagList: tagList.split(','),
     category,
     numberDays,
     eventImage,
@@ -58,7 +65,7 @@ export const createEventController = async (req, res) => {
     currentMode,
     eventType,
     location: formatted_address,
-    organizer: email,
+    organizer: email
   };
   const data = await Event.create(newEvent);
   res.status(201).send({ status: 201, data });
@@ -68,7 +75,12 @@ export const getOrganizerEvents = async (req, res) => {
   const { email } = req.organizer;
   const searchParams = req.query;
   const filterBy = { organizer: email };
-  const { pages, count, data } = await getEvents(searchParams, filterBy, Event, INCLUDETICKET);
+  const { pages, count, data } = await getEvents(
+    searchParams,
+    filterBy,
+    Event,
+    includeTicket()
+  );
 
   res.send({ status: 200, pages, count, data });
 };
@@ -79,7 +91,7 @@ export const getAllEvents = async (req, res) => {
     searchParams,
     searchParams,
     Event,
-    INCLUDETICKET
+    includeTicket()
   );
   res.send({ status: 200, pages, count, data });
 };
@@ -89,16 +101,16 @@ export const updateEvents = async (req, res) => {
   const { slug } = req.params;
   const updateTo = JSON.parse(JSON.stringify(req.body));
   if (updateTo.currentMode) {
-    await eventStatuschecker(updateTo.currentMode.split(","));
+    await eventStatuschecker(updateTo.currentMode.split(','));
   }
   const { dataValues } = await Event.findOne({
-    where: { slug },
+    where: { slug }
   });
 
   if (email !== dataValues.organizer) {
     return res.status(403).send({
       status: 403,
-      message: "Unauthorized to perform this action",
+      message: 'Unauthorized to perform this action'
     });
   }
 
@@ -108,13 +120,13 @@ export const updateEvents = async (req, res) => {
   }
   const [result, [data]] = await Event.update(updateTo, {
     where: { slug },
-    returning: true,
+    returning: true
   });
 
   res.send({
     status: 200,
-    message: "Successfully Updated",
-    data,
+    message: 'Successfully Updated',
+    data
   });
 };
 
@@ -128,7 +140,7 @@ export const likeUnlikeEvent = async (req, res) => {
 export const likedEvent = async (req, res) => {
   const { email } = req.user;
   const searchParams = req.query;
-  searchParams.sort = "updatedAt:desc";
+  searchParams.sort = 'updatedAt:desc';
   const filterBy = { email, isLiked: true };
   const { pages, count, data: liked } = await getEvents(
     searchParams,
@@ -142,7 +154,7 @@ export const likedEvent = async (req, res) => {
     jsonObj.map(async item => {
       const { slug } = item;
       const event = await Event.findAll({
-        where: { slug },
+        where: { slug }
       });
       item.event = event[0];
       return item;
@@ -155,27 +167,54 @@ export const likedEvent = async (req, res) => {
 export const getSimilarEvents = async (req, res) => {
   const { slug } = req.params;
   const queryParams = req.query;
-  queryParams.sort = "updatedAt:desc";
-  const event = await Event.findOne({
-    where: { slug },
-  });
-  if (event === null) {
-    return res.status(404).send({
-      status: 404,
-      error: "Event not found",
-    });
-  }
+  queryParams.sort = 'updatedAt:desc';
+  const event = await getSingleEvent(slug);
   const { location, category } = event;
   const filterBy = {
     category,
-    "location.country": location.country,
-    finishDate: { [Op.gte]: new Date().toISOString() },
+    'location.country': location.country,
+    finishDate: { [Op.gte]: new Date().toISOString() }
   };
   const { pages, count, data } = await getEvents(
     queryParams,
     filterBy,
     Event,
-    INCLUDETICKET
+    includeTicket()
   );
   res.send({ status: 200, pages, count, data });
+};
+
+export const getEventsNearCities = async (req, res) => {
+  const { slug } = req.params;
+  const event = await getSingleEvent(slug);  
+  const { location } = event;
+  const origins = [location.locations];
+  if (origins[0].lat == 0 && origins[0].lng == 0) {
+    return res.send({
+      status: 200,
+      data: []
+    });
+  }
+  const queryParams = {};
+  const filterBy = {
+    'location.country': location.country,
+    finishDate: { [Op.gte]: new Date().toISOString() }
+  };
+  const { pages, count, data } = await getEvents(
+    queryParams,
+    filterBy,
+    Event,
+    includeTicket()
+  );
+  let eventsNearCity = [];
+  for (const event of data) {
+    const destinations = [event.location.locations];
+    const response = await nearByCity(origins, destinations);
+    if (response.status) {
+      event.dataValues.distance = response.distance;
+      event.dataValues.duration = response.duration;
+      eventsNearCity.push(event);
+    }
+  }
+  res.send({ status: 200, data: eventsNearCity });
 };
