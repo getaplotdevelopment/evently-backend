@@ -10,7 +10,8 @@ import {
 import {
   checkUser,
   checkUserLogin,
-  checkPassword
+  checkPassword,
+  isActivate
 } from '../../middleware/users/checkUser';
 import asyncHandler from '../../helpers/errorsHandler/asyncHandler';
 import auth from '../../middleware/users/auth';
@@ -31,6 +32,7 @@ router.post(
   validateUserLogin,
   asyncHandler(checkUserLogin),
   validations,
+  asyncHandler(isActivate),
   asyncHandler(users.login)
 );
 router.put(
@@ -39,7 +41,7 @@ router.put(
   validations,
   asyncHandler(users.resetPassword)
 );
-router.get('/verify/:token', asyncHandler(users.activateAccount));
+router.put('/verify', asyncHandler(users.activateAccount));
 router.post('/check-user', validations, asyncHandler(users.checkUser));
 router.post('/send-email', asyncHandler(users.checkEmail));
 router.put(

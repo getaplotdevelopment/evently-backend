@@ -39,7 +39,7 @@ const validateUserLogin = [
     })
 ];
 const validatePassword = [
-  check('password', 'Password is required')
+  check('password', 'Your password should have at least 6 characters')
     .not()
     .isEmpty()
     .isLength({
@@ -53,7 +53,7 @@ const validateChangePassword = [
     .isLength({
       min: 6
     }),
-  check('newPassword', 'new password is required')
+  check('newPassword', 'Your password should have at least 6 characters')
     .not()
     .isEmpty()
     .isLength({

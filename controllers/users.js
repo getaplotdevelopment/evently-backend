@@ -8,6 +8,7 @@ import generateToken from '../helpers/generateToken/generateToken';
 import sendEmail from '../helpers/sendEmail/callMailer';
 import geocode from '../helpers/googleMap/goecode';
 import { redisClient } from '../helpers/logout/redisClient';
+import { getRole } from '../helpers/sendEmail/emailTemplates';
 
 dotenv.config();
 const { User, Roles } = models;
@@ -93,6 +94,7 @@ class UserController {
     const formated_address = await geocode(newUser.location);
     userInstance.location = formated_address;
     await userInstance.save();
+    getRole(user.role);
     const response = await sendEmail(user.email, token);
   }
 
@@ -193,11 +195,14 @@ class UserController {
     const payload = {
       email: foundUser.email
     };
+
     const tokenGenerated = generateToken(payload);
     const token = tokenGenerated.generate;
     req.body.token = token;
     req.body.template = 'resetPassword';
+    getRole(foundUser.role);
     const response = await sendEmail(foundUser.email, token, 'resetPassword');
+
     res.status(200).send({ status: 200, response });
   }
 
@@ -245,13 +250,15 @@ class UserController {
    * @returns {Object} Response
    */
   async activateAccount(req, res) {
-    const { token } = req.params;
-    const decoded = jwt.decode(token, secretKey);
-    if (decoded) {
+    const { token } = req.query;
+    const user = jwt.decode(token, secretKey);
+    await redisClient.LPUSH('token', token);
+
+    if (user) {
       const [rowsUpdated, [updatedAccount]] = await User.update(
         { isActivated: true },
         {
-          where: { userName: decoded.user.userName },
+          where: { email: user.email },
           returning: true
         }
       );

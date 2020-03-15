@@ -1,6 +1,8 @@
 import bcrypt from 'bcryptjs';
+import { Op } from 'sequelize';
 import models from '../../models/index';
 import httpError from '../../helpers/errorsHandler/httpError';
+import authHelper from '../../helpers/authHelper';
 
 const { User } = models;
 const { OrganizerProfile } = models;
@@ -64,10 +66,24 @@ const checkPassword = async (req, res, next) => {
   }
   next();
 };
+const isActivate = async (req, res, next) => {
+  const { email } = req.body;
+  const user = await User.findOne({
+    where: { email, isActivated: true }
+  });
+  if (!user) {
+    throw new httpError(
+      400,
+      'Kindly check your email and activate your account before login'
+    );
+  }
+  next();
+};
 export {
   checkUser,
   checkUserLogin,
   checkUserProfile,
   checkPassword,
-  checkProfile
+  checkProfile,
+  isActivate
 };
