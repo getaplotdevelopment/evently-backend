@@ -6,6 +6,7 @@ import models from '../models/index';
 import httpError from '../helpers/errorsHandler/httpError';
 import generateToken from '../helpers/generateToken/generateToken';
 import sendEmail from '../helpers/sendEmail/callMailer';
+import geocode from '../helpers/googleMap/goecode';
 
 dotenv.config();
 const { User, Roles } = models;
@@ -56,7 +57,8 @@ class UserController {
     };
     const salt = await bcrypt.genSalt(10);
     newUser.password = await bcrypt.hash(password, salt);
-    const { dataValues: createdUser } = await User.create(newUser);
+    const userInstance = await User.create(newUser);
+    const createdUser = userInstance.dataValues
     const assignedRole = await Roles.findOne({
       where: { id: createdUser.role }
     });
@@ -86,8 +88,11 @@ class UserController {
     };
     const tokenGenerated = generateToken(payload);
     const token = tokenGenerated.generate;
+    res.status(201).json({ status: 201, user, token, response: 'Email Sent'});
+    const formated_address = await geocode(newUser.location)
+    userInstance.location = formated_address
+    await userInstance.save()
     const response = await sendEmail(user.email, token);
-    res.status(201).json({ status: 201, user, token, response});
   }
 
   /**
