@@ -15,6 +15,7 @@ import {
 } from '../../middleware/users/checkUser';
 import asyncHandler from '../../helpers/errorsHandler/asyncHandler';
 import auth from '../../middleware/users/auth';
+import checkToken from '../../middleware/users/checkToken';
 
 const users = new Users();
 
@@ -37,11 +38,16 @@ router.post(
 );
 router.put(
   '/reset-password',
+  asyncHandler(checkToken),
   validatePassword,
   validations,
   asyncHandler(users.resetPassword)
 );
-router.put('/verify', asyncHandler(users.activateAccount));
+router.put(
+  '/verify',
+  asyncHandler(checkToken),
+  asyncHandler(users.activateAccount)
+);
 router.post('/check-user', validations, asyncHandler(users.checkUser));
 router.post('/send-email', asyncHandler(users.checkEmail));
 router.put(

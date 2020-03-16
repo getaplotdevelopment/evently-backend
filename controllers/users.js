@@ -222,6 +222,7 @@ class UserController {
   async resetPassword(req, res) {
     const password = bcrypt.hashSync(req.body.password, 10);
     const { token } = req.body;
+    await redisClient.LPUSH('token', token);
     const decoded = jwt.decode(token, secretKey);
     if (decoded) {
       const checkUpdate = await User.update(

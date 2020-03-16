@@ -1,7 +1,12 @@
+/* eslint-disable no-nested-ternary */
 import { redisClient } from '../../helpers/logout/redisClient';
 
 const checkToken = async (req, res, next) => {
-  const token = req.headers.authorization.split(' ')[1];
+  const token = req.body.token
+    ? req.body.token
+    : req.query.token
+    ? req.query.token
+    : req.headers.authorization.split(' ')[1];
 
   const invalid = callback => {
     redisClient.lrange('token', 0, 999999999, (err, result) =>

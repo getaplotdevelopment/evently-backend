@@ -7,19 +7,19 @@ const html = (title, action, body, role) => {
     if (role === 'SUPER USER') {
       url =
         process.env.NODE_ENV === 'production'
-          ? `${process.env.FRONTEND_PRODUCTION_URL}admin/auth/set-new-password?token=$token`
-          : `${process.env.FRONTEND_APP_URL}admin/auth/set-new-password?token=$token`;
+          ? `${process.env.FRONTEND_PRODUCTION_URL}admin/auth/reset-password?token=$token`
+          : `${process.env.FRONTEND_APP_URL}admin/auth/reset-password?token=$token`;
     } else {
       url =
         process.env.NODE_ENV === 'production'
-          ? `${process.env.FRONTEND_PRODUCTION_URL}user/auth/set-new-password?token=$token`
-          : `${process.env.FRONTEND_APP_URL}user/auth/set-new-password?token=$token`;
+          ? `${process.env.FRONTEND_PRODUCTION_URL}auth/reset-password?token=$token`
+          : `${process.env.FRONTEND_APP_URL}auth/reset-password?token=$token`;
     }
   } else {
     url =
       process.env.NODE_ENV === 'production'
-        ? `${process.env.FRONTEND_PRODUCTION_URL}user/activate-account?token=$token`
-        : `${process.env.FRONTEND_APP_URL}user/activate-account?token=$token`;
+        ? `${process.env.FRONTEND_PRODUCTION_URL}activate-account?token=$token`
+        : `${process.env.FRONTEND_APP_URL}activate-account?token=$token`;
   }
 
   const secondAction = action.toLowerCase();
