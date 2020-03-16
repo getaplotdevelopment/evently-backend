@@ -35,7 +35,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       social: {
-        type: Sequelize.ARRAY(Sequelize.STRING)
+        type: Sequelize.JSON
       },
       organizer: {
         type: Sequelize.INTEGER

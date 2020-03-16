@@ -72,6 +72,9 @@ module.exports = {
         type: Sequelize.STRING,
         defaultValue: 'draft'
       },
+      availableTickets: {
+        type: Sequelize.ARRAY(Sequelize.JSON)
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

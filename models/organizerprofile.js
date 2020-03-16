@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       preferences: DataTypes.ARRAY('STRING'),
       lastLogin: DataTypes.DATE,
       accountType: DataTypes.STRING,
-      social: DataTypes.ARRAY('STRING'),
+      social: DataTypes.JSON,
       organizer: {
         type: DataTypes.INTEGER,
         references: { model: 'User', key: 'id' }

@@ -32,8 +32,11 @@ export const createEventController = async (req, res) => {
     startTime,
     currentMode,
     eventType,
-    location
+    location,
+    availableTickets
   } = req.body;
+  console.log(availableTickets);
+  
   let eventImage = req.file
     ? await uploadCloudinary(req.file.buffer)
     : req.body.eventImage;
