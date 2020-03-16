@@ -5,13 +5,13 @@ module.exports = (sequelize, DataTypes) => {
       accountName: DataTypes.STRING,
       description: DataTypes.STRING,
       domain: DataTypes.STRING,
-      location: DataTypes.STRING,
+      location: DataTypes.JSON,
       profilePhoto: DataTypes.STRING,
       coverPhoto: DataTypes.STRING,
       preferences: DataTypes.ARRAY('STRING'),
       lastLogin: DataTypes.DATE,
       accountType: DataTypes.STRING,
-      social: DataTypes.ARRAY('STRING'),
+      social: DataTypes.JSON,
       organizer: {
         type: DataTypes.INTEGER,
         references: { model: 'User', key: 'id' }

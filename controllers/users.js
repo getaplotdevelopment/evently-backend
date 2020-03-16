@@ -206,6 +206,7 @@ class UserController {
    * @param {object} res response.
    * @returns {object} response.
    */
+  //TODO: @jaman I don't see this method used anywhere. 
   async checkUser(req, res) {
     const { email } = req.body;
 
@@ -313,7 +314,7 @@ class UserController {
     const { location } = req.body;
     const { email } = req.user;
     const userInstance = await User.findOne({ where: { email } });
-    res.json({ status: 200, message: 'Successfully updated' });
+    res.send({ status: 200, message: 'Successfully updated' });
     const formated_address = await geocode(location);
     userInstance.location = formated_address;
     await userInstance.save();

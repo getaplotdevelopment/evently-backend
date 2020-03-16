@@ -4,6 +4,7 @@ import fs from 'fs';
 import models from '../models/index';
 import cloudinary from '../helpers/fileUploadConfig/cloudinary';
 import httError from '../helpers/errorsHandler/httpError';
+import geocode from '../helpers/googleMap/goecode';
 
 dotenv.config();
 const { OrganizerProfile, User } = models;
@@ -44,11 +45,12 @@ class ProfileController {
     const profilePhoto = files.length ? urls[0].url : req.body.profilePhoto;
     const coverPhoto = files.length > 1 ? urls[1].url : req.body.coverPhoto;
     const { id } = req.user;
+    const formatted_address = await geocode(location);
     const newProfile = {
       accountName,
       description,
       domain,
-      location,
+      location: formatted_address,
       profilePhoto,
       coverPhoto,
       preferences,
@@ -135,11 +137,12 @@ class ProfileController {
     }
     const profilePhoto = files.length ? urls[0].url : undefined;
     const coverPhoto = files.length > 1 ? urls[1].url : undefined;
+    const formatted_address = await geocode(location);
     const updatedProfile = {
       accountName,
       description,
       domain,
-      location,
+      location: formatted_address,
       profilePhoto,
       coverPhoto,
       preferences,
