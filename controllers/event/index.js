@@ -11,8 +11,6 @@ const { Op } = require('sequelize');
 const { Event, Likes, Ticket, TicketCategory } = models;
 
 const includeTicket = () => {
-  // Functions are garbage collected after their scope
-  // Global variables don't
   return [
     {
       model: Ticket,
@@ -35,8 +33,6 @@ export const createEventController = async (req, res) => {
     location,
     availableTickets
   } = req.body;
-  console.log(availableTickets);
-  
   let eventImage = req.file
     ? await uploadCloudinary(req.file.buffer)
     : req.body.eventImage;
@@ -68,7 +64,8 @@ export const createEventController = async (req, res) => {
     currentMode,
     eventType,
     location: formatted_address,
-    organizer: email
+    organizer: email,
+    availableTickets
   };
   const data = await Event.create(newEvent);
   res.status(201).send({ status: 201, data });
