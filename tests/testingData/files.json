@@ -5,6 +5,7 @@
     "userName": "user",
     "email": "getaplotdev@gmail.com",
     "password": "emabush2015",
+    "location": "kansanga",
     "deviceToken": "dkfkfkskdf",
     "role": 1
   },
@@ -14,6 +15,7 @@
     "userName": "user",
     "email": "geta@gmail.com",
     "password": "emabush2015",
+    "location": "kansanga",
     "deviceToken": "dkfkfkskdf",
     "role": 2
   },
@@ -23,6 +25,7 @@
     "userName": "user",
     "email": "geta01@gmail.com",
     "password": "emabush2015",
+    "location": "kansanga",
     "isActivated": true,
     "deviceToken": "dkfkfkskdf",
     "role": 2
@@ -33,6 +36,7 @@
     "userName": "user",
     "email": "geta02@gmail.com",
     "password": "emabush2015",
+    "location": "kansanga",
     "isActivated": true,
     "deviceToken": "dkfkfkskdf",
     "role": 3
@@ -43,6 +47,7 @@
     "userName": "user",
     "email": "superuser@gmail.com",
     "password": "emabush2015",
+    "location": "kansanga",
     "isActivated": true,
     "deviceToken": "dkfkfkskdf",
     "role": 3
@@ -53,6 +58,7 @@
     "userName": "user",
     "email": "notorganizer@gmail.com",
     "password": "emabush2015",
+    "location": "kansanga",
     "isActivated": true,
     "deviceToken": "dkfkfkskdf",
     "role": 1
@@ -63,6 +69,7 @@
     "userName": "username5",
     "email": "organizer5@gmail.com",
     "password": "emabush2015",
+    "location": "kansanga",
     "isActivated": true,
     "deviceToken": "dkfkfkskdf",
     "role": 2
@@ -73,6 +80,7 @@
     "userName": "",
     "email": "getaplotdev",
     "password": "emabush2015",
+    "location": "kansanga",
     "isActivated": true,
     "deviceToken": "dkfkfkskdf",
     "role": 1
@@ -85,6 +93,7 @@
     "password": "emabush2015",
     "isActivated": true,
     "deviceToken": "dkfkfkskdf",
+    "location": "kansanga",
     "role": 1
   },
   "loginUser": {

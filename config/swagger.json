@@ -566,6 +566,58 @@
         }
       }
     },
+    "api/users/location": {
+      "patch": {
+        "tags": ["users"],
+        "summary": "update user location",
+        "description": "",
+        "operationId": "update user location",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Add the token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "{ location: 'kigali' }",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/location"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully updated",
+            "schema": {
+              "type": "string"
+            },
+            "headers": {
+              "X-Rate-Limit": {
+                "type": "integer",
+                "format": "int32",
+                "description": "calls per hour allowed by the user"
+              },
+              "X-Expires-After": {
+                "type": "string",
+                "format": "date-time",
+                "description": "date in UTC when token expires"
+              }
+            }
+          },
+          "401": {
+            "description": "Auth Error"
+          }
+        }
+      }
+    },
+
     "api/profile": {
       "post": {
         "tags": ["profile"],

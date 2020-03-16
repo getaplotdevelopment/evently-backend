@@ -17,7 +17,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       location: {
-        type: Sequelize.STRING
+        type: Sequelize.JSON
       },
       profilePhoto: {
         type: Sequelize.STRING
@@ -35,7 +35,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       social: {
-        type: Sequelize.ARRAY(Sequelize.STRING)
+        type: Sequelize.JSON
       },
       organizer: {
         type: Sequelize.INTEGER

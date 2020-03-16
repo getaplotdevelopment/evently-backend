@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       isActivated: { type: DataTypes.BOOLEAN, defaultValue: false },
       deviceToken: { type: DataTypes.STRING },
       phoneNumber: { type: DataTypes.STRING },
-      location: { type: DataTypes.STRING },
+      location: { type: DataTypes.JSON },
       role: {
         type: DataTypes.INTEGER,
         references: { model: 'Roles', key: 'id' }

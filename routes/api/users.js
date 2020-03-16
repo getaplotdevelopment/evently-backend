@@ -52,4 +52,5 @@ router.put(
   asyncHandler(users.changeCurrentPassword)
 );
 
+router.patch('/location', auth, asyncHandler(users.updateLocation));
 export default router;

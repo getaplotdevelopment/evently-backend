@@ -208,4 +208,24 @@ describe('Change current user passowrd', () => {
       .send(changePwd);
     res.should.have.status(401);
   });
+  it('Should update user location', async () => {
+    const newLocation = {location: 'mbarara'}
+    const loginUser = {
+      password: 'jamanBoss2020',
+      email: "getaplotdev@gmail.com",
+    }
+    const res = await chai
+      .request(app)
+      .post('/api/users/login')
+      .set('Content-Type', 'application/json')
+      .send(loginUser);    
+    currentUserToken = res.body.token;    
+    const result = await chai
+      .request(app)
+      .patch('/api/users/location')
+      .set({ Authorization: 'Bearer ' + currentUserToken })
+      .send(newLocation);
+    result.should.have.status(200);
+    result.body.should.have.property('message').eql('Successfully updated');
+  }).timeout(10000);
 });
