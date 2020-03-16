@@ -58,7 +58,7 @@ class UserController {
     const salt = await bcrypt.genSalt(10);
     newUser.password = await bcrypt.hash(password, salt);
     const userInstance = await User.create(newUser);
-    const createdUser = userInstance.dataValues
+    const createdUser = userInstance.dataValues;
     const assignedRole = await Roles.findOne({
       where: { id: createdUser.role }
     });
@@ -88,10 +88,10 @@ class UserController {
     };
     const tokenGenerated = generateToken(payload);
     const token = tokenGenerated.generate;
-    res.status(201).json({ status: 201, user, token, response: 'Email Sent'});
-    const formated_address = await geocode(newUser.location)
-    userInstance.location = formated_address
-    await userInstance.save()
+    res.status(201).json({ status: 201, user, token, response: 'Email Sent' });
+    const formated_address = await geocode(newUser.location);
+    userInstance.location = formated_address;
+    await userInstance.save();
     const response = await sendEmail(user.email, token);
   }
 
@@ -302,6 +302,21 @@ class UserController {
     res
       .status(200)
       .json({ status: 200, message: 'Password updated successfully' });
+  }
+
+  /**
+   * @param {Object} req - Request form user
+   * @param {Object} res - Response to the user
+   * @returns {Object} Response
+   */
+  async updateLocation(req, res) {
+    const { location } = req.body;
+    const { email } = req.user;
+    const userInstance = await User.findOne({ where: { email } });
+    res.json({ status: 200, message: 'Successfully updated' });
+    const formated_address = await geocode(location);
+    userInstance.location = formated_address;
+    await userInstance.save();
   }
 }
 
