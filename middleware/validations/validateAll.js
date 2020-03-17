@@ -49,16 +49,22 @@ const validatePassword = [
 const validateChangePassword = [
   check('oldPassword', 'Old password is required')
     .not()
-    .isEmpty()
-    .isLength({
-      min: 6
-    }),
-  check('newPassword', 'Your password should have at least 6 characters')
+    .isEmpty(),
+  check(
+    'oldPassword',
+    'Old password should have at least a length of 6 characters'
+  ).isLength({
+    min: 6
+  }),
+  check(
+    'newPassword',
+    'Your password should have at least 6 characters'
+  ).isLength({
+    min: 6
+  }),
+  check('newPassword', 'New password is required')
     .not()
     .isEmpty()
-    .isLength({
-      min: 6
-    })
 ];
 const validateEvent = [
   check('title', 'Title is required')
