@@ -3,17 +3,20 @@ import httpError from '../../helpers/errorsHandler/httpError';
 import models from '../../models/index';
 import authHelper from '../../helpers/authHelper';
 
-const { User } = models;
+const { User, Role } = models;
 
 export default async (req, res, next) => {
   const email = await authHelper(req);
   const superUser = await User.findOne({
-    where: {
-      [Op.or]: [
-        { email, role: 3 },
-        { email, role: 2 }
-      ]
-    }
+    where: { email },
+    include: [
+      {
+        model: Role,
+        where: {
+          [Op.or]: [{ designation: 'ORGANIZER' }, { designation: 'SUPER USER' }]
+        }
+      }
+    ]
   });
   if (!superUser) {
     throw new httpError(
