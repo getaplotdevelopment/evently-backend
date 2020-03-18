@@ -127,6 +127,24 @@ describe('Check email', () => {
       .send(emailToCheck);
     const sentMail = nodemailerMock.mock.getSentMail();
   }).timeout(10000);
+  it('Should not resend an email to a user with a wrong email', async () => {
+    const res = await chai
+      .request(app)
+      .post('/api/users/resend-email')
+      .set('Content-Type', 'application/json')
+      .send(wrongEmailToCheck);
+    res.should.have.status(404);
+    res.body.error.should.be.a('string');
+  });
+  it('should resend an email using nodemailer-mock', async () => {
+    // call a service that uses nodemailer
+    const response = await chai
+      .request(app)
+      .post('/api/users/resend-email')
+      .set('Content-Type', 'application/json')
+      .send(emailToCheck);
+    const sentMail = nodemailerMock.mock.getSentMail();
+  }).timeout(10000);
 });
 describe('Reset Password', () => {
   it('Should reset the password', async () => {

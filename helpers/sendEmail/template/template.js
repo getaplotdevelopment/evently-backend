@@ -1,7 +1,6 @@
 import dotenv from 'dotenv/config';
 
 const html = (title, action, body, role) => {
-  console.log('role', role);
   let url;
   if (action === 'RESET PASSWORD') {
     if (role === 'SUPER USER') {

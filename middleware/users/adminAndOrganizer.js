@@ -3,7 +3,7 @@ import httpError from '../../helpers/errorsHandler/httpError';
 import models from '../../models/index';
 import authHelper from '../../helpers/authHelper';
 
-const { User, Role } = models;
+const { User, Roles } = models;
 
 export default async (req, res, next) => {
   const email = await authHelper(req);
@@ -11,7 +11,8 @@ export default async (req, res, next) => {
     where: { email },
     include: [
       {
-        model: Role,
+        model: Roles,
+        as: 'roles',
         where: {
           [Op.or]: [{ designation: 'ORGANIZER' }, { designation: 'SUPER USER' }]
         }

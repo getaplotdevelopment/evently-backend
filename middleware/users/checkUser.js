@@ -64,7 +64,8 @@ const checkPassword = async (req, res, next) => {
   next();
 };
 const isActivate = async (req, res, next) => {
-  const { email } = req.body;
+  const email = req.body.email.toLowerCase();
+
   const user = await User.findOne({
     where: { email, isActivated: true }
   });
