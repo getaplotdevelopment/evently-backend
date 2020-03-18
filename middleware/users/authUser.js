@@ -2,11 +2,16 @@ import httpError from '../../helpers/errorsHandler/httpError';
 import models from '../../models/index';
 import authHelper from '../../helpers/authHelper';
 
-const { User } = models;
+const { User, Roles } = models;
 
 export default async (req, res, next) => {
   const email = await authHelper(req);
-  const organizer = await User.findOne({ where: { email, role: 2 } });
+  const organizer = await User.findOne({
+    where: { email },
+    include: [
+      { model: Roles, as: 'roles', where: { designation: 'ORGANIZER' } }
+    ]
+  });
   if (!organizer) {
     throw new httpError(
       403,

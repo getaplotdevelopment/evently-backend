@@ -1,7 +1,7 @@
 import express from 'express';
 import asyncHandler from '../../helpers/errorsHandler/asyncHandler';
 import auth from '../../middleware/users/auth';
-import authUser from '../../middleware/users/authUser';
+import checkToken from '../../middleware/users/checkToken';
 import adminOrOrganizer from '../../middleware/users/adminAndOrganizer';
 import TicketCategory from '../../controllers/ticketCategory';
 import {
@@ -19,6 +19,7 @@ const router = express.Router();
 
 router.post(
   '/',
+  asyncHandler(checkToken),
   asyncHandler(adminOrOrganizer),
   validateTicketCategory,
   validations,
@@ -27,17 +28,20 @@ router.post(
 );
 router.get(
   '/',
+  asyncHandler(checkToken),
   asyncHandler(auth),
   asyncHandler(category.getAllTicketCategory)
 );
 router.get(
   '/:ticketCategoryId',
+  asyncHandler(checkToken),
   asyncHandler(auth),
   asyncHandler(checkCategory),
   asyncHandler(category.getOneTicketCategory)
 );
 router.put(
   '/:ticketCategoryId',
+  asyncHandler(checkToken),
   asyncHandler(adminOrOrganizer),
   validateTicketCategory,
   validations,

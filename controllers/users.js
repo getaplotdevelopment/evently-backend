@@ -7,6 +7,8 @@ import httpError from '../helpers/errorsHandler/httpError';
 import generateToken from '../helpers/generateToken/generateToken';
 import sendEmail from '../helpers/sendEmail/callMailer';
 import geocode from '../helpers/googleMap/goecode';
+import { redisClient } from '../helpers/logout/redisClient';
+import { getRole } from '../helpers/sendEmail/emailTemplates';
 
 dotenv.config();
 const { User, Roles } = models;
@@ -28,13 +30,13 @@ class UserController {
       firstName,
       lastName,
       userName,
-      email,
       password,
       isActivated,
       deviceToken,
       phoneNumber,
       location
     } = req.body;
+    const email = req.body.email.toLowerCase();
     const gavatar = gravatar.url(email, {
       s: 200,
       r: 'pg',
@@ -92,6 +94,7 @@ class UserController {
     const formated_address = await geocode(newUser.location);
     userInstance.location = formated_address;
     await userInstance.save();
+    getRole(user.role);
     const response = await sendEmail(user.email, token);
   }
 
@@ -102,7 +105,7 @@ class UserController {
    * @returns {Object} Response
    */
   async login(req, res) {
-    const { email } = req.body;
+    const email = req.body.email.toLowerCase();
     const user = await User.findOne({
       where: { email },
       include: [
@@ -126,9 +129,11 @@ class UserController {
       where: { id: user.role }
     });
     const { designation: role } = assignedRole.dataValues;
-    const { id, userName, avatar, isActivated } = user;
+    const { id, firstName, lastName, userName, avatar, isActivated } = user;
     const payload = {
       id,
+      firstName,
+      lastName,
       userName,
       avatar,
       email: user.email,
@@ -192,11 +197,42 @@ class UserController {
     const payload = {
       email: foundUser.email
     };
+
     const tokenGenerated = generateToken(payload);
     const token = tokenGenerated.generate;
     req.body.token = token;
     req.body.template = 'resetPassword';
+    getRole(foundUser.role);
     const response = await sendEmail(foundUser.email, token, 'resetPassword');
+
+    res.status(200).send({ status: 200, response });
+  }
+
+  /**
+   * Checks if the email exists.
+   * @param {object} req request
+   * @param {object} res response.
+   * @returns {object} response.
+   */
+  async resendVerificationEmail(req, res) {
+    const { email } = req.body;
+
+    const user = await User.findOne({ where: { email } });
+
+    if (!user) {
+      throw new httpError(404, 'No user found with that email address');
+    }
+    const foundUser = user.dataValues;
+    const payload = {
+      email: foundUser.email
+    };
+
+    const tokenGenerated = generateToken(payload);
+    const token = tokenGenerated.generate;
+    req.body.token = token;
+    getRole(foundUser.role);
+    const response = await sendEmail(foundUser.email, token);
+
     res.status(200).send({ status: 200, response });
   }
 
@@ -206,25 +242,6 @@ class UserController {
    * @param {object} res response.
    * @returns {object} response.
    */
-  //TODO: @jaman I don't see this method used anywhere. 
-  async checkUser(req, res) {
-    const { email } = req.body;
-
-    const user = await User.findOne({ where: { email } });
-
-    if (!user) {
-      res.status(404).send({
-        status: 404,
-        message: 'No user found with that email address'
-      });
-    }
-    const foundUser = user.dataValues;
-    res.status(200).send({
-      status: 200,
-      user: { email: foundUser.email },
-      message: 'User exists'
-    });
-  }
 
   /**
    * Resets password.
@@ -235,6 +252,7 @@ class UserController {
   async resetPassword(req, res) {
     const password = bcrypt.hashSync(req.body.password, 10);
     const { token } = req.body;
+    await redisClient.LPUSH('token', token);
     const decoded = jwt.decode(token, secretKey);
     if (decoded) {
       const checkUpdate = await User.update(
@@ -263,13 +281,17 @@ class UserController {
    * @returns {Object} Response
    */
   async activateAccount(req, res) {
-    const { token } = req.params;
-    const decoded = jwt.decode(token, secretKey);
-    if (decoded) {
+    const { token } = req.query;
+    console.log('token', token);
+    const user = jwt.decode(token, secretKey);
+    console.log('user', user);
+    await redisClient.LPUSH('token', token);
+
+    if (user) {
       const [rowsUpdated, [updatedAccount]] = await User.update(
         { isActivated: true },
         {
-          where: { userName: decoded.user.userName },
+          where: { email: user.email },
           returning: true
         }
       );
@@ -318,6 +340,20 @@ class UserController {
     const formated_address = await geocode(location);
     userInstance.location = formated_address;
     await userInstance.save();
+  }
+
+  /**
+   * @param {Object} req - Request from user
+   * @param {Object} res - Response to the user
+   * @returns {Object} Response
+   */
+  async logout(req, res) {
+    const token = req.headers.authorization.split(' ')[1];
+    await redisClient.LPUSH('token', token);
+    return res.status(200).json({
+      status: 200,
+      message: 'You are logged out'
+    });
   }
 }
 

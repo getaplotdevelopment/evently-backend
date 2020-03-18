@@ -10,11 +10,12 @@ import {
 import {
   checkUser,
   checkUserLogin,
-  checkPassword
+  checkPassword,
+  isActivate
 } from '../../middleware/users/checkUser';
 import asyncHandler from '../../helpers/errorsHandler/asyncHandler';
-import authUser from '../../middleware/users/authUser';
 import auth from '../../middleware/users/auth';
+import checkToken from '../../middleware/users/checkToken';
 
 const users = new Users();
 
@@ -32,25 +33,36 @@ router.post(
   validateUserLogin,
   asyncHandler(checkUserLogin),
   validations,
+  asyncHandler(isActivate),
   asyncHandler(users.login)
 );
 router.put(
   '/reset-password',
+  asyncHandler(checkToken),
   validatePassword,
   validations,
   asyncHandler(users.resetPassword)
 );
-router.get('/verify/:token', asyncHandler(users.activateAccount));
+router.put(
+  '/verify',
+  asyncHandler(checkToken),
+  asyncHandler(users.activateAccount)
+);
 router.post('/check-user', validations, asyncHandler(users.checkUser));
+
 router.post('/send-email', asyncHandler(users.checkEmail));
+router.post('/resend-email', asyncHandler(users.resendVerificationEmail));
 router.put(
   '/change-password',
   validateChangePassword,
   validations,
-  auth,
+  asyncHandler(auth),
   asyncHandler(checkPassword),
   asyncHandler(users.changeCurrentPassword)
 );
 
 router.patch('/location', auth, asyncHandler(users.updateLocation));
+
+router.post('/logout', asyncHandler(auth), asyncHandler(users.logout));
+
 export default router;

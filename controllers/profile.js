@@ -29,9 +29,15 @@ class ProfileController {
       location,
       preferences,
       lastLogin,
-      accountType,
-      social
+      accountType
     } = req.body;
+
+    const social = {
+      youtube: req.body.youtube,
+      facebook: req.body.facebook,
+      linkedin: req.body.linkedin,
+      instagram: req.body.instqgram
+    };
 
     const uploader = async path => await cloudinary.uploads(path, 'Images');
     const urls = [];
