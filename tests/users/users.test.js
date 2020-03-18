@@ -7,19 +7,20 @@ import generateToken from '../../helpers/generateToken/generateToken';
 import app from '../../index';
 import {
   signupUser,
+  signupUser2,
   invalidUser,
   existingUser,
   loginUser,
   invalidLoginUser,
   invalidLoginUserPassword,
+  activatedUser,
   socialMediaUser,
   emailToCheck,
   wrongEmailToCheck
 } from '../testingData/files.json';
-import models from '../../models/index';
+
 import userController from '../../controllers/users';
 
-const { User } = models;
 const user = new userController();
 
 let currentUserToken;
@@ -28,11 +29,18 @@ chai.use(chaiHttp);
 chai.should();
 
 before(async () => {
-  // await User.destroy({ where: {}, truncate: true });
   mockery.enable({
     warnOnUnregistered: false
   });
 });
+
+const newUser = async user => {
+  return await chai
+    .request(app)
+    .post('/api/users')
+    .set('Content-Type', 'application/json')
+    .send(user);
+};
 
 mockery.registerMock('nodemailer', nodemailerMock);
 
@@ -75,12 +83,21 @@ describe('User', () => {
     res.should.have.status(409);
     res.body.error.should.be.a('string');
   });
-  it('Should login a user and return the status 200', async () => {
+  it('Should not login with an unverified account', async () => {
+    const response = await newUser(signupUser2);
     const res = await chai
       .request(app)
       .post('/api/users/login')
       .set('Content-Type', 'application/json')
       .send(loginUser);
+    res.should.have.status(401);
+  });
+  it('Should login a user and return the status 200', async () => {
+    const res = await chai
+      .request(app)
+      .post('/api/users/login')
+      .set('Content-Type', 'application/json')
+      .send(activatedUser);
     res.should.have.status(200);
     res.body.user.should.be.a('object');
     res.body.token.should.be.a('string');
@@ -168,35 +185,18 @@ describe('Reset Password', () => {
       .put('/api/users/reset-password')
       .set('Content-Type', 'application/json')
       .send({ token, password: 'newPassword2020' });
-    res.should.have.status(401);
+    res.should.have.status(403);
     res.body.error.should.be.a('string');
   });
 });
 describe('Activate user account', () => {
-  it('should activate user account', async () => {
-    const payload = {
-      user: {
-        email: 'getaplotdev@gmail.com',
-        userName: 'user'
-      }
-    };
-    const tokenGenerate = generateToken(payload);
-    const token = tokenGenerate.generate;
-    const res = await chai
-      .request(app)
-      .get(`/api/users/verify/${token}`)
-      .set('Content-Type', 'application/json');
-    // res.should.have.status(200);
-    // res.body.message.should.be.a('string');
-  });
   it('should not activate user account with a wrong token', async () => {
     const token = 'wrongTokenString';
     const res = await chai
       .request(app)
-      .get(`/api/users/verify/${token}`)
+      .put(`/api/users/verify?token=${token}`)
       .set('Content-Type', 'application/json');
-    res.should.have.status(500);
-    res.body.error.should.be.a('string');
+    res.should.have.status(403);
   });
 });
 describe('Change current user passowrd', () => {
@@ -227,17 +227,18 @@ describe('Change current user passowrd', () => {
     res.should.have.status(401);
   });
   it('Should update user location', async () => {
-    const newLocation = {location: 'mbarara'}
+    const newLocation = { location: 'mbarara' };
     const loginUser = {
-      password: 'jamanBoss2020',
-      email: "getaplotdev@gmail.com",
-    }
+      password: 'emabush2015',
+      email: 'geta@gmail.com'
+    };
     const res = await chai
       .request(app)
       .post('/api/users/login')
       .set('Content-Type', 'application/json')
-      .send(loginUser);    
-    currentUserToken = res.body.token;    
+      .send(loginUser);
+    currentUserToken = res.body.token;
+
     const result = await chai
       .request(app)
       .patch('/api/users/location')

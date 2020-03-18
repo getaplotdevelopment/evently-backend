@@ -2,18 +2,23 @@
 import jwt from 'jsonwebtoken';
 import 'dotenv/config';
 import { redisClient } from '../../helpers/logout/redisClient';
-import HttpError from '../../helpers/errorsHandler/httpError';
+import httpError from '../../helpers/errorsHandler/httpError';
 
 const checkToken = async (req, res, next) => {
   const token = req.body.token
     ? req.body.token
     : req.query.token
     ? req.query.token
-    : req.headers.authorization.split(' ')[1];
+    : req.headers.authorization
+    ? req.headers.authorization.split(' ')[1]
+    : null;
 
+  if (!token) {
+    throw new httpError(401, 'Token is required');
+  }
   jwt.verify(token, process.env.jwtSecret, (err, res) => {
     if (err) {
-      throw new HttpError(403, err);
+      throw new httpError(403, err);
     }
   });
 

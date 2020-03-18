@@ -7,7 +7,8 @@
     "password": "emabush2015",
     "location": "kansanga",
     "deviceToken": "dkfkfkskdf",
-    "role": 1
+    "role": 1,
+    "isActivated": false
   },
   "signupUser2": {
     "firstName": "Jaman",
@@ -17,6 +18,7 @@
     "password": "emabush2015",
     "location": "kansanga",
     "deviceToken": "dkfkfkskdf",
+    "isActivated": true,
     "role": 2
   },
   "signupUser4": {
@@ -104,6 +106,10 @@
     "email": "geta01@gmail.com",
     "password": "emabush2015"
   },
+  "activatedUser": {
+    "email": "geta@gmail.com",
+    "password": "emabush2015"
+  },
   "invalidLoginUser": {
     "email": "jasova3538@",
     "password": "emabush2015"
@@ -177,33 +183,17 @@
     "description": "Bomaye Music",
     "domain": "music",
     "location": "Paris",
-    "preferences": [
-      "music",
-      "preferences",
-      "dance"
-    ],
+    "preferences": ["music", "preferences", "dance"],
     "accountType": "Brand",
-    "social": [
-      "youtube",
-      "facebook",
-      "linkedin"
-    ]
+    "social": ["youtube", "facebook", "linkedin"]
   },
   "updatedProfile": {
     "accountName": "BomayE Music",
     "description": "Bomaye Music",
     "domain": "music",
     "location": "Paris",
-    "preferences": [
-      "music",
-      "preferences",
-      "dance"
-    ],
+    "preferences": ["music", "preferences", "dance"],
     "accountType": "Brand",
-    "social": [
-      "youtube",
-      "facebook",
-      "linkedin"
-    ]
+    "social": ["youtube", "facebook", "linkedin"]
   }
 }

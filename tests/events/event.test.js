@@ -15,10 +15,6 @@ import {
 chai.use(chaiHttp);
 chai.should();
 
-// before(async () => {
-//   await Event.destroy({ where: {}, truncate: true });
-// });
-
 const newOrganizer = async () => {
   return await chai
     .request(app)
@@ -47,7 +43,7 @@ const createEvents = async (userObj, event = createEvent) => {
 describe('Event', () => {
   it('should create an event', async () => {
     const response = await newOrganizer();
-    const res = await createEvents(response);        
+    const res = await createEvents(response);
     res.should.have.status(201);
     res.body.should.be.a('object');
     res.body.data.organizer.should.be.a('string');
@@ -87,8 +83,8 @@ describe('Event', () => {
         title: 'title1 is good',
         description: 'desc',
         currentMode: 'Bad status',
-        startDate: "2020-01-01",
-        finishDate: "2020-01-03",
+        startDate: '2020-01-01',
+        finishDate: '2020-01-03'
       });
     res.should.have.status(422);
     res.text.should.include('Invalid eventType, try any from this array');
@@ -268,29 +264,34 @@ describe('Event', () => {
     res.should.have.status(201);
   }).timeout(10000);
 
-  it('should retrieve event from the near by city', async() => {
+  it('should retrieve event from the near by city', async () => {
     const user1 = await loginOrganizer();
-    const eventResp = await createEvents(user1, nearByCity);    
+    const eventResp = await createEvents(user1, nearByCity);
     const { slug } = eventResp.body.data;
-    const result = await chai.request(app).get(`/api/events/${slug}/nearbycity`);
+    const result = await chai
+      .request(app)
+      .get(`/api/events/${slug}/nearbycity`);
     result.should.have.status(200);
-    result.body.data[0].should.have.property('distance')
-    result.body.data[0].should.have.property('duration')
-  })
+    result.body.data[0].should.have.property('distance');
+    result.body.data[0].should.have.property('duration');
+  });
 
   it('should return 404 if slug is invalid', async () => {
-    const slug = 'invalid-slug-1234'
-    const result = await chai.request(app).get(`/api/events/${slug}/nearbycity`);
+    const slug = 'invalid-slug-1234';
+    const result = await chai
+      .request(app)
+      .get(`/api/events/${slug}/nearbycity`);
     result.should.have.status(404);
-    result.body.should.have.property('error').eql('Event not found')
-
-  })
+    result.body.should.have.property('error').eql('Event not found');
+  });
   it('should return [] if no available events near by', async () => {
     const response = await loginOrganizer();
     const res = await createEvents(response, invalidLoc);
     const { slug } = res.body.data;
-    const result = await chai.request(app).get(`/api/events/${slug}/nearbycity`);
+    const result = await chai
+      .request(app)
+      .get(`/api/events/${slug}/nearbycity`);
     result.should.have.status(200);
-    result.body.should.have.property('data').eql([])
-  } )
+    result.body.should.have.property('data').eql([]);
+  });
 });
