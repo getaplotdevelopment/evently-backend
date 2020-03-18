@@ -1,4 +1,5 @@
 import redis from 'redis';
+import 'dotenv/config';
 
 export const redisClient = redis.createClient();
 redisClient.on('connect', () => {
