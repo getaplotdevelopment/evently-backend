@@ -30,13 +30,13 @@ class UserController {
       firstName,
       lastName,
       userName,
-      email,
       password,
       isActivated,
       deviceToken,
       phoneNumber,
       location
     } = req.body;
+    const email = req.body.email.toLowerCase();
     const gavatar = gravatar.url(email, {
       s: 200,
       r: 'pg',
@@ -105,7 +105,7 @@ class UserController {
    * @returns {Object} Response
    */
   async login(req, res) {
-    const { email } = req.body;
+    const email = req.body.email.toLowerCase();
     const user = await User.findOne({
       where: { email },
       include: [
@@ -129,9 +129,11 @@ class UserController {
       where: { id: user.role }
     });
     const { designation: role } = assignedRole.dataValues;
-    const { id, userName, avatar, isActivated } = user;
+    const { id, firstName, lastName, userName, avatar, isActivated } = user;
     const payload = {
       id,
+      firstName,
+      lastName,
       userName,
       avatar,
       email: user.email,
@@ -202,6 +204,34 @@ class UserController {
     req.body.template = 'resetPassword';
     getRole(foundUser.role);
     const response = await sendEmail(foundUser.email, token, 'resetPassword');
+
+    res.status(200).send({ status: 200, response });
+  }
+
+  /**
+   * Checks if the email exists.
+   * @param {object} req request
+   * @param {object} res response.
+   * @returns {object} response.
+   */
+  async resendVerificationEmail(req, res) {
+    const { email } = req.body;
+
+    const user = await User.findOne({ where: { email } });
+
+    if (!user) {
+      throw new httpError(404, 'No user found with that email address');
+    }
+    const foundUser = user.dataValues;
+    const payload = {
+      email: foundUser.email
+    };
+
+    const tokenGenerated = generateToken(payload);
+    const token = tokenGenerated.generate;
+    req.body.token = token;
+    getRole(foundUser.role);
+    const response = await sendEmail(foundUser.email, token);
 
     res.status(200).send({ status: 200, response });
   }

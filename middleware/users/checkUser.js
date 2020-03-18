@@ -1,14 +1,13 @@
 import bcrypt from 'bcryptjs';
-import { Op } from 'sequelize';
 import models from '../../models/index';
 import httpError from '../../helpers/errorsHandler/httpError';
-import authHelper from '../../helpers/authHelper';
 
 const { User } = models;
 const { OrganizerProfile } = models;
 
 const checkUser = async (req, res, next) => {
-  const { email } = req.body;
+  const email = req.body.email.toLowerCase();
+
   const user = await User.findOne({ where: { email } });
   if (user) {
     throw new httpError(409, 'User already exists');
@@ -36,7 +35,8 @@ const checkProfile = async (req, res, next) => {
 };
 
 const checkUserLogin = async (req, res, next) => {
-  const { email, password } = req.body;
+  const email = req.body.email.toLowerCase();
+  const { password } = req.body;
 
   const user = await User.findOne({ where: { email } });
   if (!user) {
@@ -54,9 +54,6 @@ const checkPassword = async (req, res, next) => {
   const { oldPassword } = req.body;
 
   const user = await User.findOne({ where: { id } });
-  if (!user) {
-    throw new httpError(404, 'user not found');
-  }
   const isMatch = await bcrypt.compare(oldPassword, user.password);
   if (!isMatch) {
     throw new httpError(
@@ -73,7 +70,7 @@ const isActivate = async (req, res, next) => {
   });
   if (!user) {
     throw new httpError(
-      400,
+      401,
       'Kindly check your email and activate your account before login'
     );
   }

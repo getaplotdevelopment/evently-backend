@@ -49,7 +49,9 @@ router.put(
   asyncHandler(users.activateAccount)
 );
 router.post('/check-user', validations, asyncHandler(users.checkUser));
+
 router.post('/send-email', asyncHandler(users.checkEmail));
+router.post('/resend-email', asyncHandler(users.resendVerificationEmail));
 router.put(
   '/change-password',
   validateChangePassword,
@@ -61,6 +63,6 @@ router.put(
 
 router.patch('/location', auth, asyncHandler(users.updateLocation));
 
-router.get('/logout', asyncHandler(auth), asyncHandler(users.logout));
+router.post('/logout', asyncHandler(auth), asyncHandler(users.logout));
 
 export default router;
