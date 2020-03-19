@@ -16,6 +16,7 @@ import {
 import asyncHandler from '../../helpers/errorsHandler/asyncHandler';
 import auth from '../../middleware/users/auth';
 import checkToken from '../../middleware/users/checkToken';
+import deactivateUser from '../../middleware/users/canDeactivateUser';
 
 const users = new Users();
 
@@ -59,6 +60,11 @@ router.put(
   asyncHandler(auth),
   asyncHandler(checkPassword),
   asyncHandler(users.changeCurrentPassword)
+);
+router.put(
+  '/deactivate-user/',
+  asyncHandler(deactivateUser),
+  asyncHandler(users.deactivateUser)
 );
 
 router.patch('/location', asyncHandler(auth), asyncHandler(users.updateLocation));

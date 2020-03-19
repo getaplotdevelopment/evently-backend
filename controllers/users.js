@@ -420,6 +420,26 @@ class UserController {
       message: 'You are logged out'
     });
   }
+
+  /**
+   * @param {Object} req - Request from user
+   * @param {Object} res - Response to the user
+   * @returns {Object} Response
+   */
+  async deactivateUser(req, res) {
+    const { id } = req.body;
+
+    const [rowsUpdated, [updatedAccount]] = await User.update(
+      { isDeactivated: true },
+      { where: { id } }
+    );
+
+    res.status(200).json({
+      status: 200,
+      accountsUpdated: rowsUpdated,
+      isDeactivated: updatedAccount.dataValues.isDeactivated
+    });
+  }
 }
 
 export default UserController;

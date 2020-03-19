@@ -15,7 +15,8 @@ module.exports = (sequelize, DataTypes) => {
       role: {
         type: DataTypes.INTEGER,
         references: { model: 'Roles', key: 'id' }
-      }
+      },
+      isDeactivated: { type: DataTypes.BOOLEAN, default: false }
     },
     {}
   );
