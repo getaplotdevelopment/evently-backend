@@ -14,7 +14,11 @@ export default async (req, res, next) => {
         model: Roles,
         as: 'roles',
         where: {
-          [Op.or]: [{ designation: 'USER' }, { designation: 'SUPER USER' }]
+          [Op.or]: [
+            { designation: 'USER' },
+            { designation: 'SUPER USER' },
+            { designation: 'ORGANIZER' }
+          ]
         }
       }
     ]

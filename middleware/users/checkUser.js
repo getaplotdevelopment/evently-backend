@@ -77,11 +77,37 @@ const isActivate = async (req, res, next) => {
   }
   next();
 };
+
+const isDeactivated = async (req, res, next) => {
+  const email = req.body.email.toLowerCase();
+
+  const user = await User.findOne({
+    where: { email, isDeactivated: true }
+  });
+  if (user) {
+    throw new httpError(
+      401,
+      'Account deactivated, kindly contact the help center service via evently@gmail.com'
+    );
+  }
+  next();
+};
+const checkUserId = async (req, res, next) => {
+  const { id } = req.body;
+
+  const user = await User.findOne({ where: { id } });
+  if (!user) {
+    throw new httpError(404, 'User not found');
+  }
+  next();
+};
 export {
   checkUser,
   checkUserLogin,
   checkUserProfile,
   checkPassword,
   checkProfile,
-  isActivate
+  isActivate,
+  isDeactivated,
+  checkUserId
 };

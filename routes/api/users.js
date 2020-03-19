@@ -11,10 +11,14 @@ import {
   checkUser,
   checkUserLogin,
   checkPassword,
-  isActivate
+  isActivate,
+  isDeactivated,
+  checkUserId
 } from '../../middleware/users/checkUser';
 import asyncHandler from '../../helpers/errorsHandler/asyncHandler';
 import auth from '../../middleware/users/auth';
+import authUser from '../../middleware/users/authUser';
+import isAdminAuth from '../../middleware/users/isAdminAuth';
 import checkToken from '../../middleware/users/checkToken';
 import deactivateUser from '../../middleware/users/canDeactivateUser';
 
@@ -35,6 +39,7 @@ router.post(
   asyncHandler(checkUserLogin),
   validations,
   asyncHandler(isActivate),
+  asyncHandler(isDeactivated),
   asyncHandler(users.login)
 );
 router.put(
@@ -63,6 +68,7 @@ router.put(
 );
 router.put(
   '/deactivate-user/',
+  asyncHandler(checkUserId),
   asyncHandler(deactivateUser),
   asyncHandler(users.deactivateUser)
 );
