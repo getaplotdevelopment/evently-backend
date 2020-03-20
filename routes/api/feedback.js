@@ -8,7 +8,10 @@ import checkToken from '../../middleware/users/checkToken';
 import isAdminAuth from '../../middleware/users/isAdminAuth';
 import canFeedback from '../../middleware/users/organizerOrUser';
 import FeedbackController from '../../controllers/feedback';
-import { checkFeedbackId } from '../../middleware/users/checkUser';
+import {
+  checkFeedbackId,
+  checkFeedbackOwner
+} from '../../middleware/users/checkUser';
 
 const feedback = new FeedbackController();
 
@@ -42,6 +45,7 @@ router.put(
   '/:feedbackId',
   asyncHandler(checkToken),
   asyncHandler(canFeedback),
+  asyncHandler(checkFeedbackOwner),
   asyncHandler(checkFeedbackId),
   validateFeedback,
   validations,

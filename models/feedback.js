@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
   );
   Feedback.associate = function(models) {
     Feedback.belongsTo(models.User, {
-      as: 'userfkey',
+      as: 'owner',
       foreignKey: 'user',
       onDelete: 'CASCADE'
     });

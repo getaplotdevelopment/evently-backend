@@ -50,7 +50,27 @@ class FeedbackController {
    * @returns {Object} Response
    */
   async getAllFeedback(req, res) {
-    const feedback = await Feedback.findAll();
+    const feedback = await Feedback.findAll({
+      attributes: {
+        exclude: ['user']
+      },
+      include: [
+        {
+          model: User,
+          as: 'owner',
+          attributes: {
+            exclude: [
+              'password',
+              'isActivated',
+              'deviceToken',
+              'role',
+              'createdAt',
+              'updatedAt'
+            ]
+          }
+        }
+      ]
+    });
     return res.status(200).json({
       status: 200,
       feedback
@@ -64,9 +84,30 @@ class FeedbackController {
    * @returns {Object} Response
    */
   async getOneFeedback(req, res) {
-    const { id } = req.params;
+    const { feedbackId } = req.params;
 
-    const feedback = Feedback.findOne({ where: { id } });
+    const feedback = await Feedback.findOne({
+      where: { id: feedbackId },
+      attributes: {
+        exclude: ['user']
+      },
+      include: [
+        {
+          model: User,
+          as: 'owner',
+          attributes: {
+            exclude: [
+              'password',
+              'isActivated',
+              'deviceToken',
+              'role',
+              'createdAt',
+              'updatedAt'
+            ]
+          }
+        }
+      ]
+    });
 
     res.status(200).json({
       status: 200,
@@ -82,7 +123,7 @@ class FeedbackController {
       content
     };
 
-    const feedback = Feedback.update(newFeedback, {
+    const feedback = await Feedback.update(newFeedback, {
       where: { id: feedbackId }
     });
 

@@ -98,14 +98,14 @@ const checkUserId = async (req, res, next) => {
   next();
 };
 const checkFeedbackId = async (req, res, next) => {
-  const { id } = req.params;
-  checkIdHelper(Feedback, id);
+  const { feedbackId } = req.params;
+  await checkIdHelper(Feedback, feedbackId);
   next();
 };
 
 const checkFeedbackOwner = async (req, res, next) => {
-  const { id } = req.user;
-  const owner = await Feedback.findOne({ where: { user: id } });
+  const { feedbackId } = req.user;
+  const owner = await Feedback.findOne({ where: { user: feedbackId } });
   if (!owner) {
     throw new httpError(
       403,
