@@ -428,7 +428,6 @@ class UserController {
    */
   async deactivateUser(req, res) {
     const { id } = req.body;
-    console.log('ddddd', id);
 
     const [rowsUpdated, [updatedAccount]] = await User.update(
       { isDeactivated: true },

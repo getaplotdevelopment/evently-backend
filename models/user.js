@@ -40,6 +40,9 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'user',
       allowNull: true
     });
+    User.hasMany(models.Feedback, {
+      foreignKey: 'user'
+    });
     User.belongsTo(models.Roles, {
       as: 'roles',
       foreignKey: 'role',

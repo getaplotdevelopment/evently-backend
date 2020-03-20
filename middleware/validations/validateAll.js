@@ -109,6 +109,15 @@ const validations = (req, res, next) => {
   next();
 };
 
+const validateFeedback = [
+  check('subject', 'Subject is required')
+    .not()
+    .isEmpty(),
+  check('content', 'Content is required')
+    .not()
+    .isEmpty()
+];
+
 export {
   validateUser,
   validations,
@@ -119,5 +128,6 @@ export {
   validateChangePassword,
   validateRole,
   validateTicketCategory,
-  validateTicket
+  validateTicket,
+  validateFeedback
 };

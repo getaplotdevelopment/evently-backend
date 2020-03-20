@@ -8,9 +8,9 @@ import geocode from '../helpers/googleMap/goecode';
 
 dotenv.config();
 const { OrganizerProfile, User } = models;
-// const { User } = models;
+
 /**
- * @user Controller
+ * @profile Controller
  * @exports
  * @class
  */
