@@ -34,7 +34,8 @@ class UserController {
       isActivated,
       deviceToken,
       phoneNumber,
-      location
+      location,
+      urls
     } = req.body;
     const email = req.body.email.toLowerCase();
     const gavatar = gravatar.url(email, {
@@ -94,7 +95,7 @@ class UserController {
     const formated_address = await geocode(newUser.location);
     userInstance.location = formated_address;
     await userInstance.save();
-    getRole(user.role);
+    getRole(user.role, urls);
     const response = await sendEmail(user.email, token);
   }
 
