@@ -5,7 +5,6 @@ import models from '../models/index';
 const { User, Roles } = models;
 
 export default async (condition, email) => {
-  // [{ designation: 'ORGANIZER' }, { designation: 'USER' }]
   const user = await User.findOne({
     where: { email },
     include: [

@@ -1,9 +1,9 @@
 import bcrypt from 'bcryptjs';
 import models from '../../models/index';
 import httpError from '../../helpers/errorsHandler/httpError';
+import checkIdHelper from '../../helpers/checkIdHelper';
 
-const { User } = models;
-const { OrganizerProfile } = models;
+const { User, Feedback, OrganizerProfile } = models;
 
 const checkUser = async (req, res, next) => {
   const email = req.body.email.toLowerCase();
@@ -94,13 +94,27 @@ const isDeactivated = async (req, res, next) => {
 };
 const checkUserId = async (req, res, next) => {
   const { id } = req.body;
+  checkIdHelper(User, id);
+  next();
+};
+const checkFeedbackId = async (req, res, next) => {
+  const { id } = req.params;
+  checkIdHelper(Feedback, id);
+  next();
+};
 
-  const user = await User.findOne({ where: { id } });
-  if (!user) {
-    throw new httpError(404, 'User not found');
+const checkFeedbackOwner = async (req, res, next) => {
+  const { id } = req.user;
+  const owner = await Feedback.findOne({ where: { user: id } });
+  if (!owner) {
+    throw new httpError(
+      403,
+      "Un-authorized, User role can't perform this action."
+    );
   }
   next();
 };
+
 export {
   checkUser,
   checkUserLogin,
@@ -109,5 +123,7 @@ export {
   checkProfile,
   isActivate,
   isDeactivated,
-  checkUserId
+  checkUserId,
+  checkFeedbackId,
+  checkFeedbackOwner
 };
