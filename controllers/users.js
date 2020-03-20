@@ -92,11 +92,11 @@ class UserController {
     const tokenGenerated = generateToken(payload);
     const token = tokenGenerated.generate;
     res.status(201).json({ status: 201, user, token, response: 'Email Sent' });
+    const response = await sendEmail(user.email, token);
+    getRole(user.role, urls);
     const formated_address = await geocode(newUser.location);
     userInstance.location = formated_address;
     await userInstance.save();
-    getRole(user.role, urls);
-    const response = await sendEmail(user.email, token);
   }
 
   /**
@@ -187,7 +187,7 @@ class UserController {
    * @returns {object} response.
    */
   async checkEmail(req, res) {
-    const { email } = req.body;
+    const { email, urls } = req.body;
 
     const user = await User.findOne({ where: { email } });
 
@@ -203,7 +203,7 @@ class UserController {
     const token = tokenGenerated.generate;
     req.body.token = token;
     req.body.template = 'resetPassword';
-    getRole(foundUser.role);
+    getRole(foundUser.role, urls);
     const response = await sendEmail(foundUser.email, token, 'resetPassword');
 
     res.status(200).send({ status: 200, response });
@@ -216,7 +216,7 @@ class UserController {
    * @returns {object} response.
    */
   async resendVerificationEmail(req, res) {
-    const { email } = req.body;
+    const { email, urls } = req.body;
 
     const user = await User.findOne({ where: { email } });
 
@@ -231,7 +231,7 @@ class UserController {
     const tokenGenerated = generateToken(payload);
     const token = tokenGenerated.generate;
     req.body.token = token;
-    getRole(foundUser.role);
+    getRole(foundUser.role, urls);
     const response = await sendEmail(foundUser.email, token);
 
     res.status(200).send({ status: 200, response });
