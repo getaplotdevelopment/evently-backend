@@ -94,7 +94,7 @@ const isDeactivated = async (req, res, next) => {
 };
 const checkUserId = async (req, res, next) => {
   const { id } = req.body;
-  checkIdHelper(User, id);
+  await checkIdHelper(User, id);
   next();
 };
 const checkFeedbackId = async (req, res, next) => {

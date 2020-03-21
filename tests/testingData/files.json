@@ -27,7 +27,8 @@
       "redirect": "https",
       "appUrl": "http://"
     },
-    "role": 2
+    "role": 2,
+    "isDeactivated": false
   },
   "signupUser4": {
     "firstName": "Jaman",
@@ -42,7 +43,8 @@
       "redirect": "https",
       "appUrl": "http://"
     },
-    "role": 2
+    "role": 2,
+    "isDeactivated": false
   },
   "signupUser6": {
     "firstName": "Jaman",
@@ -57,7 +59,8 @@
       "redirect": "https",
       "appUrl": "http://"
     },
-    "role": 3
+    "role": 3,
+    "isDeactivated": false
   },
   "superUser": {
     "firstName": "Jaman",
@@ -72,7 +75,8 @@
       "redirect": "https",
       "appUrl": "http://"
     },
-    "role": 3
+    "role": 3,
+    "isDeactivated": false
   },
   "signupUser3": {
     "firstName": "Jaman",
@@ -87,7 +91,8 @@
       "redirect": "https",
       "appUrl": "http://"
     },
-    "role": 1
+    "role": 1,
+    "isDeactivated": false
   },
   "signupUser5": {
     "firstName": "Ja",
@@ -102,7 +107,8 @@
       "redirect": "https",
       "appUrl": "http://"
     },
-    "role": 2
+    "role": 2,
+    "isDeactivated": false
   },
   "invalidUser": {
     "firstName": "",
@@ -117,7 +123,8 @@
       "redirect": "https",
       "appUrl": "http://"
     },
-    "role": 1
+    "role": 1,
+    "isDeactivated": false
   },
   "existingUser": {
     "firstName": "Jaman",
@@ -132,7 +139,8 @@
       "redirect": "https",
       "appUrl": "http://"
     },
-    "role": 1
+    "role": 1,
+    "isDeactivated": false
   },
   "loginUser": {
     "email": "getaplotdev@gmail.com",

@@ -16,7 +16,8 @@ import {
   activatedUser,
   socialMediaUser,
   emailToCheck,
-  wrongEmailToCheck
+  wrongEmailToCheck,
+  toBeDeactivated
 } from '../testingData/files.json';
 
 import userController from '../../controllers/users';
@@ -38,6 +39,14 @@ const newUser = async user => {
   return await chai
     .request(app)
     .post('/api/users')
+    .set('Content-Type', 'application/json')
+    .send(user);
+};
+
+const loginAUser = async user => {
+  return await chai
+    .request(app)
+    .post('/api/users/login')
     .set('Content-Type', 'application/json')
     .send(user);
 };
@@ -189,7 +198,7 @@ describe('Reset Password', () => {
     res.body.error.should.be.a('string');
   });
 });
-describe('Activate user account', () => {
+describe.only('Activate user account', () => {
   it('should not activate user account with a wrong token', async () => {
     const token = 'wrongTokenString';
     const res = await chai
@@ -198,8 +207,44 @@ describe('Activate user account', () => {
       .set('Content-Type', 'application/json');
     res.should.have.status(403);
   });
+  it('should deactivate user account', async () => {
+    const response = await newUser(toBeDeactivated);
+
+    const {
+      token,
+      user: { id }
+    } = response.body;
+
+    const res = await chai
+      .request(app)
+      .put('/api/users/deactivate-user')
+      .send({ id })
+      .set('Authorization', `Bearer ${token}`);
+    res.should.have.status(200);
+  });
+  it('should not deactivate user account with a wrong ID', async () => {
+    const response = await newUser(signupUser);
+    const wrongId = 800398500293802;
+
+    const { token } = response.body;
+    const res = await chai
+      .request(app)
+      .put('/api/users/deactivate-user')
+      .send({ id: wrongId })
+      .set('Authorization', `Bearer ${token}`);
+    res.should.have.status(404);
+  });
+  it('should not allow user to login after being deactivated', async () => {
+    const response = await loginAUser(toBeDeactivated);
+    response.should.have.status(401);
+    response.body.should.be.a('object');
+    response.body.error.should.be.a('string');
+    response.body.error.should.include(
+      'Account deactivated, kindly contact the help center service via evently@gmail.com'
+    );
+  });
 });
-describe('Change current user passowrd', () => {
+describe('Change current user password', () => {
   it('Should change the current user password', async () => {
     const changePwd = {
       oldPassword: 'newPassword2020',
@@ -242,7 +287,7 @@ describe('Change current user passowrd', () => {
     const result = await chai
       .request(app)
       .patch('/api/users/location')
-      .set({ Authorization: 'Bearer ' + currentUserToken })
+      .set({ Authorization: `Bearer ${currentUserToken}` })
       .send(newLocation);
     result.should.have.status(200);
     result.body.should.have.property('message').eql('Successfully updated');
@@ -348,5 +393,55 @@ describe('Change current user passowrd', () => {
       .set({ Authorization: 'Bearer ' + currentUserToken });
     result.should.have.status(404);
     result.body.should.have.property('error').eql('User does not exist');
+  });
+});
+describe('Feedback', () => {
+  let token;
+  let feedbackId;
+  it('Should allow user to create feedback', async () => {
+    const response = newUser(signupUser);
+    const {
+      user: { id }
+    } = response.body;
+    token = req.body.token;
+    const feedback = {
+      subject: 'Awesome app',
+      content: 'This is really freakin good',
+      user: id
+    };
+
+    const res = await chai
+      .request(app)
+      .post('/api/feedback')
+      .set('Authorization', `Bearer ${token}`)
+      .send(feedback);
+    res.should.have.status(201);
+  });
+  it('should get all feedback', async () => {
+    const res = await chai
+      .request(app)
+      .get('/api/feedback')
+      .set('Authorization', `Bearer ${token}`);
+    res.should.have.status(200);
+  });
+  it('should get one feedback', async () => {
+    const res = await chai
+      .request(app)
+      .get(`/api/feedback/${feedbackId}`)
+      .set('Authorization', `Bearer ${token}`);
+    res.should.have.status(200);
+  });
+  it('should update a feedback', async () => {
+    const feedback = {
+      subject: 'Awesome app',
+      content: 'This is really freakin good',
+      user: id
+    };
+    const res = await chai
+      .request(app)
+      .put(`/api/feedback/${feedbackId}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send(feedback);
+    res.should.have.status(200);
   });
 });

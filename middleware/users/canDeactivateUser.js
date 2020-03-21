@@ -9,8 +9,6 @@ export default async (req, res, next) => {
     { designation: 'ORGANIZER' }
   ];
   const superUser = await authStrategy(condition, email);
-
-  console.log('superuser', superUser);
-
+  req.user = superUser.dataValues;
   next();
 };
