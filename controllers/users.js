@@ -92,8 +92,8 @@ class UserController {
     const tokenGenerated = generateToken(payload);
     const token = tokenGenerated.generate;
     res.status(201).json({ status: 201, user, token, response: 'Email Sent' });
-    const response = await sendEmail(user.email, token);
     getRole(user.role, urls);
+    await sendEmail(user.email, token);
     const formated_address = await geocode(newUser.location);
     userInstance.location = formated_address;
     await userInstance.save();

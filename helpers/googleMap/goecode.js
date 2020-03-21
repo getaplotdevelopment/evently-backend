@@ -1,9 +1,21 @@
 import { Client } from '@googlemaps/google-maps-services-js';
 import httpError from '../errorsHandler/httpError';
 
-const { GOOGLE_MAP_KEY } = process.env
-export default async (address) => {
+const { GOOGLE_MAP_KEY } = process.env;
+export default async address => {
   const client = new Client({});
+  const emptyLocation = {
+    address: null,
+    country: null,
+    place_id: null,
+    locations: {
+      lat: 0,
+      lng: 0
+    }
+  };
+  if (!address) {
+    return emptyLocation;
+  }
   const locPayload = await client.geocode({
     params: {
       address,
@@ -15,18 +27,10 @@ export default async (address) => {
     throw new httpError(422, 'Google Map, ' + locPayload.data.error_message);
   }
   if (results.length === 0) {
-    return {
-      address: null,
-      country: null,
-      place_id: null,
-      locations: {
-        lat: 0,
-        lng: 0
-      }
-    };
+    return emptyLocation;
   }
-  const locationArray = results[0].formatted_address.split(',')
-  const country = locationArray[locationArray.length - 1].trim()
+  const locationArray = results[0].formatted_address.split(',');
+  const country = locationArray[locationArray.length - 1].trim();
   const locationObj = {
     address: results[0].formatted_address,
     country,

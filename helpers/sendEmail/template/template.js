@@ -1,6 +1,6 @@
 import dotenv from 'dotenv/config';
 
-const html = (title, action, body, role) => {
+const html = (title, action, body, role, urls) => {
   let url;
   if (action === 'RESET PASSWORD') {
     if (role === 'SUPER USER') {
