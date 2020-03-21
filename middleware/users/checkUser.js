@@ -104,8 +104,8 @@ const checkFeedbackId = async (req, res, next) => {
 };
 
 const checkFeedbackOwner = async (req, res, next) => {
-  const { feedbackId } = req.user;
-  const owner = await Feedback.findOne({ where: { user: feedbackId } });
+  const { id } = req.user;
+  const owner = await Feedback.findOne({ where: { user: id } });
   if (!owner) {
     throw new httpError(
       403,

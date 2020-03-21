@@ -29,6 +29,7 @@ class FeedbackController {
     const { dataValues } = await Feedback.create(newFeedback);
     const user = await User.findOne({ where: { id } });
     const feedback = {
+      id: dataValues.id,
       subject: dataValues.subject,
       content: dataValues.content,
       user: {

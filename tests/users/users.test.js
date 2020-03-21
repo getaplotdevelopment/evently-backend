@@ -17,7 +17,8 @@ import {
   socialMediaUser,
   emailToCheck,
   wrongEmailToCheck,
-  toBeDeactivated
+  toBeDeactivated,
+  superUser
 } from '../testingData/files.json';
 
 import userController from '../../controllers/users';
@@ -198,7 +199,7 @@ describe('Reset Password', () => {
     res.body.error.should.be.a('string');
   });
 });
-describe.only('Activate user account', () => {
+describe('Activate user account', () => {
   it('should not activate user account with a wrong token', async () => {
     const token = 'wrongTokenString';
     const res = await chai
@@ -395,15 +396,16 @@ describe('Change current user password', () => {
     result.body.should.have.property('error').eql('User does not exist');
   });
 });
-describe('Feedback', () => {
+describe.only('Feedback', () => {
+  let ownerToken;
   let token;
   let feedbackId;
+  let id;
   it('Should allow user to create feedback', async () => {
-    const response = newUser(signupUser);
-    const {
-      user: { id }
-    } = response.body;
-    token = req.body.token;
+    const response = await newUser(signupUser);
+
+    id = response.body.user.id;
+    ownerToken = response.body.token;
     const feedback = {
       subject: 'Awesome app',
       content: 'This is really freakin good',
@@ -413,11 +415,21 @@ describe('Feedback', () => {
     const res = await chai
       .request(app)
       .post('/api/feedback')
-      .set('Authorization', `Bearer ${token}`)
+      .set('Authorization', `Bearer ${ownerToken}`)
       .send(feedback);
     res.should.have.status(201);
+    feedbackId = res.body.feedback.id;
   });
-  it('should get all feedback', async () => {
+  it('Only Super user should view feedback', async () => {
+    const res = await chai
+      .request(app)
+      .get('/api/feedback')
+      .set('Authorization', `Bearer ${token}`);
+    res.should.have.status(403);
+  });
+  it('Should allow user to view feedback', async () => {
+    const response = await newUser(superUser);
+    token = response.body.token;
     const res = await chai
       .request(app)
       .get('/api/feedback')
@@ -431,16 +443,27 @@ describe('Feedback', () => {
       .set('Authorization', `Bearer ${token}`);
     res.should.have.status(200);
   });
-  it('should update a feedback', async () => {
+  it('Only feedback owners should update them ', async () => {
     const feedback = {
       subject: 'Awesome app',
-      content: 'This is really freakin good',
-      user: id
+      content: 'This is really freakin good'
     };
     const res = await chai
       .request(app)
       .put(`/api/feedback/${feedbackId}`)
       .set('Authorization', `Bearer ${token}`)
+      .send(feedback);
+    res.should.have.status(403);
+  });
+  it('Should allow user to update their feedback ', async () => {
+    const feedback = {
+      subject: 'Awesome app',
+      content: 'This is really freakin good'
+    };
+    const res = await chai
+      .request(app)
+      .put(`/api/feedback/${feedbackId}`)
+      .set('Authorization', `Bearer ${ownerToken}`)
       .send(feedback);
     res.should.have.status(200);
   });
