@@ -18,7 +18,8 @@ import {
   emailToCheck,
   wrongEmailToCheck,
   toBeDeactivated,
-  superUser
+  superUser,
+  feedbackUser
 } from '../testingData/files.json';
 
 import userController from '../../controllers/users';
@@ -396,13 +397,13 @@ describe('Change current user password', () => {
     result.body.should.have.property('error').eql('User does not exist');
   });
 });
-describe.only('Feedback', () => {
+describe('Feedback', () => {
   let ownerToken;
   let token;
   let feedbackId;
   let id;
   it('Should allow user to create feedback', async () => {
-    const response = await newUser(signupUser);
+    const response = await newUser(feedbackUser);
 
     id = response.body.user.id;
     ownerToken = response.body.token;
@@ -428,7 +429,7 @@ describe.only('Feedback', () => {
     res.should.have.status(403);
   });
   it('Should allow user to view feedback', async () => {
-    const response = await newUser(superUser);
+    const response = await loginAUser(superUser);
     token = response.body.token;
     const res = await chai
       .request(app)

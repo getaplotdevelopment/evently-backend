@@ -14,6 +14,18 @@
     },
     "isActivated": false
   },
+  "feedbackUser": {
+    "firstName": "Jaman",
+    "lastName": "evently",
+    "userName": "user",
+    "email": "jaman2020@gmail.com",
+    "password": "emabush2015",
+    "location": "kansanga",
+    "deviceToken": "dkfkfkskdf",
+    "role": 1,
+    "isActivated": false,
+    "isDeactivated": false
+  },
   "signupUser2": {
     "firstName": "Jaman",
     "lastName": "evently",
