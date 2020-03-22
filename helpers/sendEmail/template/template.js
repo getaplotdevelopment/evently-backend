@@ -1,6 +1,6 @@
 import dotenv from 'dotenv/config';
 
-const html = (title, action, body, role) => {
+const html = (title, action, body, role, urls) => {
   let url;
   if (action === 'RESET PASSWORD') {
     if (role === 'SUPER USER') {
@@ -9,16 +9,10 @@ const html = (title, action, body, role) => {
           ? `${process.env.FRONTEND_PRODUCTION_URL}admin/auth/reset-password?token=$token`
           : `${process.env.FRONTEND_APP_URL}admin/auth/reset-password?token=$token`;
     } else {
-      url =
-        process.env.NODE_ENV === 'production'
-          ? `${process.env.FRONTEND_PRODUCTION_URL}auth/reset-password?token=$token`
-          : `${process.env.FRONTEND_APP_URL}auth/reset-password?token=$token`;
+      url = `${urls.redirect}/redirect?url=${urls.appUrl}&token=$token`;
     }
   } else {
-    url =
-      process.env.NODE_ENV === 'production'
-        ? `${process.env.FRONTEND_PRODUCTION_URL}activate-account?token=$token`
-        : `${process.env.FRONTEND_APP_URL}activate-account?token=$token`;
+    url = `${urls.redirect}/redirect?url=${urls.appUrl}&token=$token`;
   }
 
   const secondAction = action.toLowerCase();

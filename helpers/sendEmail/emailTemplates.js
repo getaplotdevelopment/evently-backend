@@ -1,19 +1,21 @@
 import html from './template/template';
 
-const getRole = role => {
+const getRole = (role, urls) => {
   const { verification, resetPassword } = emailTemplates;
 
   resetPassword.html = html(
     'Reset password',
     'RESET PASSWORD',
     'requested a password reset for your evently account',
-    role
+    role,
+    urls
   );
   verification.html = html(
     'Email verification',
     'ACTIVATE YOUR ACCOUNT',
     'to activate your evently account',
-    role
+    role,
+    urls
   );
 
   return role;

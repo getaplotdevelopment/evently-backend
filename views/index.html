@@ -1,0 +1,7 @@
+<script type="text/javascript">
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const token = urlParams.get('token');
+    const url = urlParams.get('url');
+    window.location = `${url}/${token}`;
+  </script>
