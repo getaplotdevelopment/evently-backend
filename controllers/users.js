@@ -181,6 +181,50 @@ class UserController {
   }
 
   /**
+   *
+   * @param {Object} req
+   * @param {*} res
+   * @returns {Object} Json data
+   */
+  async socialAuthentication(req, res) {
+    const { firstName, lastName, email, avatar } = req.body;
+    const role = req.body.role ? req.body.role : 1;
+    const user = {
+      firstName,
+      lastName,
+      email,
+      avatar,
+      isActivated: true,
+      role
+    };
+    const assignedRole = await Roles.findOne({
+      where: { id: user.role }
+    });
+    const { designation } = assignedRole.dataValues;
+    const payload = {
+      firstName,
+      lastName,
+      email,
+      avatar,
+      isActivated: true,
+      role: designation
+    };
+    const result = await User.findOrCreate({
+      where: {
+        email
+      },
+      defaults: user
+    });
+    const { generate: token } = generateToken(payload);
+
+    return res.status(200).json({
+      status: 200,
+      payload,
+      token
+    });
+  }
+
+  /**
    * Checks if the email exists.
    * @param {object} req request
    * @param {object} res response.
