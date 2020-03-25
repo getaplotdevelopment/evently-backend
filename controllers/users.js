@@ -504,6 +504,26 @@ class UserController {
       isDeactivated: updatedAccount.dataValues.isDeactivated
     });
   }
+
+  /**
+   * @param {Object} req - Request from user
+   * @param {Object} res - Response to the user
+   * @returns {Object} Response
+   */
+  async approveOrganizer(req, res) {
+    const { id } = req.body;
+
+    const [rowsUpdated, [updatedAccount]] = await User.update(
+      { isApproved: true },
+      { where: { id }, returning: true }
+    );
+
+    res.status(200).json({
+      status: 200,
+      accountsUpdated: rowsUpdated,
+      isDeactivated: updatedAccount.dataValues.isDeactivated
+    });
+  }
 }
 
 export default UserController;

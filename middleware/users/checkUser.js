@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import models from '../../models/index';
 import httpError from '../../helpers/errorsHandler/httpError';
 import checkIdHelper from '../../helpers/checkIdHelper';
+import checkOrganizerIdHelper from '../../helpers/checkOrganizerIdHelper';
 
 const { User, Feedback, OrganizerProfile } = models;
 
@@ -97,6 +98,11 @@ const checkUserId = async (req, res, next) => {
   await checkIdHelper(User, id);
   next();
 };
+const checkOrganizerId = async (req, res, next) => {
+  const { id } = req.body;
+  await checkOrganizerIdHelper(User, id);
+  next();
+};
 const checkFeedbackId = async (req, res, next) => {
   const { feedbackId } = req.params;
   await checkIdHelper(Feedback, feedbackId);
@@ -125,5 +131,6 @@ export {
   isDeactivated,
   checkUserId,
   checkFeedbackId,
-  checkFeedbackOwner
+  checkFeedbackOwner,
+  checkOrganizerId
 };

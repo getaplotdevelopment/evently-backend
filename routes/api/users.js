@@ -13,7 +13,8 @@ import {
   checkPassword,
   isActivate,
   isDeactivated,
-  checkUserId
+  checkUserId,
+  checkOrganizerId
 } from '../../middleware/users/checkUser';
 import asyncHandler from '../../helpers/errorsHandler/asyncHandler';
 import auth from '../../middleware/users/auth';
@@ -67,16 +68,23 @@ router.put(
 );
 router.put(
   '/deactivate-user/',
-  asyncHandler(checkUserId),
   asyncHandler(deactivateUser),
+  asyncHandler(checkUserId),
   asyncHandler(users.deactivateUser)
 );
 router.put(
   '/reactivate-user/',
-  asyncHandler(checkUserId),
   asyncHandler(isAdminAuth),
   asyncHandler(deactivateUser),
+  asyncHandler(checkUserId),
   asyncHandler(users.reactivateUser)
+);
+router.put(
+  '/approve-organizer/',
+  asyncHandler(isAdminAuth),
+  asyncHandler(checkUserId),
+  asyncHandler(checkOrganizerId),
+  asyncHandler(users.approveOrganizer)
 );
 
 router.patch('/location', asyncHandler(auth), asyncHandler(users.updateLocation));
