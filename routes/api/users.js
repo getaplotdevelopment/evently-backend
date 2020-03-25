@@ -17,7 +17,6 @@ import {
 } from '../../middleware/users/checkUser';
 import asyncHandler from '../../helpers/errorsHandler/asyncHandler';
 import auth from '../../middleware/users/auth';
-import authUser from '../../middleware/users/authUser';
 import isAdminAuth from '../../middleware/users/isAdminAuth';
 import checkToken from '../../middleware/users/checkToken';
 import deactivateUser from '../../middleware/users/canDeactivateUser';
@@ -71,6 +70,13 @@ router.put(
   asyncHandler(checkUserId),
   asyncHandler(deactivateUser),
   asyncHandler(users.deactivateUser)
+);
+router.put(
+  '/reactivate-user/',
+  asyncHandler(checkUserId),
+  asyncHandler(isAdminAuth),
+  asyncHandler(deactivateUser),
+  asyncHandler(users.reactivateUser)
 );
 
 router.patch('/location', asyncHandler(auth), asyncHandler(users.updateLocation));

@@ -20,8 +20,7 @@ export default async (condition, email, id) => {
 
   const { dataValues } = user;
   const { roles } = dataValues;
-  console.log('_previousDataValues', roles.designation);
-  if (!dataValues.id === id) {
+  if (dataValues.id !== id) {
     if (roles.designation !== 'SUPER USER') {
       throw new httpError(
         403,
