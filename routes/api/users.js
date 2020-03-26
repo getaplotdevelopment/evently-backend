@@ -61,7 +61,8 @@ router.put(
   asyncHandler(users.changeCurrentPassword)
 );
 
-router.patch('/location', auth, asyncHandler(users.updateLocation));
+router.patch('/location', asyncHandler(auth), asyncHandler(users.updateLocation));
+router.post('/:user_email/follow', asyncHandler(auth), asyncHandler(users.followUser))
 
 router.post('/logout', asyncHandler(auth), asyncHandler(users.logout));
 
