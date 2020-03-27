@@ -283,9 +283,7 @@ class UserController {
    */
   async activateAccount(req, res) {
     const { token } = req.query;
-    console.log('token', token);
     const user = jwt.decode(token, secretKey);
-    console.log('user', user);
     await redisClient.LPUSH('token', token);
 
     if (user) {

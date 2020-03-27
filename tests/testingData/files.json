@@ -8,6 +8,10 @@
     "location": "kansanga",
     "deviceToken": "dkfkfkskdf",
     "role": 1,
+    "urls": {
+      "redirect": "https",
+      "appUrl": "http://"
+    },
     "isActivated": false
   },
   "signupUser2": {
@@ -19,6 +23,10 @@
     "location": "kansanga",
     "deviceToken": "dkfkfkskdf",
     "isActivated": true,
+    "urls": {
+      "redirect": "https",
+      "appUrl": "http://"
+    },
     "role": 2
   },
   "signupUser4": {
@@ -30,6 +38,10 @@
     "location": "kansanga",
     "isActivated": true,
     "deviceToken": "dkfkfkskdf",
+    "urls": {
+      "redirect": "https",
+      "appUrl": "http://"
+    },
     "role": 2
   },
   "signupUser6": {
@@ -41,6 +53,10 @@
     "location": "kansanga",
     "isActivated": true,
     "deviceToken": "dkfkfkskdf",
+    "urls": {
+      "redirect": "https",
+      "appUrl": "http://"
+    },
     "role": 3
   },
   "superUser": {
@@ -52,6 +68,10 @@
     "location": "kansanga",
     "isActivated": true,
     "deviceToken": "dkfkfkskdf",
+    "urls": {
+      "redirect": "https",
+      "appUrl": "http://"
+    },
     "role": 3
   },
   "signupUser3": {
@@ -63,6 +83,10 @@
     "location": "kansanga",
     "isActivated": true,
     "deviceToken": "dkfkfkskdf",
+    "urls": {
+      "redirect": "https",
+      "appUrl": "http://"
+    },
     "role": 1
   },
   "signupUser5": {
@@ -74,6 +98,10 @@
     "location": "kansanga",
     "isActivated": true,
     "deviceToken": "dkfkfkskdf",
+    "urls": {
+      "redirect": "https",
+      "appUrl": "http://"
+    },
     "role": 2
   },
   "invalidUser": {
@@ -85,6 +113,10 @@
     "location": "kansanga",
     "isActivated": true,
     "deviceToken": "dkfkfkskdf",
+    "urls": {
+      "redirect": "https",
+      "appUrl": "http://"
+    },
     "role": 1
   },
   "existingUser": {
@@ -96,6 +128,10 @@
     "isActivated": true,
     "deviceToken": "dkfkfkskdf",
     "location": "kansanga",
+    "urls": {
+      "redirect": "https",
+      "appUrl": "http://"
+    },
     "role": 1
   },
   "loginUser": {
