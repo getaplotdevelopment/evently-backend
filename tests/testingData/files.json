@@ -7,12 +7,13 @@
     "password": "emabush2015",
     "location": "kansanga",
     "deviceToken": "dkfkfkskdf",
-    "role": 1,
+    "role": 3,
     "urls": {
       "redirect": "https",
       "appUrl": "http://"
     },
-    "isActivated": false
+    "isActivated": false,
+    "isDeactivated": false
   },
   "feedbackUser": {
     "firstName": "Jaman",
@@ -24,7 +25,11 @@
     "deviceToken": "dkfkfkskdf",
     "role": 1,
     "isActivated": false,
-    "isDeactivated": false
+    "isDeactivated": false,
+    "urls": {
+      "redirect": "https",
+      "appUrl": "http://"
+    }
   },
   "signupUser2": {
     "firstName": "Jaman",
@@ -40,7 +45,11 @@
       "appUrl": "http://"
     },
     "role": 2,
-    "isDeactivated": false
+    "isDeactivated": false,
+    "urls": {
+      "redirect": "https",
+      "appUrl": "http://"
+    }
   },
   "signupUser4": {
     "firstName": "Jaman",
@@ -56,7 +65,11 @@
       "appUrl": "http://"
     },
     "role": 2,
-    "isDeactivated": false
+    "isDeactivated": false,
+    "urls": {
+      "redirect": "https",
+      "appUrl": "http://"
+    }
   },
   "signupUser6": {
     "firstName": "Jaman",
@@ -72,7 +85,11 @@
       "appUrl": "http://"
     },
     "role": 3,
-    "isDeactivated": false
+    "isDeactivated": false,
+    "urls": {
+      "redirect": "https",
+      "appUrl": "http://"
+    }
   },
   "superUser": {
     "firstName": "Jaman",
@@ -88,7 +105,11 @@
       "appUrl": "http://"
     },
     "role": 3,
-    "isDeactivated": false
+    "isDeactivated": false,
+    "urls": {
+      "redirect": "https",
+      "appUrl": "http://"
+    }
   },
   "signupUser3": {
     "firstName": "Jaman",
@@ -104,7 +125,11 @@
       "appUrl": "http://"
     },
     "role": 1,
-    "isDeactivated": false
+    "isDeactivated": false,
+    "urls": {
+      "redirect": "https",
+      "appUrl": "http://"
+    }
   },
   "signupUser5": {
     "firstName": "Ja",
@@ -120,7 +145,11 @@
       "appUrl": "http://"
     },
     "role": 2,
-    "isDeactivated": false
+    "isDeactivated": false,
+    "urls": {
+      "redirect": "https",
+      "appUrl": "http://"
+    }
   },
   "invalidUser": {
     "firstName": "",
@@ -136,7 +165,11 @@
       "appUrl": "http://"
     },
     "role": 1,
-    "isDeactivated": false
+    "isDeactivated": false,
+    "urls": {
+      "redirect": "https",
+      "appUrl": "http://"
+    }
   },
   "existingUser": {
     "firstName": "Jaman",
@@ -153,6 +186,22 @@
     },
     "role": 1,
     "isDeactivated": false
+  },
+  "toBeDeactivated": {
+    "firstName": "Jaman",
+    "lastName": "evently",
+    "userName": "user",
+    "email": "jaman@gmail.com",
+    "password": "emabush2015",
+    "isActivated": true,
+    "deviceToken": "dkfkfkskdf",
+    "location": "kansanga",
+    "role": 1,
+    "isDeactivated": false,
+    "urls": {
+      "redirect": "https",
+      "appUrl": "http://"
+    }
   },
   "loginUser": {
     "email": "getaplotdev@gmail.com",

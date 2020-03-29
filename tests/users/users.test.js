@@ -225,7 +225,7 @@ describe('Activate user account', () => {
     res.should.have.status(200);
   });
   it('should not deactivate user account with a wrong ID', async () => {
-    const response = await newUser(signupUser);
+    const response = await loginAUser(superUser);
     const wrongId = 800398500293802;
 
     const { token } = response.body;
