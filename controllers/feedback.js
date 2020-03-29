@@ -1,6 +1,7 @@
 /* eslint-disable require-jsdoc */
 import 'dotenv/config';
 import models from '../models/index';
+import pagination from '../helpers/paginationHelper';
 
 const { Feedback, User } = models;
 
@@ -51,27 +52,33 @@ class FeedbackController {
    * @returns {Object} Response
    */
   async getAllFeedback(req, res) {
-    const feedback = await Feedback.findAll({
-      attributes: {
-        exclude: ['user']
-      },
-      include: [
-        {
-          model: User,
-          as: 'owner',
-          attributes: {
-            exclude: [
-              'password',
-              'isActivated',
-              'deviceToken',
-              'role',
-              'createdAt',
-              'updatedAt'
-            ]
-          }
+    const searchParams = req.query;
+    const include = [
+      {
+        model: User,
+        as: 'owner',
+        attributes: {
+          exclude: [
+            'password',
+            'isActivated',
+            'deviceToken',
+            'role',
+            'createdAt',
+            'updatedAt'
+          ]
         }
-      ]
-    });
+      }
+    ];
+    const attributes = {
+      exclude: ['user']
+    };
+    const feedback = await pagination(
+      searchParams,
+      Feedback,
+      attributes,
+      include
+    );
+
     return res.status(200).json({
       status: 200,
       feedback
