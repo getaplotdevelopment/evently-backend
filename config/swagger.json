@@ -617,7 +617,7 @@
         }
       }
     },
-    "api/users/{userEmail}/follow": {
+    "api/users/{userId}/follow": {
       "post": {
         "tags": ["users"],
         "summary": "Follow a user",
@@ -636,11 +636,11 @@
           },
           {
             "in": "path",
-            "name": "userEmail",
-            "description": "provide the user email to follow",
+            "name": "userId",
+            "description": "provide the user id to follow",
             "type": "string",
             "required": true,
-            "example": "evently@gmail.com"
+            "example": "0002"
           }
         ],
         "responses": {
@@ -656,7 +656,7 @@
         }
       }
     },
-    "api/users/{userEmail}/unfollow": {
+    "api/users/{userId}/unfollow": {
       "delete": {
         "tags": ["users"],
         "summary": "Unfollow a user",
@@ -675,11 +675,11 @@
           },
           {
             "in": "path",
-            "name": "userEmail",
-            "description": "provide the user email to unfollow",
+            "name": "userId",
+            "description": "provide the user id to unfollow",
             "type": "string",
             "required": true,
-            "example": "evently@gmail.com"
+            "example": "002"
           }
         ],
         "responses": {

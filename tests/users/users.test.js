@@ -252,7 +252,7 @@ describe('Change current user passowrd', () => {
       password: 'emabush2015',
       email: 'geta@gmail.com'
     };
-    const userToFollow = 'getaplotdev@gmail.com';
+    const userToFollow = 1
     const res = await chai
       .request(app)
       .post('/api/users/login')
@@ -272,7 +272,7 @@ describe('Change current user passowrd', () => {
       password: 'emabush2015',
       email: 'geta@gmail.com'
     };
-    const userToFollow = 'invalidemail@gmail.com';
+    const userToFollow = 10007;
     const res = await chai
       .request(app)
       .post('/api/users/login')
@@ -292,7 +292,7 @@ describe('Change current user passowrd', () => {
       password: 'emabush2015',
       email: 'geta@gmail.com'
     };
-    const userToFollow = 'getaplotdev@gmail.com';
+    const userToFollow = 1;
     const res = await chai
       .request(app)
       .post('/api/users/login')
@@ -311,7 +311,7 @@ describe('Change current user passowrd', () => {
       password: 'emabush2015',
       email: 'geta@gmail.com'
     };
-    const userToFollow = 'getaplotdev@gmail.com';
+    const userToFollow = 1;
     const res = await chai
       .request(app)
       .post('/api/users/login')
@@ -330,8 +330,8 @@ describe('Change current user passowrd', () => {
       password: 'emabush2015',
       email: 'geta@gmail.com'
     };
-    const userToFollow = 'invaliduser@gmail.com';
-    const userToFollow2 = 'getaplotdev@gmail.com';
+    const userToFollow = 10002;
+    const userToFollow2 = 1;
     const res = await chai
       .request(app)
       .post('/api/users/login')

@@ -347,25 +347,38 @@ class UserController {
    * @returns {Object} Response
    */
   async followUser(req, res) {
-    const { user_email: follower } = req.params;
+    const { userId: follower } = req.params;
     const { email: following } = req.user;
     const isUserExist = await User.findOne({
-      where: { email: follower }
-    });
+      where: { id: follower },
+      attributes: [
+        'id',
+        'firstName',
+        'lastName',
+        'userName',
+        'email',
+        'avatar',
+        'isActivated'
+      ]
+    });    
     if (!isUserExist) {
       throw new httpError(404, 'User does not exist');
     }
     const isFollowed = await Follow.findOne({
-      where: { follower, following }
+      where: { id: follower, following }
     });
     if (isFollowed) {
       throw new httpError(409, 'User already followed');
     }
-    const dataValues = await Follow.create({
-      follower,
+    const { dataValues: userObj } = isUserExist;    
+    const response = await Follow.create({
+      id: userObj.id,
+      follower: userObj.email,
       following
     });
-    return res.send({ status: 200, follow: true, data: dataValues });
+    userObj.email = undefined
+    response.follower = userObj;
+    return res.send({ status: 200, follow: true, data: response });
   }
 
   /**
@@ -374,22 +387,22 @@ class UserController {
    * @returns {Object} Response
    */
   async unfollowUser(req, res) {
-    const { user_email: follower } = req.params;
+    const { userId: id } = req.params;
     const { email: following } = req.user;
     const isUserExist = await User.findOne({
-      where: { email: follower }
+      where: { id }
     });
     if (!isUserExist) {
       throw new httpError(404, 'User does not exist');
     }
     const isunFollowed = await Follow.findOne({
-      where: { follower, following }
+      where: { id, following }
     });
     if (!isunFollowed) {
       throw new httpError(404, 'User does not exist');
     }
     const dataValues = await Follow.destroy({
-      where: { follower, following }
+      where: { id, following }
     });
     return res.send({ status: 200, follow: false, message: 'User unfollowed' });
   }
