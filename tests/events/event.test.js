@@ -43,8 +43,6 @@ const createEvents = async (userObj, event = createEvent) => {
 describe('Event', () => {
   it('should create an event', async () => {
     const response = await newOrganizer();
-    console.log('response', response);
-    
     const res = await createEvents(response);
     res.should.have.status(201);
     res.body.should.be.a('object');

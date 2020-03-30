@@ -617,6 +617,81 @@
         }
       }
     },
+    "api/users/{userId}/follow": {
+      "post": {
+        "tags": ["users"],
+        "summary": "Follow a user",
+        "description": "",
+        "operationId": "follow user",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Add the token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "description": "provide the user id to follow",
+            "type": "string",
+            "required": true,
+            "example": "0002"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully followed"
+          },
+          "404": {
+            "description": "User doesn't exist"
+          },
+          "409": {
+            "description": "User already unfollowed"
+          }
+        }
+      }
+    },
+    "api/users/{userId}/unfollow": {
+      "delete": {
+        "tags": ["users"],
+        "summary": "Unfollow a user",
+        "description": "",
+        "operationId": "unfollow user",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Add the token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "description": "provide the user id to unfollow",
+            "type": "string",
+            "required": true,
+            "example": "002"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User unfollowed"
+          },
+          "404": {
+            "description": "User doesn't exist"
+          }
+        }
+      }
+    },
 
     "api/profile": {
       "post": {

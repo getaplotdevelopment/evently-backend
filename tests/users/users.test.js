@@ -247,4 +247,106 @@ describe('Change current user passowrd', () => {
     result.should.have.status(200);
     result.body.should.have.property('message').eql('Successfully updated');
   }).timeout(10000);
+  it('Should user follow another user', async () => {
+    const loginUser = {
+      password: 'emabush2015',
+      email: 'geta@gmail.com'
+    };
+    const userToFollow = 1
+    const res = await chai
+      .request(app)
+      .post('/api/users/login')
+      .set('Content-Type', 'application/json')
+      .send(loginUser);
+    currentUserToken = res.body.token;
+
+    const result = await chai
+      .request(app)
+      .post(`/api/users/${userToFollow}/follow`)
+      .set({ Authorization: 'Bearer ' + currentUserToken });
+    result.should.have.status(200);
+    result.body.should.have.property('follow').eql(true);
+  });
+  it('Should user only follow existing users', async () => {
+    const loginUser = {
+      password: 'emabush2015',
+      email: 'geta@gmail.com'
+    };
+    const userToFollow = 10007;
+    const res = await chai
+      .request(app)
+      .post('/api/users/login')
+      .set('Content-Type', 'application/json')
+      .send(loginUser);
+    currentUserToken = res.body.token;
+
+    const result = await chai
+      .request(app)
+      .post(`/api/users/${userToFollow}/follow`)
+      .set({ Authorization: 'Bearer ' + currentUserToken });
+    result.should.have.status(404);
+    result.body.should.have.property('error').eql('User does not exist');
+  });
+  it('Should user only follow a user once', async () => {
+    const loginUser = {
+      password: 'emabush2015',
+      email: 'geta@gmail.com'
+    };
+    const userToFollow = 1;
+    const res = await chai
+      .request(app)
+      .post('/api/users/login')
+      .set('Content-Type', 'application/json')
+      .send(loginUser);
+    currentUserToken = res.body.token;
+    const result = await chai
+      .request(app)
+      .post(`/api/users/${userToFollow}/follow`)
+      .set({ Authorization: 'Bearer ' + currentUserToken });
+    result.should.have.status(409);
+    result.body.should.have.property('error').eql('User already followed');
+  });
+  it('Should user unfollow a followed user.', async () => {
+    const loginUser = {
+      password: 'emabush2015',
+      email: 'geta@gmail.com'
+    };
+    const userToFollow = 1;
+    const res = await chai
+      .request(app)
+      .post('/api/users/login')
+      .set('Content-Type', 'application/json')
+      .send(loginUser);
+    currentUserToken = res.body.token;
+    const result = await chai
+      .request(app)
+      .delete(`/api/users/${userToFollow}/unfollow`)
+      .set({ Authorization: 'Bearer ' + currentUserToken });
+    result.should.have.status(200);
+    result.body.should.have.property('message').eql('User unfollowed');
+  });
+  it('Should user unfollow existing users.', async () => {
+    const loginUser = {
+      password: 'emabush2015',
+      email: 'geta@gmail.com'
+    };
+    const userToFollow = 10002;
+    const userToFollow2 = 1;
+    const res = await chai
+      .request(app)
+      .post('/api/users/login')
+      .set('Content-Type', 'application/json')
+      .send(loginUser);
+    currentUserToken = res.body.token;
+    await chai
+      .request(app)
+      .delete(`/api/users/${userToFollow2}/unfollow`)
+      .set({ Authorization: 'Bearer ' + currentUserToken });
+    const result = await chai
+      .request(app)
+      .delete(`/api/users/${userToFollow}/unfollow`)
+      .set({ Authorization: 'Bearer ' + currentUserToken });
+    result.should.have.status(404);
+    result.body.should.have.property('error').eql('User does not exist');
+  });
 });

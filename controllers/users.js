@@ -11,7 +11,7 @@ import { redisClient } from '../helpers/logout/redisClient';
 import { getRole } from '../helpers/sendEmail/emailTemplates';
 
 dotenv.config();
-const { User, Roles } = models;
+const { User, Roles, Follow } = models;
 const { secretKey } = process.env;
 /**
  * @user Controller
@@ -283,9 +283,7 @@ class UserController {
    */
   async activateAccount(req, res) {
     const { token } = req.query;
-    console.log('token', token);
     const user = jwt.decode(token, secretKey);
-    console.log('user', user);
     await redisClient.LPUSH('token', token);
 
     if (user) {
@@ -341,6 +339,72 @@ class UserController {
     const formated_address = await geocode(location);
     userInstance.location = formated_address;
     await userInstance.save();
+  }
+
+  /**
+   * @param {Object} req - Request form user
+   * @param {Object} res - Response to the user
+   * @returns {Object} Response
+   */
+  async followUser(req, res) {
+    const { userId: follower } = req.params;
+    const { email: following } = req.user;
+    const isUserExist = await User.findOne({
+      where: { id: follower },
+      attributes: [
+        'id',
+        'firstName',
+        'lastName',
+        'userName',
+        'email',
+        'avatar',
+        'isActivated'
+      ]
+    });    
+    if (!isUserExist) {
+      throw new httpError(404, 'User does not exist');
+    }
+    const isFollowed = await Follow.findOne({
+      where: { id: follower, following }
+    });
+    if (isFollowed) {
+      throw new httpError(409, 'User already followed');
+    }
+    const { dataValues: userObj } = isUserExist;    
+    const response = await Follow.create({
+      id: userObj.id,
+      follower: userObj.email,
+      following
+    });
+    userObj.email = undefined
+    response.follower = userObj;
+    return res.send({ status: 200, follow: true, data: response });
+  }
+
+  /**
+   * @param {Object} req - Request form user
+   * @param {Object} res - Response to the user
+   * @returns {Object} Response
+   */
+  async unfollowUser(req, res) {
+    const { userId: id } = req.params;
+    const { email: following } = req.user;
+    const isUserExist = await User.findOne({
+      where: { id }
+    });
+    if (!isUserExist) {
+      throw new httpError(404, 'User does not exist');
+    }
+    const isunFollowed = await Follow.findOne({
+      where: { id, following }
+    });
+    if (!isunFollowed) {
+      throw new httpError(404, 'User does not exist');
+    }
+    const dataValues = await Follow.destroy({
+      where: { id, following }
+    });
+    return res.send({ status: 200, follow: false, message: 'User unfollowed' });
   }
 
   /**
