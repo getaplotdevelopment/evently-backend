@@ -9,6 +9,7 @@ import sendEmail from '../helpers/sendEmail/callMailer';
 import geocode from '../helpers/googleMap/goecode';
 import { redisClient } from '../helpers/logout/redisClient';
 import { getRole } from '../helpers/sendEmail/emailTemplates';
+import findOneHelper from '../helpers/rolesHelper/findOneHelper';
 
 dotenv.config();
 const { User, Roles, Follow } = models;
@@ -44,7 +45,12 @@ class UserController {
       d: 'mm'
     });
     const avatar = gavatar.slice(2, gavatar.length);
-    const role = req.body.role ? req.body.role : 1;
+    const roleDesignation = req.body.role ? req.body.role : 'USER';
+    const { dataValues } = await findOneHelper(Roles, {
+      designation: roleDesignation
+    });
+    const role = dataValues.id;
+
     const newUser = {
       firstName,
       lastName,
@@ -62,9 +68,8 @@ class UserController {
     newUser.password = await bcrypt.hash(password, salt);
     const userInstance = await User.create(newUser);
     const createdUser = userInstance.dataValues;
-    const assignedRole = await Roles.findOne({
-      where: { id: createdUser.role }
-    });
+    const assignedRole = await findOneHelper(Roles, { id: createdUser.role });
+
     const { designation } = assignedRole.dataValues;
 
     const payload = {
