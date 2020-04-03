@@ -1,9 +1,10 @@
 import bcrypt from 'bcryptjs';
 import models from '../../models/index';
 import httpError from '../../helpers/errorsHandler/httpError';
+import checkIdHelper from '../../helpers/checkIdHelper';
+import checkOrganizerIdHelper from '../../helpers/checkOrganizerIdHelper';
 
-const { User } = models;
-const { OrganizerProfile } = models;
+const { User, Feedback, OrganizerProfile } = models;
 
 const checkUser = async (req, res, next) => {
   const email = req.body.email.toLowerCase();
@@ -77,11 +78,59 @@ const isActivate = async (req, res, next) => {
   }
   next();
 };
+
+const isDeactivated = async (req, res, next) => {
+  const email = req.body.email.toLowerCase();
+
+  const user = await User.findOne({
+    where: { email, isDeactivated: true }
+  });
+  if (user) {
+    throw new httpError(
+      401,
+      'Account deactivated, kindly contact the help center service via evently@gmail.com'
+    );
+  }
+  next();
+};
+const checkUserId = async (req, res, next) => {
+  const { id } = req.body;
+  await checkIdHelper(User, id);
+  next();
+};
+const checkOrganizerId = async (req, res, next) => {
+  const { id } = req.body;
+  await checkOrganizerIdHelper(User, id);
+  next();
+};
+const checkFeedbackId = async (req, res, next) => {
+  const { feedbackId } = req.params;
+  await checkIdHelper(Feedback, feedbackId);
+  next();
+};
+
+const checkFeedbackOwner = async (req, res, next) => {
+  const { id } = req.user;
+  const owner = await Feedback.findOne({ where: { user: id } });
+  if (!owner) {
+    throw new httpError(
+      403,
+      "Un-authorized, User role can't perform this action."
+    );
+  }
+  next();
+};
+
 export {
   checkUser,
   checkUserLogin,
   checkUserProfile,
   checkPassword,
   checkProfile,
-  isActivate
+  isActivate,
+  isDeactivated,
+  checkUserId,
+  checkFeedbackId,
+  checkFeedbackOwner,
+  checkOrganizerId
 };

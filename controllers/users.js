@@ -9,6 +9,7 @@ import sendEmail from '../helpers/sendEmail/callMailer';
 import geocode from '../helpers/googleMap/goecode';
 import { redisClient } from '../helpers/logout/redisClient';
 import { getRole } from '../helpers/sendEmail/emailTemplates';
+import findOneHelper from '../helpers/rolesHelper/findOneHelper';
 
 dotenv.config();
 const { User, Roles, Follow } = models;
@@ -44,7 +45,12 @@ class UserController {
       d: 'mm'
     });
     const avatar = gavatar.slice(2, gavatar.length);
-    const role = req.body.role ? req.body.role : 1;
+    const roleDesignation = req.body.role ? req.body.role : 'USER';
+    const { dataValues } = await findOneHelper(Roles, {
+      designation: roleDesignation
+    });
+    const role = dataValues.id;
+
     const newUser = {
       firstName,
       lastName,
@@ -62,9 +68,8 @@ class UserController {
     newUser.password = await bcrypt.hash(password, salt);
     const userInstance = await User.create(newUser);
     const createdUser = userInstance.dataValues;
-    const assignedRole = await Roles.findOne({
-      where: { id: createdUser.role }
-    });
+    const assignedRole = await findOneHelper(Roles, { id: createdUser.role });
+
     const { designation } = assignedRole.dataValues;
 
     const payload = {
@@ -178,6 +183,50 @@ class UserController {
       });
     }
     return result;
+  }
+
+  /**
+   *
+   * @param {Object} req
+   * @param {*} res
+   * @returns {Object} Json data
+   */
+  async socialAuthentication(req, res) {
+    const { firstName, lastName, email, avatar } = req.body;
+    const role = req.body.role ? req.body.role : 1;
+    const user = {
+      firstName,
+      lastName,
+      email,
+      avatar,
+      isActivated: true,
+      role
+    };
+    const assignedRole = await Roles.findOne({
+      where: { id: user.role }
+    });
+    const { designation } = assignedRole.dataValues;
+    const payload = {
+      firstName,
+      lastName,
+      email,
+      avatar,
+      isActivated: true,
+      role: designation
+    };
+    const result = await User.findOrCreate({
+      where: {
+        email
+      },
+      defaults: user
+    });
+    const { generate: token } = generateToken(payload);
+
+    return res.status(200).json({
+      status: 200,
+      payload,
+      token
+    });
   }
 
   /**
@@ -418,6 +467,66 @@ class UserController {
     return res.status(200).json({
       status: 200,
       message: 'You are logged out'
+    });
+  }
+
+  /**
+   * @param {Object} req - Request from user
+   * @param {Object} res - Response to the user
+   * @returns {Object} Response
+   */
+  async deactivateUser(req, res) {
+    const { id } = req.body;
+
+    const [rowsUpdated, [updatedAccount]] = await User.update(
+      { isDeactivated: true },
+      { where: { id }, returning: true }
+    );
+
+    res.status(200).json({
+      status: 200,
+      accountsUpdated: rowsUpdated,
+      isDeactivated: updatedAccount.dataValues.isDeactivated
+    });
+  }
+
+  /**
+   * @param {Object} req - Request from user
+   * @param {Object} res - Response to the user
+   * @returns {Object} Response
+   */
+  async reactivateUser(req, res) {
+    const { id } = req.body;
+
+    const [rowsUpdated, [updatedAccount]] = await User.update(
+      { isDeactivated: false },
+      { where: { id }, returning: true }
+    );
+
+    res.status(200).json({
+      status: 200,
+      accountsUpdated: rowsUpdated,
+      isDeactivated: updatedAccount.dataValues.isDeactivated
+    });
+  }
+
+  /**
+   * @param {Object} req - Request from user
+   * @param {Object} res - Response to the user
+   * @returns {Object} Response
+   */
+  async approveOrganizer(req, res) {
+    const { id } = req.body;
+
+    const [rowsUpdated, [updatedAccount]] = await User.update(
+      { isApproved: true },
+      { where: { id }, returning: true }
+    );
+
+    res.status(200).json({
+      status: 200,
+      accountsUpdated: rowsUpdated,
+      isDeactivated: updatedAccount.dataValues.isDeactivated
     });
   }
 }

@@ -30,5 +30,7 @@ router.get(
   passport.authenticate('google', { session: false }),
   asyncHandler(user.loginViaSocialMedia)
 );
+router.post('/auth/google', user.socialAuthentication);
+router.post('/auth/facebook', user.socialAuthentication);
 
 export default router;

@@ -8,6 +8,7 @@ import organizerProfile from './api/profile';
 import roles from './api/roles';
 import ticketCategory from './api/ticketCategory';
 import ticket from './api/ticket';
+import feedback from './api/feedback';
 
 const app = express();
 
@@ -17,9 +18,10 @@ app.use('/api/profile', organizerProfile);
 app.use('/api/roles', roles);
 app.use('/api/ticket/category', ticketCategory);
 app.use('/api/ticket', ticket);
+app.use('/api/feedback', feedback);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.get('/redirect', (req, res) => {
-    res.sendfile('views/index.html');
-  });
+  res.sendfile('views/index.html');
+});
 
 export default app;

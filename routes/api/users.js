@@ -11,11 +11,16 @@ import {
   checkUser,
   checkUserLogin,
   checkPassword,
-  isActivate
+  isActivate,
+  isDeactivated,
+  checkUserId,
+  checkOrganizerId
 } from '../../middleware/users/checkUser';
 import asyncHandler from '../../helpers/errorsHandler/asyncHandler';
 import auth from '../../middleware/users/auth';
+import isAdminAuth from '../../middleware/users/isAdminAuth';
 import checkToken from '../../middleware/users/checkToken';
+import deactivateUser from '../../middleware/users/canDeactivateUser';
 
 const users = new Users();
 
@@ -34,6 +39,7 @@ router.post(
   asyncHandler(checkUserLogin),
   validations,
   asyncHandler(isActivate),
+  asyncHandler(isDeactivated),
   asyncHandler(users.login)
 );
 router.put(
@@ -59,6 +65,26 @@ router.put(
   asyncHandler(auth),
   asyncHandler(checkPassword),
   asyncHandler(users.changeCurrentPassword)
+);
+router.put(
+  '/deactivate-user/',
+  asyncHandler(deactivateUser),
+  asyncHandler(checkUserId),
+  asyncHandler(users.deactivateUser)
+);
+router.put(
+  '/reactivate-user/',
+  asyncHandler(isAdminAuth),
+  asyncHandler(deactivateUser),
+  asyncHandler(checkUserId),
+  asyncHandler(users.reactivateUser)
+);
+router.put(
+  '/approve-organizer/',
+  asyncHandler(isAdminAuth),
+  asyncHandler(checkUserId),
+  asyncHandler(checkOrganizerId),
+  asyncHandler(users.approveOrganizer)
 );
 
 router.patch('/location', asyncHandler(auth), asyncHandler(users.updateLocation));

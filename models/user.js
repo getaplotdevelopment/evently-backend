@@ -15,7 +15,9 @@ module.exports = (sequelize, DataTypes) => {
       role: {
         type: DataTypes.INTEGER,
         references: { model: 'Roles', key: 'id' }
-      }
+      },
+      isDeactivated: { type: DataTypes.BOOLEAN, defaultValue: false },
+      isApproved: { type: DataTypes.BOOLEAN, defaultValue: false }
     },
     {}
   );
@@ -38,6 +40,9 @@ module.exports = (sequelize, DataTypes) => {
     User.hasMany(models.TicketCategory, {
       foreignKey: 'user',
       allowNull: true
+    });
+    User.hasMany(models.Feedback, {
+      foreignKey: 'user'
     });
     User.belongsTo(models.Roles, {
       as: 'roles',
