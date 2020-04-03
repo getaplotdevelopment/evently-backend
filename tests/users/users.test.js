@@ -64,7 +64,7 @@ after(async () => {
   mockery.deregisterAll();
   mockery.disable();
 });
-describe('User', () => {
+describe.only('User', () => {
   it('Should create a user and return the status 201', async () => {
     const res = await chai
       .request(app)
@@ -299,7 +299,7 @@ describe('Change current user password', () => {
       password: 'emabush2015',
       email: 'geta@gmail.com'
     };
-    const userToFollow = 1
+    const userToFollow = 1;
     const res = await chai
       .request(app)
       .post('/api/users/login')
