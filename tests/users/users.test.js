@@ -64,7 +64,7 @@ after(async () => {
   mockery.deregisterAll();
   mockery.disable();
 });
-describe.only('User', () => {
+describe('User', () => {
   it('Should create a user and return the status 201', async () => {
     const res = await chai
       .request(app)

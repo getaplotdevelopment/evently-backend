@@ -7,7 +7,7 @@
     "password": "emabush2015",
     "location": "kansanga",
     "deviceToken": "dkfkfkskdf",
-    "role": 3,
+    "role": "SUPER USER",
     "urls": {
       "redirect": "https",
       "appUrl": "http://"
@@ -23,7 +23,7 @@
     "password": "emabush2015",
     "location": "kansanga",
     "deviceToken": "dkfkfkskdf",
-    "role": 1,
+    "role": "USER",
     "isActivated": false,
     "isDeactivated": false,
     "urls": {
@@ -44,7 +44,7 @@
       "redirect": "https",
       "appUrl": "http://"
     },
-    "role": 2,
+    "role": "ORGANIZER",
     "isDeactivated": false,
     "urls": {
       "redirect": "https",
@@ -64,7 +64,7 @@
       "redirect": "https",
       "appUrl": "http://"
     },
-    "role": 2,
+    "role": "ORGANIZER",
     "isDeactivated": false,
     "urls": {
       "redirect": "https",
@@ -84,7 +84,7 @@
       "redirect": "https",
       "appUrl": "http://"
     },
-    "role": 3,
+    "role": "SUPER USER",
     "isDeactivated": false,
     "urls": {
       "redirect": "https",
@@ -104,7 +104,7 @@
       "redirect": "https",
       "appUrl": "http://"
     },
-    "role": 3,
+    "role": "SUPER USER",
     "isDeactivated": false,
     "urls": {
       "redirect": "https",
@@ -124,7 +124,7 @@
       "redirect": "https",
       "appUrl": "http://"
     },
-    "role": 1,
+    "role": "USER",
     "isDeactivated": false,
     "urls": {
       "redirect": "https",
@@ -144,7 +144,7 @@
       "redirect": "https",
       "appUrl": "http://"
     },
-    "role": 2,
+    "role": "ORGANIZER",
     "isDeactivated": false,
     "urls": {
       "redirect": "https",
@@ -164,7 +164,7 @@
       "redirect": "https",
       "appUrl": "http://"
     },
-    "role": 1,
+    "role": "USER",
     "isDeactivated": false,
     "urls": {
       "redirect": "https",
@@ -184,7 +184,7 @@
       "redirect": "https",
       "appUrl": "http://"
     },
-    "role": 1,
+    "role": "USER",
     "isDeactivated": false
   },
   "toBeDeactivated": {
@@ -196,7 +196,7 @@
     "isActivated": true,
     "deviceToken": "dkfkfkskdf",
     "location": "kansanga",
-    "role": 1,
+    "role": "USER",
     "isDeactivated": false,
     "urls": {
       "redirect": "https",
