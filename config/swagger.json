@@ -161,6 +161,34 @@
         ]
       }
     },
+    "api/events/all?title=awesome title&&location.coutry=Uganda": {
+      "get": {
+        "tags": ["Events"],
+        "summary": "Search events",
+        "description": "Returns a list of searched events, use '&&' to add another search param",
+        "operationId": "search all events",
+        "produces": ["application/xml", "application/json"],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Event"
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Event not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
     "api/events/{slug}": {
       "patch": {
         "tags": ["Events"],
@@ -199,6 +227,109 @@
         "responses": {
           "405": {
             "description": "Invalid input"
+          }
+        },
+        "security": [
+          {
+            "Eventstore_auth": ["write:Events", "read:Events"]
+          }
+        ]
+      }
+    },
+    "api/events/{slug}/like": {
+      "patch": {
+        "tags": ["Events"],
+        "summary": "Likes and unlike events",
+        "description": "When clicked once, the selected event is liked. When you hit this endpoint the second time, the event will be unliked.",
+        "operationId": "likeNUnlikeEvent",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Add the token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "path",
+            "name": "slug",
+            "description": "Provide the event slug",
+            "type": "string",
+            "required": true,
+            "example": "slug-123456789"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "properties": {
+                "isLiked": "boolean",
+                "data": {
+                  "properties": {
+                    "isLiked": false,
+                    "id": 7,
+                    "slug": "title1-is-to-good-also-14860",
+                    "email": "bal900007@gmail.com",
+                    "updatedAt": "2020-07-14T18:59:33.778Z",
+                    "createdAt": "2020-07-14T18:59:33.778Z"
+                  }
+                },
+                "likedBy": "[]"
+              }
+            }
+          },
+          "405": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Eventstore_auth": ["write:Events", "read:Events"]
+          }
+        ]
+      }
+    },
+    "api/events/liked": {
+      "get": {
+        "tags": ["Events"],
+        "summary": "liked events",
+        "description": "Retrieve events liked by the user",
+        "operationId": "likeNUnlikeEvent",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Add the token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "properties": {
+                "pages": "number",
+                "count": "number",
+                "data": [{}]
+              }
+            }
+          },
+          "405": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         },
         "security": [
