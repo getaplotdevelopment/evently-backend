@@ -15,11 +15,17 @@ const router = express.Router();
 router.post('/webhook', asyncHandler(webhookPath));
 
 router.post(
-  '/create',
+  '/momo',
   asyncHandler(checkToken),
   asyncHandler(auth),
   asyncHandler(makePayment)
 );
 
+router.post(
+  '/card',
+  asyncHandler(checkToken),
+  asyncHandler(auth),
+  asyncHandler(standardPayment)
+);
 
 export default router;
