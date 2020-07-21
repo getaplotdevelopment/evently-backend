@@ -47,7 +47,7 @@
     "passport": "^0.4.1",
     "passport-facebook": "^3.0.0",
     "passport-google-oauth20": "^2.0.0",
-    "pg": "^7.17.0",
+    "pg": "^8.3.0",
     "pg-hstore": "^2.3.3",
     "redis": "^3.0.2",
     "redis-server": "^1.2.2",
