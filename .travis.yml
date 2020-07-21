@@ -11,8 +11,6 @@ services:
   - postgresql
   - redis-server
 script:
-  - npm run db:migrate
-  - run db:migrate:seed:test
   - npm run test
   - codecov
 before_script:
