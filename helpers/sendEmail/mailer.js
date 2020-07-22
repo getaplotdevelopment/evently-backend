@@ -1,6 +1,10 @@
 import nodemailer from 'nodemailer';
-import { emailTemplates } from './emailTemplates';
-import { email } from '../../config/config';
+import {
+  emailTemplates
+} from './emailTemplates';
+import {
+  email
+} from '../../config/config';
 
 /**
  * Class module to send email
@@ -32,6 +36,9 @@ class Mailer {
       mailOptions.to = this.userMail;
       const addToken = mailOptions.html.replace('$token', token);
       mailOptions.html = addToken;
+      // console.log('mailOptions.html', mailOptions.html);
+      // console.log('addToken', addToken);
+      // console.log('mailOptions', mailOptions);
       try {
         const response = await this.sendEmail(mailOptions);
         resolve(response);

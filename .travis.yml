@@ -11,11 +11,10 @@ services:
   - postgresql
   - redis-server
 script:
-  - npm run db:migrate
   - npm run test
   - codecov
 before_script:
   - export CODECOV_TOKEN="91e014e0-ff1d-4e86-9264-8ce9dae1b813"
-  - psql -c 'create database evently_test;' -U postgres
+  - psql -c 'create database eventlytest;' -U postgres
 after_success:
   - npm run coverage
