@@ -264,6 +264,7 @@ describe('Event', () => {
     res.should.have.status(201);
   }).timeout(10000);
 
+  // Functionality needs to be updated
   it('should retrieve event from the near by city', async () => {
     const user1 = await loginOrganizer();
     const eventResp = await createEvents(user1, nearByCity);
