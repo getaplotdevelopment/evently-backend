@@ -46,3 +46,6 @@ yarn.lock
 
 #VScode configuration
 .vscode
+
+#Server configurations
+.dump.rdb
