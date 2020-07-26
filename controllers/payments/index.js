@@ -6,19 +6,22 @@ const { PaymentRequests } = models;
 export const webhookPath = async(req, res) => {
   
   const requestJson = req.body;
+  const { data } = requestJson
 
   const newRequest = {
-    verificationId: requestJson.id,
-    refId: requestJson.tx_ref,
-    status: requestJson.status,
-    amount: requestJson.charged_amount,
-    createdAt: requestJson.created_at,
+    verificationId: data.id,
+    refId: data.tx_ref,
+    status: data.status,
+    amount: data.charged_amount,
+    createdAt: data.created_at,
     eventStatus: requestJson.event,
-    customer: requestJson.customer,
-    paymentType: requestJson.payment_type
+    customer: data.customer,
+    paymentType: data.payment_type
   };
+  console.log(newRequest);
+  
 
-  const data = await PaymentRequests.create(newRequest);
+  const dataObj = await PaymentRequests.create(newRequest);  
 
   res.sendStatus(200);
 };
