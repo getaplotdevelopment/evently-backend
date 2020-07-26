@@ -12,7 +12,7 @@ import { getRole } from '../helpers/sendEmail/emailTemplates';
 import findOneHelper from '../helpers/rolesHelper/findOneHelper';
 
 dotenv.config();
-const { User, Roles, Follow } = models;
+const { User, Roles, Follow, UserActivity } = models;
 const { secretKey } = process.env;
 /**
  * @user Controller
@@ -68,7 +68,9 @@ class UserController {
     newUser.password = await bcrypt.hash(password, salt);
     const userInstance = await User.create(newUser);
     const createdUser = userInstance.dataValues;
-    const assignedRole = await findOneHelper(Roles, { id: createdUser.role });
+    const assignedRole = await findOneHelper(Roles, {
+      id: createdUser.role
+    });
 
     const { designation } = assignedRole.dataValues;
 
@@ -94,9 +96,18 @@ class UserController {
       location: createdUser.location,
       role: designation
     };
+    await UserActivity.create({
+      designation: 'Registration',
+      userId: user.id
+    });
     const tokenGenerated = generateToken(payload);
     const token = tokenGenerated.generate;
-    res.status(201).json({ status: 201, user, token, response: 'Email Sent' });
+    res.status(201).json({
+      status: 201,
+      user,
+      token,
+      response: 'Email Sent'
+    });
     getRole(user.role, urls);
     await sendEmail(user.email, token);
     const formated_address = await geocode(newUser.location);
@@ -113,7 +124,9 @@ class UserController {
   async login(req, res) {
     const email = req.body.email.toLowerCase();
     const user = await User.findOne({
-      where: { email },
+      where: {
+        email
+      },
       include: [
         {
           model: Roles,
@@ -132,7 +145,9 @@ class UserController {
       ]
     });
     const assignedRole = await Roles.findOne({
-      where: { id: user.role }
+      where: {
+        id: user.role
+      }
     });
     const { designation: role } = assignedRole.dataValues;
     const { id, firstName, lastName, userName, avatar, isActivated } = user;
@@ -146,9 +161,17 @@ class UserController {
       isActivated,
       role
     };
+    await UserActivity.create({
+      designation: 'login',
+      userId: payload.id
+    });
     const generatedToken = generateToken(payload);
     const token = generatedToken.generate;
-    return res.status(200).json({ status: 200, user: payload, token });
+    return res.status(200).json({
+      status: 200,
+      user: payload,
+      token
+    });
   }
 
   /**
@@ -171,6 +194,10 @@ class UserController {
     const payload = {
       id: result[0].id
     };
+    await UserActivity.create({
+      designation: 'Login via social media',
+      userId: payload.id
+    });
     const { generate } = generateToken(payload);
     if (
       process.env.NODE_ENV === 'development' ||
@@ -203,7 +230,9 @@ class UserController {
       role
     };
     const assignedRole = await Roles.findOne({
-      where: { id: user.role }
+      where: {
+        id: user.role
+      }
     });
     const { designation } = assignedRole.dataValues;
     const payload = {
@@ -238,7 +267,11 @@ class UserController {
   async checkEmail(req, res) {
     const { email, urls } = req.body;
 
-    const user = await User.findOne({ where: { email } });
+    const user = await User.findOne({
+      where: {
+        email
+      }
+    });
 
     if (!user) {
       throw new httpError(404, 'No user found with that email address');
@@ -255,7 +288,10 @@ class UserController {
     getRole(foundUser.role, urls);
     const response = await sendEmail(foundUser.email, token, 'resetPassword');
 
-    res.status(200).send({ status: 200, response });
+    res.status(200).send({
+      status: 200,
+      response
+    });
   }
 
   /**
@@ -267,7 +303,11 @@ class UserController {
   async resendVerificationEmail(req, res) {
     const { email, urls } = req.body;
 
-    const user = await User.findOne({ where: { email } });
+    const user = await User.findOne({
+      where: {
+        email
+      }
+    });
 
     if (!user) {
       throw new httpError(404, 'No user found with that email address');
@@ -283,7 +323,10 @@ class UserController {
     getRole(foundUser.role, urls);
     const response = await sendEmail(foundUser.email, token);
 
-    res.status(200).send({ status: 200, response });
+    res.status(200).send({
+      status: 200,
+      response
+    });
   }
 
   /**
@@ -337,9 +380,13 @@ class UserController {
 
     if (user) {
       const [rowsUpdated, [updatedAccount]] = await User.update(
-        { isActivated: true },
         {
-          where: { email: user.email },
+          isActivated: true
+        },
+        {
+          where: {
+            email: user.email
+          },
           returning: true
         }
       );
@@ -365,14 +412,20 @@ class UserController {
     newPassword = await bcrypt.hash(newPassword, salt);
 
     await User.update(
-      { password: newPassword },
       {
-        where: { id }
+        password: newPassword
+      },
+      {
+        where: {
+          id
+        }
       }
     );
-    res
-      .status(200)
-      .json({ status: 200, message: 'Password updated successfully' });
+    await UserActivity.create({ designation: 'change password', userId: id });
+    res.status(200).json({
+      status: 200,
+      message: 'Password updated successfully'
+    });
   }
 
   /**
@@ -383,8 +436,19 @@ class UserController {
   async updateLocation(req, res) {
     const { location } = req.body;
     const { email } = req.user;
-    const userInstance = await User.findOne({ where: { email } });
-    res.send({ status: 200, message: 'Successfully updated' });
+    const userInstance = await User.findOne({
+      where: {
+        email
+      }
+    });
+    res.send({
+      status: 200,
+      message: 'Successfully updated'
+    });
+    await UserActivity.create({
+      designation: 'update my location',
+      userId: userInstance.id
+    });
     const formated_address = await geocode(location);
     userInstance.location = formated_address;
     await userInstance.save();
@@ -399,7 +463,9 @@ class UserController {
     const { userId: follower } = req.params;
     const { email: following } = req.user;
     const isUserExist = await User.findOne({
-      where: { id: follower },
+      where: {
+        id: follower
+      },
       attributes: [
         'id',
         'firstName',
@@ -414,7 +480,10 @@ class UserController {
       throw new httpError(404, 'User does not exist');
     }
     const isFollowed = await Follow.findOne({
-      where: { id: follower, following }
+      where: {
+        id: follower,
+        following
+      }
     });
     if (isFollowed) {
       throw new httpError(409, 'User already followed');
@@ -427,7 +496,11 @@ class UserController {
     });
     userObj.email = undefined;
     response.follower = userObj;
-    return res.send({ status: 200, follow: true, data: response });
+    return res.send({
+      status: 200,
+      follow: true,
+      data: response
+    });
   }
 
   /**
@@ -439,21 +512,33 @@ class UserController {
     const { userId: id } = req.params;
     const { email: following } = req.user;
     const isUserExist = await User.findOne({
-      where: { id }
+      where: {
+        id
+      }
     });
     if (!isUserExist) {
       throw new httpError(404, 'User does not exist');
     }
     const isunFollowed = await Follow.findOne({
-      where: { id, following }
+      where: {
+        id,
+        following
+      }
     });
     if (!isunFollowed) {
       throw new httpError(404, 'User does not exist');
     }
     const dataValues = await Follow.destroy({
-      where: { id, following }
+      where: {
+        id,
+        following
+      }
     });
-    return res.send({ status: 200, follow: false, message: 'User unfollowed' });
+    return res.send({
+      status: 200,
+      follow: false,
+      message: 'User unfollowed'
+    });
   }
 
   /**
@@ -479,8 +564,15 @@ class UserController {
     const { id } = req.body;
 
     const [rowsUpdated, [updatedAccount]] = await User.update(
-      { isDeactivated: true },
-      { where: { id }, returning: true }
+      {
+        isDeactivated: true
+      },
+      {
+        where: {
+          id
+        },
+        returning: true
+      }
     );
 
     res.status(200).json({
@@ -499,8 +591,15 @@ class UserController {
     const { id } = req.body;
 
     const [rowsUpdated, [updatedAccount]] = await User.update(
-      { isDeactivated: false },
-      { where: { id }, returning: true }
+      {
+        isDeactivated: false
+      },
+      {
+        where: {
+          id
+        },
+        returning: true
+      }
     );
 
     res.status(200).json({
@@ -519,8 +618,15 @@ class UserController {
     const { id } = req.body;
 
     const [rowsUpdated, [updatedAccount]] = await User.update(
-      { isApproved: true },
-      { where: { id }, returning: true }
+      {
+        isApproved: true
+      },
+      {
+        where: {
+          id
+        },
+        returning: true
+      }
     );
 
     res.status(200).json({
