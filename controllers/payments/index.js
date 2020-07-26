@@ -144,25 +144,16 @@ export const standardPayment = async (req, res) => {
   };
 
 
-  const response = await axios({
+  await axios({
     url: 'https://api.flutterwave.com/v3/payments',
     method: 'post',
     data: payload,
     headers: { 'Authorization': 'Bearer ' + public_secret }
-  }).then((res) => {
-    // console.log(res);
-    console.log('77777777777', req);
-    
+  }).then((results) => {
+    return res.status(200).send({...results});
   }).catch((err) => {
     console.log(err);
     
-  })
-
-  // console.log('666666666', req);
-
-  // console.log(response);
-  
-
-
-}
+  });
+};
 
