@@ -4,38 +4,49 @@ import axios from 'axios'
 
 import { v4 as uuidv4 } from 'uuid';
 const { Event, PaymentEvents, PaymentRequests } = models;
+const { PUBLIC_SECRET, enckey } = process.env;
 
-var TICKET_NO, EVENT_SLUG, ORGINIZER;
+var TICKET_NO, EVENT_SLUG, ORGANIZER;
 
-const verifyPayment = async (payload, public_secret) => {
+const verifyPayment = async (payload) => {
   const verificationId = payload.verificationId
   console.log('verificationId', verificationId);
-  console.log('TICKET_NO, EVENT_SLUG, ORGINIZER', TICKET_NO, EVENT_SLUG, ORGINIZER);
+  console.log('TICKET_NO, EVENT_SLUG, ORGINIZER', TICKET_NO, EVENT_SLUG, ORGANIZER);
+
+  const organizer = ORGANIZER;
+  const ticketNo = TICKET_NO;
+  const event = EVENT_SLUG;
   
   
   const results = await axios({
     url: `https://api.flutterwave.com/v3/transactions/${verificationId}/verify`,
     method: 'GET',
-    headers: { 'Authorization': 'Bearer ' + 'FLWSECK_TEST-f6f396b315ff0fd72a9c6b8f102859b0-X' }
+    headers: { 'Authorization': 'Bearer ' + PUBLIC_SECRET }
   });  
 
   const { data }  = results.data
   console.log('verify response', data);
 
   if (results.status === 200) {
+    console.log('-------->>>>>>', organizer);
+    
     const paidPayload = {
       paymentID: uuidv4(),
-      ticketNo: TICKET_NO,
+      ticketNo,
       amount: data.amount,
-      organizer: ORGINIZER,
-      event: EVENT_SLUG,
+      organizer,
+      event,
       transactionID: data.id,
       attendanceStatus: true,
       customer: data.customer,
       paymentMethod: data.payment_type,
       refID: data.tx_ref
     };
+    console.log('=====>', paidPayload);
+    
     const { dataValues } = await PaymentEvents.create(paidPayload)
+    console.log('---->');
+    
     console.log('verify response created', dataValues);
   } else {
     throw new Error(err);
@@ -44,7 +55,6 @@ const verifyPayment = async (payload, public_secret) => {
 };
 
 export const webhookPath = async(req, res) => {
-  const { public_secret } = req.headers;
   const requestJson = req.body;
   const { data } = requestJson;
 
@@ -58,95 +68,14 @@ export const webhookPath = async(req, res) => {
     customer: data.customer,
     paymentType: data.payment_type
   };
-  console.log(newRequest);
 
   const { dataValues } = await PaymentRequests.create(newRequest); 
-  await verifyPayment(dataValues, public_secret)
+  await verifyPayment(dataValues)
 
   res.sendStatus(200);
 };
-  
-const defineGlobals = () => {
-  const tx_ref= 'GAT-' + random(100000000, 200000000);
-  const redirect_url = 'https://rentalsug.com';
-  return { tx_ref, redirect_url };
-};
-
-export const makePayment = async(req, res) => {
-  const { public_secret, public_key } = req.headers;
-  const { ftw, tx_ref, redirect_url} = await defineGlobals(public_key, public_secret, false);
- 
-  const {
-    amount,
-    email,
-    phone_number,
-    currency,
-    fullname,
-    network
-  } = req.body;
-
-  const payload = {
-    tx_ref,
-    amount,
-    email,
-    phone_number,
-    currency,
-    fullname,
-    redirect_url,
-    network
-  }
-
-  const response = await ugMobileMoney(ftw, payload);
-  return res.send(response)
-  
-}
-
-const ugMobileMoney = async(ftw, payload) => {
-  const response = await ftw.MobileMoney.uganda(payload)
-  console.log(response);
-  
-  return response
-}
-
-export const chargeCard = async (req, res) => {
-  const { public_secret, public_key, enckey} = req.headers;
-  const { ftw, tx_ref, redirect_url} = await defineGlobals(public_key, public_secret, true);
- 
-
-  const {
-    card_number,
-    cvv,
-    expiry_month,
-    expiry_year,
-    currency,
-    amount,
-    fullname,
-    email,
-    phone_number
-  } = req.body;
-
-  const payload = {
-    card_number,
-    cvv,
-    expiry_month,
-    expiry_year,
-    currency,
-    amount,
-    fullname,
-    email,
-    phone_number,
-    tx_ref,
-    redirect_url,
-    enckey
-  };
-
-  const response = await ftw.Charge.card(payload);
-  console.log(response);
-  
-}
 
 export const standardPayment = async (req, res) => {
-  const { public_secret, enckey} = req.headers;
   const tx_ref= 'GAT-' + random(100000000, 200000000);
   const redirect_url = 'https://rentalsug.com';  
   const { slug } = req.params;
@@ -155,7 +84,7 @@ export const standardPayment = async (req, res) => {
   });
 
   if (dataValues) {
-    ORGINIZER = dataValues.organizer;
+    ORGANIZER = dataValues.organizer;
     EVENT_SLUG = slug;
   }  
 
@@ -192,7 +121,7 @@ export const standardPayment = async (req, res) => {
     url: 'https://api.flutterwave.com/v3/payments',
     method: 'post',
     data: payload,
-    headers: { 'Authorization': 'Bearer ' + public_secret }
+    headers: { 'Authorization': 'Bearer ' + PUBLIC_SECRET }
   });
   const { data } = hostedLink
   return res.status(200).send(data);

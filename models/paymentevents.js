@@ -40,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
     });
     PaymentEvents.belongsTo(models.PaymentRequests, {
       as: 'paymentToRequests',
-      foreignKey: 'ticketNo',
+      foreignKey: 'refID',
       onDelete: 'CASCADE'
     });
   };
