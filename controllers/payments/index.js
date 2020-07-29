@@ -1,12 +1,50 @@
 import models from '../../models';
-import Flutterwave from 'flutterwave-node-v3';
 import random from 'lodash.random';
 import axios from 'axios'
 
+import { v4 as uuidv4 } from 'uuid';
+const { Event, PaymentEvents, PaymentRequests } = models;
 
-const { PaymentRequests } = models;
+var TICKET_NO, EVENT_SLUG, ORGINIZER;
 
-export const webhookPath = async (req, res) => {
+const verifyPayment = async (payload, public_secret) => {
+  const verificationId = payload.verificationId
+  console.log('verificationId', verificationId);
+  console.log('TICKET_NO, EVENT_SLUG, ORGINIZER', TICKET_NO, EVENT_SLUG, ORGINIZER);
+  
+  
+  const results = await axios({
+    url: `https://api.flutterwave.com/v3/transactions/${verificationId}/verify`,
+    method: 'GET',
+    headers: { 'Authorization': 'Bearer ' + 'FLWSECK_TEST-f6f396b315ff0fd72a9c6b8f102859b0-X' }
+  });  
+
+  const { data }  = results.data
+  console.log('verify response', data);
+
+  if (results.status === 200) {
+    const paidPayload = {
+      paymentID: uuidv4(),
+      ticketNo: TICKET_NO,
+      amount: data.amount,
+      organizer: ORGINIZER,
+      event: EVENT_SLUG,
+      transactionID: data.id,
+      attendanceStatus: true,
+      customer: data.customer,
+      paymentMethod: data.payment_type,
+      refID: data.tx_ref
+    };
+    const { dataValues } = await PaymentEvents.create(paidPayload)
+    console.log('verify response created', dataValues);
+  } else {
+    throw new Error(err);
+  }
+
+};
+
+export const webhookPath = async(req, res) => {
+  const { public_secret } = req.headers;
   const requestJson = req.body;
   const { data } = requestJson;
 
@@ -22,20 +60,16 @@ export const webhookPath = async (req, res) => {
   };
   console.log(newRequest);
 
-  const dataObj = await PaymentRequests.create(newRequest);
+  const { dataValues } = await PaymentRequests.create(newRequest); 
+  await verifyPayment(dataValues, public_secret)
 
   res.sendStatus(200);
 };
-
-export const makePayment = async(req, res) => {
-  const { public_secret, public_key, encryption_key} = req.headers;
-  console.log(req.headers);
   
-const defineGlobals = (public_key, public_secret, status) => {
-  const ftw = new Flutterwave(public_key, public_secret, status);
+const defineGlobals = () => {
   const tx_ref= 'GAT-' + random(100000000, 200000000);
   const redirect_url = 'https://rentalsug.com';
-  return { ftw, tx_ref, redirect_url };
+  return { tx_ref, redirect_url };
 };
 
 export const makePayment = async(req, res) => {
@@ -112,25 +146,37 @@ export const chargeCard = async (req, res) => {
 }
 
 export const standardPayment = async (req, res) => {
-  const { public_secret, public_key, enckey} = req.headers;
-  const { ftw, tx_ref, redirect_url } = await defineGlobals(public_key, public_secret, true);
+  const { public_secret, enckey} = req.headers;
+  const tx_ref= 'GAT-' + random(100000000, 200000000);
+  const redirect_url = 'https://rentalsug.com';  
+  const { slug } = req.params;
+  const { dataValues } = await Event.findOne({
+    where: { slug }
+  });
+
+  if (dataValues) {
+    ORGINIZER = dataValues.organizer;
+    EVENT_SLUG = slug;
+  }  
 
   const {
     currency,
     amount,
     fullname,
     email,
-    phone_number
+    phone_number,
+    ticket_id
   } = req.body;
+
+  TICKET_NO = ticket_id;
 
   const payload = {
     currency,
-    transaction_id: '777777',
     amount,
     payment_options: 'card',
     customer: {
       email,
-      phonenumber: phone_number,
+      phone_number,
       name: fullname,
     },
     customizations: {
@@ -142,18 +188,13 @@ export const standardPayment = async (req, res) => {
     redirect_url,
     enckey
   };
-
-
-  await axios({
+  const hostedLink = await axios({
     url: 'https://api.flutterwave.com/v3/payments',
     method: 'post',
     data: payload,
     headers: { 'Authorization': 'Bearer ' + public_secret }
-  }).then((results) => {
-    return res.status(200).send({...results});
-  }).catch((err) => {
-    console.log(err);
-    
   });
+  const { data } = hostedLink
+  return res.status(200).send(data);
 };
 

@@ -22,7 +22,7 @@ router.post(
 );
 
 router.post(
-  '/card',
+  '/:slug/pay',
   asyncHandler(checkToken),
   asyncHandler(auth),
   asyncHandler(standardPayment)

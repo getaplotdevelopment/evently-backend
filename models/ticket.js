@@ -35,6 +35,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'event',
       onDelete: 'CASCADE'
     });
+    Ticket.hasMany(models.PaymentEvents, {
+      foreignKey: 'ticketNo',
+      allowNull: false
+    });
   };
   return Ticket;
 };
