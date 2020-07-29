@@ -1,6 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import passport from 'passport';
+import createError, { HttpError } from 'http-errors';
+import { HTTP_NOT_FOUND, HTTP_SERVER_ERROR } from './constants/httpStatusCode';
 import router from './routes/app';
 
 const app = express();
@@ -21,11 +23,8 @@ app.use(router);
 app.set('view engine', 'ejs');
 app.set('trust proxy', true);
 app.use(express.static(`${__dirname}/public`));
-app.use((req, res) => {
-  res.status(404).send({
-    status: 404,
-    error: 'resource not found'
-  });
+app.use((req, res, next) => {
+  next(createError(HTTP_NOT_FOUND, 'resource not found'));
 });
 app.listen(port, () => {
   console.log(`server started successfully on the port: ${port}`);
