@@ -25,11 +25,7 @@ const verifyPayment = async (payload) => {
   });  
 
   const { data }  = results.data
-  console.log('verify response', data);
-
-  if (results.status === 200) {
-    console.log('-------->>>>>>', organizer);
-    
+  if (results.status === 200) {    
     const paidPayload = {
       paymentID: uuidv4(),
       ticketNo,
@@ -42,14 +38,9 @@ const verifyPayment = async (payload) => {
       paymentMethod: data.payment_type,
       refID: data.tx_ref
     };
-    console.log('=====>', paidPayload);
-    
     const { dataValues } = await PaymentEvents.create(paidPayload)
-    console.log('---->');
-    
-    console.log('verify response created', dataValues);
   } else {
-    throw new Error(err);
+    throw new Error(results);
   }
 
 };
