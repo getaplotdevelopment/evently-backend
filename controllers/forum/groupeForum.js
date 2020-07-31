@@ -30,7 +30,7 @@ export default class GroupeForumController {
     // welcome current user
     socket.emit(
       MESSAGE_CHAT_FORUM,
-      formatMessage(GETPLOT_BOT_NAME, 'Welcome to Getaplot')
+      formatMessage(GETPLOT_BOT_NAME, 'Welcome to Getaplot forum')
     );
   }
 }

@@ -26,7 +26,7 @@ export default class ConnectedUserController {
       avatar,
       role
     });
-    return { ...connectedUser.get() };
+    return connectedUser.get();
   }
 
   /**
@@ -40,11 +40,17 @@ export default class ConnectedUserController {
     if (data) {
       Object.keys(data).forEach(key => {
         if (data[key]) {
-          options.push({ [key]: data[key] });
+          options.push({
+            [key]: data[key]
+          });
         }
       });
-      where = { [Op.and]: options };
+      where = {
+        [Op.and]: options
+      };
     }
-    await ConnectedUser.destroy({ where });
+    await ConnectedUser.destroy({
+      where
+    });
   }
 }
