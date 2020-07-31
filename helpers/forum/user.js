@@ -2,10 +2,10 @@ import models from '../../models/index';
 
 const { Forum } = models;
 
-const userJoin = async (socketId, username) => {
+const userJoin = async (socketId, connectedUser) => {
   const user = {
-    id: socketId,
-    username
+    clientId: socketId,
+    connectedUser
   };
   await Forum.create(user);
 };

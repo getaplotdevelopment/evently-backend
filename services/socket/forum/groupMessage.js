@@ -9,7 +9,7 @@ import {
 import GroupForumController from '../../../controllers/forum/groupeForum';
 
 export default async ({ io, forumNsp, socket }) => {
-  socket.on(JOIN_ROOM_FORUM, userData => {
-    return GroupForumController.joinForum(socket, userData);
+  socket.on(JOIN_ROOM_FORUM, connectedUser => {
+    return GroupForumController.joinForum(socket, connectedUser);
   });
 };

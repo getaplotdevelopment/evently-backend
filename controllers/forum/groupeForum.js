@@ -18,14 +18,14 @@ import { formatMessage } from '../../helpers/forum/message';
 export default class GroupeForumController {
   /**
    *
-   * @param {Object} userData -userdata
+   * @param {Object} connectedUser -connectedUser
    * @param {Object} data -user
    * @param {Object} socket -connexion data
    * @return {Object} Response
    */
 
-  static async joinForum({ socket, userData }) {
-    await userJoin(socket.id, userData);
+  static async joinForum({ socket, connectedUser }) {
+    await userJoin(socket.id, connectedUser);
     socket.join(GETPLOT_FORUM);
     // welcome current user
     socket.emit(
