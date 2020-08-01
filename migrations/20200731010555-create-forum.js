@@ -1,16 +1,16 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('UserActivities', {
+    await queryInterface.createTable('Forums', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      designation: {
+      clientId: {
         type: Sequelize.STRING
       },
-      userId: {
+      connectedUser: {
         type: Sequelize.INTEGER
       },
       createdAt: {
@@ -24,6 +24,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('UserActivities');
+    await queryInterface.dropTable('Forums');
   }
 };

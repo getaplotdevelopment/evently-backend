@@ -52,30 +52,34 @@ module.exports = (sequelize, DataTypes) => {
     User.hasMany(models.Follow, {
       foreignKey: 'id'
     });
-    // User.hasMany(models.Forum, {
-    //   foreignKey: 'connectedUser',
-    //   allowNull: false
-    // });
-    // User.hasMany(models.commentEvent, {
-    //   foreignKey: 'user',
-    //   allowNull: false
-    // });
-    // User.hasMany(models.likeComment, {
-    //   foreignKey: 'user',
-    //   allowNull: false
-    // });
-    // User.hasMany(models.replayComment, {
-    //   foreignKey: 'user',
-    //   allowNull: false
-    // });
-    // User.hasMany(models.shareComment, {
-    //   foreignKey: 'users',
-    //   allowNull: false
-    // });
-    // User.hasMany(models.CommentExperience, {
-    //   foreignKey: 'user',
-    //   allowNull: false
-    // });
+    User.hasMany(models.Forum, {
+      foreignKey: 'connectedUser',
+      allowNull: false
+    });
+    User.hasMany(models.commentEvent, {
+      foreignKey: 'user',
+      allowNull: false
+    });
+    User.hasMany(models.likeComment, {
+      foreignKey: 'user',
+      allowNull: false
+    });
+    User.hasMany(models.replayComment, {
+      foreignKey: 'user',
+      allowNull: false
+    });
+    User.hasMany(models.shareComment, {
+      foreignKey: 'users',
+      allowNull: false
+    });
+    User.hasMany(models.CommentExperience, {
+      foreignKey: 'user',
+      allowNull: false
+    });
+    User.hasMany(models.Forum, {
+      foreignKey: 'connectedUser',
+      allowNull: false
+    });
   };
   return User;
 };

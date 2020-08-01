@@ -10,12 +10,11 @@ import feedback from './feedback';
 
 const router = Router();
 
-router.use('/api', events);
-router.use('/api/users', [users, socialAuth]);
-router.use('/api/profile', organizerProfile);
-router.use('/api/roles', roles);
-router.use('/api/ticket/category', ticketCategory);
-router.use('/api/ticket', ticket);
-router.use('/api/feedback', feedback);
-
+router.use('/', events);
+router.use('/users', [users, socialAuth]);
+router.use('/profile', organizerProfile);
+router.use('/roles', roles);
+router.use('/ticket/category', ticketCategory);
+router.use('/ticket', ticket);
+router.use('/feedback', feedback);
 export default router;

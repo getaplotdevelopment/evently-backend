@@ -1,9 +1,9 @@
 import moment from 'moment';
 
-const formatMessage = (username, message) => {
+const formatMessage = (username, text) => {
   return {
     username,
-    message,
+    text,
     time: moment().format('h:m:a')
   };
 };

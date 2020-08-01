@@ -14,10 +14,6 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'user',
       onDelete: 'CASCADE'
     });
-    ConnectedUser.hasMany(models.Forum, {
-      foreignKey: 'connectedUser',
-      allowNull: false
-    });
   };
   return ConnectedUser;
 };

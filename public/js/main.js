@@ -1,3 +1,7 @@
+/* eslint-disable require-jsdoc */
+// import io from 'socket.io';
+// import { JOIN_ROOM_FORUM } from '../../constants/forum/groupMessage';
+
 const chatForm = document.getElementById('chat-form');
 const feedback = document.querySelector('.outputFeedback');
 const chatMessages = document.querySelector('.chat-messages');
@@ -9,79 +13,67 @@ let timeout;
 
 // Get username and room from URL
 
-const {
-  username,
-  room,
-} = Qs.parse(location.search, {
-  ignoreQueryPrefix: true,
+const { username, userId } = Qs.parse(location.search, {
+  ignoreQueryPrefix: true
 });
 
-const socket = io();
-
+const socket = io('/forum');
 // Join chatroom
-socket.emit('joinRoom', {
-  username,
-  room
+socket.emit('JOIN_ROOM_FORUM', {
+  user: {
+    username,
+    userId
+  }
 });
-
 
 // Get room and users
-socket.on('roomUsers', ({
-  room,
-  users
-}) => {
-  outputRoomName(room);
-  outputUsers(users);
-});
+// socket.on('roomUsers', ({ room, users }) => {
+//   outputRoomName(room);
+//   outputUsers(users);
+// });
 
-socket.on('message', (message) => {
+socket.on('MESSAGE_CHAT_FORUM', message => {
+  console.log('message', message);
   outputMessage(message);
-  //scroll down
+  // scroll down
 
   chatMessages.scrollTop = chatMessages.scrollHeight;
 });
 
+// feedback from server
 
-//feedback from server
-
-socket.on('action', (action) => {
-  outputUserFeedback(action);
-
-});
-
+// socket.on('action', action => {
+//   outputUserFeedback(action);
+// });
 
 // Message submit
-chatForm.addEventListener('submit', (e) => {
-  e.preventDefault();
+// chatForm.addEventListener('submit', e => {
+//   e.preventDefault();
 
-  // get message text
+//   // get message text
 
-  const msg = e.target.elements.msg.value;
+//   const msg = e.target.elements.msg.value;
 
-  //Emit a message to the server
-  socket.emit('chatMessage', msg);
+//   // Emit a message to the server
+//   socket.emit('chatMessage', msg);
 
-  // Clear input
+//   // Clear input
 
-  e.target.elements.msg.value = '';
-  e.target.elements.msg.focus();
-});
-
+//   e.target.elements.msg.value = '';
+//   e.target.elements.msg.focus();
+// });
 
 // Feedback submit
 
 function timeoutFunction() {
-  socket.emit("feedback", false);
+  socket.emit('feedback', false);
 }
 
-
 chatForm.addEventListener('keypress', () => {
-
-
-  //Emit a feedback to the server
+  // Emit a feedback to the server
   socket.emit('feedback', 'is typing...');
-  clearTimeout(timeout)
-  timeout = setTimeout(timeoutFunction, 2000)
+  clearTimeout(timeout);
+  timeout = setTimeout(timeoutFunction, 2000);
 });
 
 // OutputMessage function to Dom
@@ -96,7 +88,6 @@ function outputMessage(message) {
   document.querySelector('.chat-messages').appendChild(div);
 }
 
-
 // OutputMessage the feedback to Dom
 function outputUserFeedback(message) {
   if (message.text) {
@@ -104,7 +95,6 @@ function outputUserFeedback(message) {
   } else {
     feedback.innerHTML = '';
   }
-
 }
 
 // Add room name to Dom
@@ -117,6 +107,6 @@ function outputRoomName(room) {
 
 function outputUsers(users) {
   userList.innerHTML = `
-  ${users.map((user) => `<li>${user.username}</li>`).join('')}
+  ${users.map(user => `<li>${user.username}</li>`).join('')}
   `;
 }

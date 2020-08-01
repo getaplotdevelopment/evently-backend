@@ -61,5 +61,3 @@ const onListing = () => {
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListing);
-
-export default app;

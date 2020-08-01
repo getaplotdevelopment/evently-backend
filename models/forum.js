@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     connectedUser: DataTypes.INTEGER
   });
   Forum.associate = models => {
-    Forum.belongsTo(models.ConnectedUser, {
+    Forum.belongsTo(models.User, {
       as: 'user',
       foreignKey: 'connectedUser',
       onDelete: 'CASCADE'

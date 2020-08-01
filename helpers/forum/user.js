@@ -7,7 +7,12 @@ const userJoin = async (socketId, connectedUser) => {
     clientId: socketId,
     connectedUser
   };
-  await Forum.create(user);
+  const userForum = await Forum.create(user);
+  return userForum;
 };
 
-export { userJoin };
+const getRoomUsers = forumUsers => {
+  return forumUsers.filter(forumUser => forumUser.user);
+};
+
+export { userJoin, getRoomUsers };

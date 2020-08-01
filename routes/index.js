@@ -3,7 +3,7 @@ import api from './api';
 
 const router = Router();
 
-router.use('api', api);
+router.use('/api', api);
 
 // Get hope page
 

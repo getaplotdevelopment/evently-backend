@@ -1,5 +1,5 @@
 export const GETPLOT_BOT_NAME = 'GetAplot Bot';
-export const GETPLOT_FORUM = 'GETPLOT_FORUM';
+export const GETPLOT_FORUM = 'GetAplot Forum';
 export const CONNECTION = 'CONNECTION';
 export const CONNECT_USER = 'CONNECT_USER';
 export const CONNECT_USER_SUCCESS = 'CONNECT_USER_SUCCESS';
