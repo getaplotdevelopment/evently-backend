@@ -12,7 +12,7 @@ import { formatMessage } from '../../helpers/forum/message';
 import findOneHelper from '../../helpers/rolesHelper/findOneHelper';
 import findAllInclude from '../../helpers/findAllInclude';
 
-const { User, Forum } = models;
+const { User, Forum, Message } = models;
 
 /**
  * @GroupeForumController Controller
@@ -28,7 +28,7 @@ export default class GroupeForumController {
    * @return {Object} Response
    */
 
-  static async joinForum(io, socket, connectedUser) {
+  static async joinForum({ io, socket, forumNsp, connectedUser }) {
     const idUser = parseInt(connectedUser.user.userId, 10);
     const user = await userJoin(socket.id, idUser);
     socket.join(GETPLOT_FORUM);
@@ -74,10 +74,44 @@ export default class GroupeForumController {
     const users = forumUsers.map(forumUser => {
       return forumUser.user;
     });
-    console.log('users', users);
-    io.to(GETPLOT_FORUM).emit(GET_ROOM_USERS, {
+    forumNsp.in(GETPLOT_FORUM).emit(GET_ROOM_USERS, {
       room: GETPLOT_FORUM,
       users
     });
+  }
+
+  static async foruMessage({ io, socket, message }) {
+    const include = [
+      {
+        model: User,
+        as: 'user',
+        attributes: {
+          exclude: [
+            'password',
+            'isActivated',
+            'deviceToken',
+            'role',
+            'createdAt',
+            'updatedAt'
+          ]
+        }
+      }
+    ];
+    const condition = { clientId: socket.id };
+    const user = await findAllInclude(Forum, include, condition);
+    const {
+      dataValues: {
+        user: { dataValues }
+      }
+    } = user[0];
+    const messageToPost = {
+      message,
+      userId: dataValues.id
+    };
+    await Message.create(messageToPost);
+    socket.join(GETPLOT_FORUM);
+    // forumNsp
+    //   .in(GETPLOT_FORUM)
+    //   .emit(MESSAGE_CHAT_FORUM, formatMessage(dataValues.userName, message));
   }
 }

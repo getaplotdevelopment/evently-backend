@@ -1,4 +1,5 @@
 import { Namespace } from 'socket.io';
+import models from '../../../models';
 
 import {
   JOIN_ROOM_FORUM,
@@ -8,8 +9,11 @@ import {
 } from '../../../constants/forum/groupMessage';
 import GroupForumController from '../../../controllers/forum/groupeForum';
 
-export default async (io, forumNsp, socket) => {
+export default async ({ io, forumNsp, socket }) => {
   socket.on(JOIN_ROOM_FORUM, connectedUser => {
-    return GroupForumController.joinForum(io, socket, connectedUser);
+    return GroupForumController.joinForum({ io, socket, forumNsp,  connectedUser });
+  });
+  socket.on(MESSAGE_CHAT_FORUM, async message => {
+    return GroupForumController.foruMessage({ io, socket, forumNsp, message });
   });
 };

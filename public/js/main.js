@@ -1,5 +1,5 @@
 /* eslint-disable require-jsdoc */
-// import io from 'socket.io';
+// import io from 'forumSocket.io';
 // import { JOIN_ROOM_FORUM } from '../../constants/forum/groupMessage';
 
 const chatForm = document.getElementById('chat-form');
@@ -17,9 +17,10 @@ const { username, userId } = Qs.parse(location.search, {
   ignoreQueryPrefix: true
 });
 
-const socket = io('/forum');
+const forumSocket = io('/forum');
+const socket = io();
 // Join chatroom
-socket.emit('JOIN_ROOM_FORUM', {
+forumSocket.emit('JOIN_ROOM_FORUM', {
   user: {
     username,
     userId
@@ -27,54 +28,59 @@ socket.emit('JOIN_ROOM_FORUM', {
 });
 
 // Get room and users
-// socket.on('roomUsers', ({ room, users }) => {
-//   outputRoomName(room);
-//   outputUsers(users);
-// });
+forumSocket.on('GET_ROOM_USERS', ({ room, users }) => {
+  console.log('or here', users);
+  outputRoomName(room);
+  outputUsers(users);
+});
+socket.on('GET_ROOM_USERS', ({ room, users }) => {
+  console.log('here', users);
+  outputRoomName(room);
+  outputUsers(users);
+});
 
-socket.on('MESSAGE_CHAT_FORUM', message => {
+forumSocket.on('MESSAGE_CHAT_FORUM', message => {
   console.log('message', message);
   outputMessage(message);
   // scroll down
-
   chatMessages.scrollTop = chatMessages.scrollHeight;
 });
 
 // feedback from server
 
-// socket.on('action', action => {
+// forumSocket.on('action', action => {
 //   outputUserFeedback(action);
 // });
 
 // Message submit
-// chatForm.addEventListener('submit', e => {
-//   e.preventDefault();
+chatForm.addEventListener('submit', e => {
+  e.preventDefault();
 
-//   // get message text
+  // get message text
 
-//   const msg = e.target.elements.msg.value;
+  const msg = e.target.elements.msg.value;
 
-//   // Emit a message to the server
-//   socket.emit('chatMessage', msg);
+  // Emit a message to the server
+  forumSocket.emit('MESSAGE_CHAT_FORUM', msg);
 
-//   // Clear input
+  // Clear input
 
-//   e.target.elements.msg.value = '';
-//   e.target.elements.msg.focus();
-// });
+  e.target.elements.msg.value = '';
+  e.target.elements.msg.focus();
+});
 
 // Feedback submit
 
-function timeoutFunction() {
-  socket.emit('feedback', false);
-}
+// function timeoutFunction() {
+//   forumSocket.emit('feedback', false);
+// }
 
-chatForm.addEventListener('keypress', () => {
-  // Emit a feedback to the server
-  socket.emit('feedback', 'is typing...');
-  clearTimeout(timeout);
-  timeout = setTimeout(timeoutFunction, 2000);
-});
+// chatForm.addEventListener('keypress', () => {
+//   // Emit a feedback to the server
+//   forumSocket.emit('feedback', 'is typing...');
+//   clearTimeout(timeout);
+//   timeout = setTimeout(timeoutFunction, 2000);
+// });
 
 // OutputMessage function to Dom
 function outputMessage(message) {
@@ -106,7 +112,9 @@ function outputRoomName(room) {
 // Add users to dom
 
 function outputUsers(users) {
-  userList.innerHTML = `
-  ${users.map(user => `<li>${user.username}</li>`).join('')}
+  if (users !== null) {
+    userList.innerHTML = `
+  ${users.map(user => `<li>${user.firstName}</li>`).join('')}
   `;
+  }
 }

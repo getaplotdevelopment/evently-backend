@@ -5,7 +5,7 @@ export default io => {
   const forumNsp = io.of('/forum');
 
   forumNsp.on('connection', socket => {
-    groupMessage(io, forumNsp, socket);
+    groupMessage({ io, forumNsp, socket });
     // directMessage({ io, socket });
   });
 
