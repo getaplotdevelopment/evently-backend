@@ -118,3 +118,57 @@ export const standardPayment = async (req, res) => {
   return res.status(200).send(data);
 };
 
+export const usersPaidForEvent = async (req, res) => {
+  const { slug } = req.params;
+  const { email } = req.organizer;
+  
+  const { count, rows: data } = await PaymentEvents.findAndCountAll({
+    where: {
+      event: slug
+    }
+  })
+
+  const { organizer } = data[0];
+
+  if ( email !== organizer) {    
+    return res.status(403).send({
+      status: 403,
+      message: 'Unauthorized to perform this action'
+    });
+  }
+
+  return res.send({
+    message: 'success',
+    count,
+    data
+  });
+}
+
+export const eventAttendees = async (req, res) => {
+  const { slug } = req.params;
+  const { email } = req.organizer;
+  
+  const { count, rows: data } = await PaymentEvents.findAndCountAll({
+    where: {
+      event: slug,
+      attendanceStatus: "false"
+    }
+  })
+
+  const { organizer } = data[0];
+
+  if ( email !== organizer) {    
+    return res.status(403).send({
+      status: 403,
+      message: 'Unauthorized to perform this action'
+    });
+  }
+
+  return res.send({
+    message: 'success',
+    count,
+    data
+  });
+
+}
+

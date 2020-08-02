@@ -25,7 +25,7 @@ describe('Tickets', () => {
 
     const createTicket = {
       price: 200,
-      number: 50,
+      number: 5,
       category: 1
     };
     const response = await chai
@@ -35,12 +35,12 @@ describe('Tickets', () => {
       .send(createTicket);
     response.should.have.status(201);
     response.body.should.be.a('object');
-    ticketId = response.body.newCreatedTicket.id;
+    ticketId = 4;    
   }).timeout(10000);
   it('should not allow to create a ticket with a redundant category', async () => {
     const createTicket = {
       price: 200,
-      number: 50,
+      number: 5,
       category: 1
     };
     const res = await chai
@@ -59,7 +59,7 @@ describe('Tickets', () => {
       .request(app)
       .put(`/api/ticket/${slug}/${ticketId}`)
       .set('Authorization', `Bearer ${token}`)
-      .send(updatedTicketCategory);
+      .send(updatedTicketCategory);    
     res.should.have.status(200);
     res.body.should.be.a('object');
   });

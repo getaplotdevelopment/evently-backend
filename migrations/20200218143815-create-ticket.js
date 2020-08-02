@@ -10,8 +10,11 @@ module.exports = {
       price: {
         type: Sequelize.INTEGER
       },
-      number: {
+      ticketNumber: {
         type: Sequelize.INTEGER
+      },
+      status: {
+        type: Sequelize.STRING
       },
       category: {
         type: Sequelize.INTEGER

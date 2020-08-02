@@ -3,7 +3,8 @@ module.exports = (sequelize, DataTypes) => {
     'Ticket',
     {
       price: DataTypes.INTEGER,
-      number: DataTypes.INTEGER,
+      ticketNumber: DataTypes.INTEGER,
+      status: DataTypes.STRING,
       category: {
         type: DataTypes.INTEGER,
         references: { model: 'TicketCategory', key: 'id' }
