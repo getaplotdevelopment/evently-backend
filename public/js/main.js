@@ -1,8 +1,6 @@
 /* eslint-disable require-jsdoc */
-// import io from 'forumSocket.io';
-// import { JOIN_ROOM_FORUM } from '../../constants/forum/groupMessage';
-
 const chatForm = document.getElementById('chat-form');
+// const leaveForum = document.getElementById('leave-forum');
 const feedback = document.querySelector('.outputFeedback');
 const chatMessages = document.querySelector('.chat-messages');
 
@@ -29,18 +27,11 @@ forumSocket.emit('JOIN_ROOM_FORUM', {
 
 // Get room and users
 forumSocket.on('GET_ROOM_USERS', ({ room, users }) => {
-  console.log('or here', users);
-  outputRoomName(room);
-  outputUsers(users);
-});
-socket.on('GET_ROOM_USERS', ({ room, users }) => {
-  console.log('here', users);
   outputRoomName(room);
   outputUsers(users);
 });
 
 forumSocket.on('MESSAGE_CHAT_FORUM', message => {
-  console.log('message', message);
   outputMessage(message);
   // scroll down
   chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -68,6 +59,15 @@ chatForm.addEventListener('submit', e => {
   e.target.elements.msg.value = '';
   e.target.elements.msg.focus();
 });
+
+// Leave chat
+// leaveForum.addEventListener('onclick', e => {
+//   e.preventDefault();
+// });
+function leaveForum() {
+  console.log('holla here');
+  forumSocket.emit('LEAVE_FORUM', 'jaman');
+}
 
 // Feedback submit
 

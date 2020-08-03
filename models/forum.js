@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
   });
   Forum.associate = models => {
     Forum.belongsTo(models.User, {
-      as: 'user',
+      as: 'owner',
       foreignKey: 'connectedUser',
       onDelete: 'CASCADE'
     });
