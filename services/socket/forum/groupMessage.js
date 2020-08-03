@@ -5,6 +5,7 @@ import {
   JOIN_ROOM_FORUM,
   MESSAGE_CHAT_FORUM,
   LEAVE_FORUM,
+  IS_TYPING,
   GET_ROOM_USERS,
   GET_FEEDBACK_FORUM
 } from '../../../constants/forum/groupMessage';
@@ -24,5 +25,8 @@ export default async ({ io, forumNsp, socket }) => {
   });
   socket.on(LEAVE_FORUM, async user => {
     return GroupForumController.leaveForum({ io, socket, forumNsp, user });
+  });
+  socket.on(IS_TYPING, async msg => {
+    return GroupForumController.userTyping({ io, socket, forumNsp, msg });
   });
 };

@@ -4,6 +4,7 @@ import {
   JOIN_ROOM_FORUM,
   MESSAGE_CHAT_FORUM,
   GET_ROOM_USERS,
+  IS_TYPING,
   GET_FEEDBACK_FORUM
 } from '../../constants/forum/groupMessage';
 import { GETPLOT_BOT_NAME, GETPLOT_FORUM } from '../../constants/forum/general';
@@ -52,7 +53,7 @@ export default class GroupeForumController {
     const idUser = parseInt(connectedUser.user.userId, 10);
     const user = await userJoin(socket.id, idUser);
     socket.join(GETPLOT_FORUM);
-   
+
     const { dataValues: userForum } = user;
     const userConnected = await findOneHelper(User, {
       id: userForum.connectedUser
@@ -70,8 +71,8 @@ export default class GroupeForumController {
       );
     });
 
-     // welcome current user
-     socket.emit(
+    // welcome current user
+    socket.emit(
       MESSAGE_CHAT_FORUM,
       formatMessage(GETPLOT_BOT_NAME, 'Welcome to Getaplot forum')
     );
@@ -130,6 +131,23 @@ export default class GroupeForumController {
           MESSAGE_CHAT_FORUM,
           formatMessage(GETPLOT_FORUM, `${user} has left the forum`)
         );
+    }
+  }
+
+  static async userTyping({ io, socket, forumNsp, msg }) {
+    const condition = { clientId: socket.id };
+    const typingUser = await findAllInclude(Forum, includeUser(), condition);
+    if (typingUser) {
+      const {
+        dataValues: {
+          owner: {
+            dataValues: { userName }
+          }
+        }
+      } = typingUser[0];
+      socket.broadcast
+        .to(GETPLOT_FORUM)
+        .emit(IS_TYPING, formatMessage(userName, msg));
     }
   }
 }

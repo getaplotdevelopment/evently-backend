@@ -37,11 +37,10 @@ forumSocket.on('MESSAGE_CHAT_FORUM', message => {
   chatMessages.scrollTop = chatMessages.scrollHeight;
 });
 
-// feedback from server
-
-// forumSocket.on('action', action => {
-//   outputUserFeedback(action);
-// });
+// feedback from server user is typing
+forumSocket.on('IS_TYPING', action => {
+  outputUserFeedback(action);
+});
 
 // Message submit
 chatForm.addEventListener('submit', e => {
@@ -60,27 +59,23 @@ chatForm.addEventListener('submit', e => {
   e.target.elements.msg.focus();
 });
 
-// Leave chat
-// leaveForum.addEventListener('onclick', e => {
-//   e.preventDefault();
-// });
+
 function leaveForum() {
-  console.log('holla here');
   forumSocket.emit('LEAVE_FORUM', 'jaman');
 }
 
 // Feedback submit
 
-// function timeoutFunction() {
-//   forumSocket.emit('feedback', false);
-// }
+function timeoutFunction() {
+  forumSocket.emit('IS_TYPING', false);
+}
 
-// chatForm.addEventListener('keypress', () => {
-//   // Emit a feedback to the server
-//   forumSocket.emit('feedback', 'is typing...');
-//   clearTimeout(timeout);
-//   timeout = setTimeout(timeoutFunction, 2000);
-// });
+chatForm.addEventListener('keypress', () => {
+  // Emit a feedback to the server
+  forumSocket.emit('IS_TYPING', 'is typing...');
+  clearTimeout(timeout);
+  timeout = setTimeout(timeoutFunction, 1700);
+});
 
 // OutputMessage function to Dom
 function outputMessage(message) {
