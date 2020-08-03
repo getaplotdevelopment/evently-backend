@@ -107,8 +107,8 @@ router.delete(
 
 router.post('/logout', asyncHandler(auth), asyncHandler(users.logout));
 router.get(
-  '/user-activity',
-  asyncHandler(auth),
+  '/user-activity/:userId',
+  asyncHandler(isAdminAuth),
   asyncHandler(userActivity.getUserActivity)
 );
 

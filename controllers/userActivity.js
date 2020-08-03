@@ -22,13 +22,13 @@ class UserActivityController {
     const include = [
       {
         model: User,
-        as: 'userId',
+        as: 'owner',
         attributes: {
           exclude: ['password', 'createdAt', 'updatedAt']
         }
       }
     ];
-    const userActivities = await UserActivity.findOne({
+    const userActivities = await UserActivity.findAll({
       where,
       include
     });

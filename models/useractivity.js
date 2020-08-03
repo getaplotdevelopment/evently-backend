@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
   });
   UserActivity.associate = models => {
     UserActivity.belongsTo(models.User, {
-      as: 'user',
+      as: 'owner',
       foreignKey: 'userId',
       onDelete: 'CASCADE'
     });
