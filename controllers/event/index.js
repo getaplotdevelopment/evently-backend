@@ -1,3 +1,4 @@
+import { Op, Sequelize } from 'sequelize';
 import eventStatuschecker from '../../helpers/eventHelper/eventStatuschecker';
 import getEvents from '../../helpers/eventHelper/getEvent';
 import handleLikeUnlike from '../../helpers/eventHelper/handleLikeUnlike';
@@ -7,7 +8,9 @@ import slugGenerator from '../../helpers/slugGenerator';
 import nearByCity from '../../helpers/googleMap/nearByCity';
 import models from '../../models';
 import getSingleEvent from '../../helpers/eventHelper/getSingleEvent';
-const { Op } = require('sequelize');
+import sendEmail from '../../helpers/sendEmail/callMailer';
+import { getRole } from '../../helpers/sendEmail/emailTemplates';
+
 const { Event, Likes, Ticket, TicketCategory } = models;
 
 const includeTicket = () => {
@@ -33,7 +36,7 @@ export const createEventController = async (req, res) => {
     location,
     availableTickets
   } = req.body;
-  let eventImage = req.file
+  const eventImage = req.file
     ? await uploadCloudinary(req.file.buffer)
     : req.body.eventImage;
   if (currentMode) {
@@ -114,7 +117,7 @@ export const updateEvents = async (req, res) => {
     });
   }
 
-  let eventImage = req.file ? await uploadCloudinary(req.file.buffer) : null;
+  const eventImage = req.file ? await uploadCloudinary(req.file.buffer) : null;
   if (req.file) {
     updateTo.eventImage = eventImage;
   }
@@ -206,7 +209,7 @@ export const getEventsNearCities = async (req, res) => {
     Event,
     includeTicket()
   );
-  let eventsNearCity = [];
+  const eventsNearCity = [];
   for (const event of data) {
     const destinations = [event.location.locations];
     const response = await nearByCity(origins, destinations);
@@ -217,4 +220,24 @@ export const getEventsNearCities = async (req, res) => {
     }
   }
   res.send({ status: 200, data: eventsNearCity });
+};
+
+export const cancelFreeEvent = async (req, res) => {
+  const { slug } = req.params;
+  const condition = { slug, eventType: false };
+  const eventStatus = 'canceled';
+  const cancelEvent = await Event.update(
+    {
+      eventStatus
+    },
+    {
+      where: condition
+    }
+  );
+  if (cancelEvent[0] == 1) {
+    res.status(200).json({
+      status: 200,
+      message: 'Event successfuly canceled'
+    });
+  }
 };

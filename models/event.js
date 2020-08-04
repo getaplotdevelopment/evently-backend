@@ -28,7 +28,12 @@ module.exports = (sequelize, DataTypes) => {
       isLiked: DataTypes.BOOLEAN,
       likedBy: DataTypes.ARRAY('STRING'),
       availableTickets: DataTypes.ARRAY('JSON'),
-      isDeleted: { type: DataTypes.BOOLEAN, defaultValue: false }
+      isDeleted: { type: DataTypes.BOOLEAN, defaultValue: false },
+      eventStatus: {
+        type: DataTypes.ENUM('canceled, paused, live'),
+        allowNull: false,
+        defaultValue: 'live'
+      }
     },
     {}
   );

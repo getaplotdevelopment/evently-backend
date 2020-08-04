@@ -8,7 +8,8 @@ import {
   likeUnlikeEvent,
   likedEvent,
   getSimilarEvents,
-  getEventsNearCities
+  getEventsNearCities,
+  cancelFreeEvent
 } from '../../controllers/event';
 import asyncHandler from '../../helpers/errorsHandler/asyncHandler';
 import {
@@ -54,12 +55,11 @@ router.patch(
 );
 router.get('/events/liked', asyncHandler(auth), asyncHandler(likedEvent));
 
-router.get(
-  '/events/:slug/similar',
-  asyncHandler(getSimilarEvents)
-  )
-router.get(
-  '/events/:slug/nearbycity',
-  asyncHandler(getEventsNearCities)
-)
+router.get('/events/:slug/similar', asyncHandler(getSimilarEvents));
+router.get('/events/:slug/nearbycity', asyncHandler(getEventsNearCities));
+router.put(
+  '/events/cancel-event/:slug',
+  asyncHandler(authUser),
+  asyncHandler(cancelFreeEvent)
+);
 export default router;
