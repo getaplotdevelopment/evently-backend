@@ -1,7 +1,12 @@
 import html from './template/template';
 
 const getRole = (role, urls) => {
-  const { verification, resetPassword, freeEventCancellation } = emailTemplates;
+  const {
+    verification,
+    resetPassword,
+    freeEventCancellation,
+    paidEventCancellation
+  } = emailTemplates;
 
   resetPassword.html = html(
     'Reset password',
@@ -19,6 +24,13 @@ const getRole = (role, urls) => {
   );
   freeEventCancellation.html = html(
     'Free Event cancellation',
+    'THHE EVENT HAS BEEN CANCELLED',
+    'To learn more about the cancellation',
+    role,
+    urls
+  );
+  paidEventCancellation.html = html(
+    'Paid Event cancellation',
     'THHE EVENT HAS BEEN CANCELLED',
     'To learn more about the cancellation',
     role,
@@ -43,6 +55,11 @@ const emailTemplates = {
     from: '',
     to: '',
     subject: 'Free Event cancellation'
+  },
+  paidEventCancellation: {
+    from: '',
+    to: '',
+    subject: 'Paid Event cancellation'
   }
 };
 

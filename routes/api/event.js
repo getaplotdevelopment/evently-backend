@@ -62,4 +62,9 @@ router.put(
   asyncHandler(authUser),
   asyncHandler(cancelFreeEvent)
 );
+router.put(
+  '/events/cancel-paid-event/:slug',
+  asyncHandler(authUser),
+  asyncHandler(cancelFreeEvent)
+);
 export default router;

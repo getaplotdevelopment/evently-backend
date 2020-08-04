@@ -241,3 +241,22 @@ export const cancelFreeEvent = async (req, res) => {
     });
   }
 };
+export const cancelPaidEvent = async (req, res) => {
+  const { slug } = req.params;
+  const condition = { slug, eventType: true };
+  const eventStatus = 'canceled';
+  const cancelEvent = await Event.update(
+    {
+      eventStatus
+    },
+    {
+      where: condition
+    }
+  );
+  if (cancelEvent[0] == 1) {
+    res.status(200).json({
+      status: 200,
+      message: 'Event successfuly canceled'
+    });
+  }
+};
