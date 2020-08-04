@@ -1,4 +1,5 @@
 import models from '../models/index';
+import { async } from 'rxjs/internal/scheduler/async';
 
 const { Ticket, TicketCategory, User, Event } = models;
 
@@ -15,66 +16,91 @@ class TicketController {
    * @returns {Object} Response
    */
   async createTicket(req, res) {
-    const { slug } = req.params;
-    const { price, number, category } = req.body;   
-    const { id } = req.organizer;
-    
-    const newTicket = {
-      price,
-      category,
-      organizer: id,
-      event: slug,
-      status: 'available'
-    };
 
-    let count = await Ticket.count({organizer: id, evevent: slug});
-    const ticketCategory = await TicketCategory.findOne({
-      where: { id: category }
-    });
+    const createTicketsByCategory = async(category) => {
+      const newTicket = {
+        price,
+        category,
+        organizer: id,
+        event: slug,
+        status: 'available'
+      };
+  
+      let count = await Ticket.count({organizer: id, event: slug});
 
-    if (!ticketCategory) {
-      return res.status(400).send({
-        status: 400,
-        error: "ticket category doesn't exit"
-      })
-    }    
-    
-    for (let i = 1; i <= number; i++) {
-      count += 1;
-      newTicket.ticketNumber = count;
-      const createdTicket = await Ticket.create(newTicket);
+      const ticketCategory = await TicketCategory.findOne({
+        where: { id: category }
+      });
+  
+      if (!ticketCategory) {
+        return res.status(400).send({
+          status: 400,
+          error: "ticket category doesn't exit"
+        })
+      }    
+      
+      for (let i = 1; i <= number; i++) {
+        count += 1;
+        newTicket.ticketNumber = count;
+        const createdTicket = await Ticket.create(newTicket);
+      }
+      const currentOrganizer = await User.findOne({ where: { id } });
+      const currentEvent = await Event.findOne({ where: { slug } });    
+  
+      const newCategory = {
+        id: ticketCategory.id,
+        designation: ticketCategory.designation
+      };
+  
+      const newOrganizer = {
+        id: currentOrganizer.id,
+        firstName: currentOrganizer.firstName,
+        lastName: currentOrganizer.lastName,
+        userName: currentOrganizer.userName,
+        email: currentOrganizer.email,
+        avatar: currentOrganizer.avatar
+      };
+  
+      const newEvent = {
+        slug: currentEvent.slug,
+        title: currentEvent.title,
+        description: currentEvent.description,
+        location: currentEvent.location
+      };
+  
+      const newCreatedTicket = {
+        message: `${number} tickets created successfully.`,
+        category: newCategory,
+        organizer: newOrganizer,
+        event: newEvent
+      };
+      return newCreatedTicket
     }
-    const currentOrganizer = await User.findOne({ where: { id } });
-    const currentEvent = await Event.findOne({ where: { slug } });    
+    const { slug } = req.params;
+    const { price, number, ...categoryList } = req.body;
+    const { id } = req.organizer;
 
-    const newCategory = {
-      id: ticketCategory.id,
-      designation: ticketCategory.designation
+    const categoryMapper = async(category) => {
+      const res = await TicketCategory.findAll({})
+      
+      console.log('7568768989', res);
+      
+      const object = [{name: 'table', id: 1}, {name: 'vip', id: 2}, {name: 'vvip', id: 3}]
+      
+      return object.find(({name}) => name === category);
+      
     };
+    
+    for (const category in categoryList) {
+      const number = categoryList[category]
+      const categoryId = await categoryMapper(category)
 
-    const newOrganizer = {
-      id: currentOrganizer.id,
-      firstName: currentOrganizer.firstName,
-      lastName: currentOrganizer.lastName,
-      userName: currentOrganizer.userName,
-      email: currentOrganizer.email,
-      avatar: currentOrganizer.avatar
-    };
+      console.log(number, categoryId);
 
-    const newEvent = {
-      slug: currentEvent.slug,
-      title: currentEvent.title,
-      description: currentEvent.description,
-      location: currentEvent.location
-    };
+    }
 
-    const newCreatedTicket = {
-      message: `${number} tickets created successfully.`,
-      category: newCategory,
-      organizer: newOrganizer,
-      event: newEvent
-    };
-    res.status(201).json({ status: 201, newCreatedTicket });
+    // const newTickets = createTicketsByCategory(category)
+    // res.status(201).json({ status: 201, newTickets });
   }
 
   /**

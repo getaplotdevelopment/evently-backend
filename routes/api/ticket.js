@@ -23,7 +23,7 @@ router.post(
   '/:slug',
   asyncHandler(checkToken),
   asyncHandler(authUser),
-  asyncHandler(checkTicketExist),
+  // asyncHandler(checkTicketExist),
   validateTicket,
   validations,
   asyncHandler(checkEvent),
