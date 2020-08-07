@@ -50,6 +50,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'event',
       allowNull: false
     });
+    Event.hasMany(models.commentEvent, {
+      foreignKey: 'event',
+      allowNull: false
+    });
   };
   return Event;
 };
