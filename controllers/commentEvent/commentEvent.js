@@ -1,7 +1,6 @@
 import models from '../../models';
-import findOneHelper from '../../helpers/finOneHelper';
 
-const { User, commentEvent, Event } = models;
+const { User, commentEvent } = models;
 
 const includeUser = () => {
   return [
@@ -60,11 +59,18 @@ class CommentEventController {
    */
   async getOneComment(req, res) {
     const { commentId } = req.params;
-    const where = { id: commentId };
+    const where = { id: commentId, isDeleted: false };
     const comment = await commentEvent.findOne({
       where,
       include: includeUser()
     });
+    if (!comment) {
+      console.log('here');
+      return res.status(404).json({
+        status: 404,
+        message: 'No comment found'
+      });
+    }
     res.status(200).json({
       status: 200,
       comment
@@ -80,7 +86,7 @@ class CommentEventController {
   async updateComment(req, res) {
     const { commentId: id } = req.params;
     const { text, img, isHidden } = req.body;
-    const where = { id };
+    const where = { id, isDeleted: false };
     const comment = {
       text,
       img,
@@ -112,7 +118,12 @@ class CommentEventController {
     const deleteComment = await commentEvent.update(comment, {
       where
     });
-    console.log('deleteComment', deleteComment);
+    if (deleteComment[0] === 1) {
+      res.status(200).json({
+        status: 200,
+        message: 'Comment successfully deleted'
+      });
+    }
   }
 }
 

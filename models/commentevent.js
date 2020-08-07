@@ -6,7 +6,8 @@ module.exports = (sequelize, DataTypes) => {
       img: DataTypes.STRING,
       user: DataTypes.INTEGER,
       event: DataTypes.STRING,
-      ishidden: { type: DataTypes.BOOLEAN, defaultValue: false }
+      ishidden: { type: DataTypes.BOOLEAN, defaultValue: false },
+      isDeleted: { type: DataTypes.BOOLEAN, defaultValue: false }
     },
     {}
   );

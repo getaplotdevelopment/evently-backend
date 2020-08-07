@@ -40,7 +40,7 @@ router.put(
   asyncHandler(comment.updateComment)
 );
 router.put(
-  '/:slug/delete-event-comment/:commentId',
+  '/:slug/delete-comment/:commentId',
   asyncHandler(checkToken),
   asyncHandler(auth),
   asyncHandler(checkEvent),

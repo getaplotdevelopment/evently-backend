@@ -23,6 +23,9 @@ module.exports = {
       ishidden: {
         type: Sequelize.BOOLEAN
       },
+      isDeleted: {
+        type: Sequelize.BOOLEAN
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
