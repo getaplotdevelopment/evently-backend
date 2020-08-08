@@ -36,7 +36,7 @@ class CommentEventController {
   async createComment(req, res) {
     const { slug } = req.params;
     const { text, img, isHidden } = req.body;
-    const { id: user } = req.organizer || req.user;
+    const { id: user } = req.user;
     const comment = {
       text,
       img,

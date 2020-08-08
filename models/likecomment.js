@@ -3,7 +3,9 @@ module.exports = (sequelize, DataTypes) => {
     'likeComment',
     {
       commentEvent: DataTypes.INTEGER,
-      user: DataTypes.INTEGER
+      user: DataTypes.INTEGER,
+      hasLiked: { type: DataTypes.BOOLEAN, defaultValue: false },
+      hasDisLiked: { type: DataTypes.BOOLEAN, defaultValue: false }
     },
     {}
   );

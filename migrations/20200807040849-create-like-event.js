@@ -14,6 +14,12 @@ module.exports = {
       user: {
         type: Sequelize.INTEGER
       },
+      hasLiked: {
+        type: Sequelize.BOOLEAN
+      },
+      hasDisLiked: {
+        type: Sequelize.BOOLEAN
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
