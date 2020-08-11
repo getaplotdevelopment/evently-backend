@@ -2,6 +2,7 @@ import express from 'express';
 import asyncHandler from '../../helpers/errorsHandler/asyncHandler';
 import checkToken from '../../middleware/users/checkToken';
 import Comment from '../../controllers/commentEvent/commentEvent';
+import LikeComment from '../../controllers/commentEvent/likeComment';
 import auth from '../../middleware/users/auth';
 import { checkEvent } from '../../middleware/event/checkEvent';
 import { checkComment } from '../../middleware/commentEvent/checkComment';
@@ -11,6 +12,7 @@ import {
 } from '../../middleware/validations/validateAll';
 
 const comment = new Comment();
+const likeComment = new LikeComment();
 
 const router = express.Router();
 
@@ -46,6 +48,13 @@ router.put(
   asyncHandler(checkEvent),
   asyncHandler(checkComment),
   asyncHandler(comment.deleteComment)
+);
+router.put(
+  '/comment/:commentId/like',
+  asyncHandler(checkToken),
+  asyncHandler(auth),
+  asyncHandler(checkComment),
+  asyncHandler(likeComment.likeComment)
 );
 
 export default router;
