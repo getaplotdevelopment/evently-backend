@@ -1,6 +1,6 @@
 import models from '../../models';
 
-const { User, commentEvent } = models;
+const { User, commentEvent, Event } = models;
 
 const includeUser = () => {
   return [
@@ -62,7 +62,7 @@ class CommentEventController {
     const where = { id: commentId, isDeleted: false };
     const comment = await commentEvent.findOne({
       where,
-      include: includeUser()
+      include: includeUser(),
     });
     if (!comment) {
       console.log('here');

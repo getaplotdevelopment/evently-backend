@@ -29,14 +29,14 @@ class LikeCommentController {
       );
       return res.status(200).json({
         status: 200,
-        message: 'liked successfuly'
+        message: 'liked successfully'
       });
     }
     if (!findLikedComment) {
       await likeComment.create({ commentEvent, user, hasLiked: true });
       return res.status(200).json({
         status: 200,
-        message: 'liked successfuly'
+        message: 'liked successfully'
       });
     }
     await likeComment.update(
@@ -45,7 +45,7 @@ class LikeCommentController {
     );
     return res.status(200).json({
       status: 200,
-      message: 'Disliked successfuly'
+      message: 'Disliked successfully'
     });
   }
 }

@@ -5,7 +5,9 @@ module.exports = (sequelize, DataTypes) => {
       text: DataTypes.STRING,
       img: DataTypes.STRING,
       commentEvent: DataTypes.INTEGER,
-      user: DataTypes.INTEGER
+      user: DataTypes.INTEGER,
+      ishidden: { type: DataTypes.BOOLEAN, defaultValue: false },
+      isDeleted: { type: DataTypes.BOOLEAN, defaultValue: false }
     },
     {}
   );
