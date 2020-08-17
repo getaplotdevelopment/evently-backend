@@ -8,6 +8,7 @@ import ticketCategory from './ticketCategory';
 import ticket from './ticket';
 import feedback from './feedback';
 import commentEvent from './commentEvent';
+import experience from './experience';
 
 const router = Router();
 
@@ -19,4 +20,5 @@ router.use('/ticket/category', ticketCategory);
 router.use('/ticket', ticket);
 router.use('/feedback', feedback);
 router.use('/event', commentEvent);
+router.use('/experience', experience);
 export default router;

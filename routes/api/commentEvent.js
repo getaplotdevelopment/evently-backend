@@ -53,6 +53,14 @@ router.put(
   asyncHandler(comment.deleteComment)
 );
 router.put(
+  '/:slug/replay-comment/:commentId',
+  asyncHandler(checkToken),
+  asyncHandler(auth),
+  asyncHandler(checkEvent),
+  asyncHandler(checkComment),
+  asyncHandler(comment.reportCommentEvent)
+);
+router.put(
   '/comment/:commentId/like',
   asyncHandler(checkToken),
   asyncHandler(auth),
@@ -86,6 +94,13 @@ router.put(
   asyncHandler(auth),
   asyncHandler(checkReplay),
   asyncHandler(replayComment.deleteReplay)
+);
+router.post(
+  '/comment/report-replay/:replayId',
+  asyncHandler(checkToken),
+  asyncHandler(auth),
+  asyncHandler(checkReplay),
+  asyncHandler(replayComment.reportReplayComment)
 );
 
 export default router;

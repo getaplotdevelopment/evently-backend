@@ -1,6 +1,7 @@
 import models from '../../models';
+import { EVENT_COMMENT } from '../../constants/reports';
 
-const { User, commentEvent, Event } = models;
+const { User, commentEvent, Event, ReportContent } = models;
 
 const includeUser = () => {
   return [
@@ -62,7 +63,7 @@ class CommentEventController {
     const where = { id: commentId, isDeleted: false };
     const comment = await commentEvent.findOne({
       where,
-      include: includeUser(),
+      include: includeUser()
     });
     if (!comment) {
       console.log('here');
@@ -124,6 +125,30 @@ class CommentEventController {
         message: 'Comment successfully deleted'
       });
     }
+  }
+
+  /**
+   *
+   * @param {Object} req - Requests from client
+   * @param {*} res - Response from the db
+   * @returns {Object} Response
+   */
+  async reportCommentEvent(req, res) {
+    const { commentId: entityId } = req.params;
+    const { designation } = req.body;
+    const { id: user } = req.user;
+    const newReport = {
+      entity: EVENT_COMMENT,
+      designation,
+      entityId,
+      user
+    };
+    const reportExperience = await ReportContent.create(newReport);
+    res.status(201).json({
+      status: 200,
+      reportExperience,
+      message: 'Thanks for your report'
+    });
   }
 }
 

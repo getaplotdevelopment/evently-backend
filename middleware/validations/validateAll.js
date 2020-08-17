@@ -159,6 +159,11 @@ const validateComment = [
     .not()
     .isEmpty()
 ];
+const validateExperience = [
+  check('text', 'Text is required')
+    .not()
+    .isEmpty()
+];
 
 export {
   validateUser,
@@ -174,5 +179,6 @@ export {
   validateFeedback,
   validateFreePayment,
   validatePaidPayment,
-  validateComment
+  validateComment,
+  validateExperience
 };

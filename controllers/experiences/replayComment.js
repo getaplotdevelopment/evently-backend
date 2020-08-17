@@ -1,8 +1,13 @@
 /* eslint-disable no-dupe-keys */
 import models from '../../models';
-import { REPLAY_EVENT_COMMENT } from '../../constants/reports';
+import { REPLAY_EXPERIENCE_COMMENT } from '../../constants/reports';
 
-const { User, commentEvent, replayComment, ReportContent } = models;
+const {
+  User,
+  CommentExperience,
+  ReplayExperienceComment,
+  ReportContent
+} = models;
 
 const includeUser = () => {
   return [
@@ -25,8 +30,8 @@ const includeUser = () => {
 const includeComment = () => {
   return [
     {
-      model: commentEvent,
-      as: 'commentEvents',
+      model: CommentExperience,
+      as: 'commentExperiences',
       attributes: {
         exclude: ['createdAt', 'updatedAt']
       },
@@ -36,11 +41,11 @@ const includeComment = () => {
 };
 
 /**
- * @ReplayCommentController Controller
+ * @ReplayCommentExperienceController Controller
  * @exports
  * @class
  */
-class ReplayCommentController {
+class ReplayCommentExperienceController {
   /**
    *
    * @param {Object} req - Requests from client
@@ -49,16 +54,15 @@ class ReplayCommentController {
    */
   async createCommentReplay(req, res) {
     const { commentId } = req.params;
-    const { text, img, isHidden } = req.body;
+    const { text, img } = req.body;
     const { id: user } = req.user;
     const replayToComment = {
       text,
       img,
-      isHidden,
       user,
-      commentEvent: commentId
+      ExperienceComent: commentId
     };
-    const newReplay = await replayComment.create(replayToComment);
+    const newReplay = await ReplayExperienceComment.create(replayToComment);
     res.status(201).json({
       status: 201,
       comment: newReplay
@@ -74,7 +78,7 @@ class ReplayCommentController {
   async getOneReplay(req, res) {
     const { replayId: id } = req.params;
     const where = { id, isDeleted: false };
-    const replay = await replayComment.findOne({
+    const replay = await ReplayExperienceComment.findOne({
       where,
       include: includeComment()
     });
@@ -98,14 +102,13 @@ class ReplayCommentController {
    */
   async updateReplay(req, res) {
     const { replayId: id } = req.params;
-    const { text, img, isHidden } = req.body;
+    const { text, img } = req.body;
     const where = { id, isDeleted: false };
     const replay = {
       text,
-      img,
-      isHidden
+      img
     };
-    const updateReplay = await replayComment.update(replay, {
+    const updateReplay = await ReplayExperienceComment.update(replay, {
       where
     });
     if (updateReplay[0] === 1) {
@@ -129,7 +132,7 @@ class ReplayCommentController {
     const repaly = {
       isDeleted: true
     };
-    const deleteComment = await replayComment.update(repaly, {
+    const deleteComment = await ReplayExperienceComment.update(repaly, {
       where
     });
     if (deleteComment[0] === 1) {
@@ -146,12 +149,12 @@ class ReplayCommentController {
    * @param {*} res - Response from the db
    * @returns {Object} Response
    */
-  async reportReplayComment(req, res) {
+  async reportReplayCommentExperience(req, res) {
     const { replayId: entityId } = req.params;
     const { designation } = req.body;
     const { id: user } = req.user;
     const newReport = {
-      entity: REPLAY_EVENT_COMMENT,
+      entity: REPLAY_EXPERIENCE_COMMENT,
       designation,
       entityId,
       user
@@ -165,4 +168,4 @@ class ReplayCommentController {
   }
 }
 
-export default ReplayCommentController;
+export default ReplayCommentExperienceController;

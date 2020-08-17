@@ -1,8 +1,7 @@
-/* eslint-disable no-dupe-keys */
 import models from '../../models';
-import { REPLAY_EVENT_COMMENT } from '../../constants/reports';
+import { EXPERIENCE } from '../../constants/reports';
 
-const { User, commentEvent, replayComment, ReportContent } = models;
+const { User, Experience, ReportContent } = models;
 
 const includeUser = () => {
   return [
@@ -22,46 +21,31 @@ const includeUser = () => {
     }
   ];
 };
-const includeComment = () => {
-  return [
-    {
-      model: commentEvent,
-      as: 'commentEvents',
-      attributes: {
-        exclude: ['createdAt', 'updatedAt']
-      },
-      include: includeUser()
-    }
-  ];
-};
 
 /**
- * @ReplayCommentController Controller
+ * @ExperienceController Controller
  * @exports
  * @class
  */
-class ReplayCommentController {
+class ExperienceController {
   /**
    *
    * @param {Object} req - Requests from client
    * @param {*} res - Response from the db
    * @returns {Object} Response
    */
-  async createCommentReplay(req, res) {
-    const { commentId } = req.params;
-    const { text, img, isHidden } = req.body;
+  async createExperience(req, res) {
+    const { text, img } = req.body;
     const { id: user } = req.user;
-    const replayToComment = {
+    const experience = {
       text,
       img,
-      isHidden,
-      user,
-      commentEvent: commentId
+      user
     };
-    const newReplay = await replayComment.create(replayToComment);
+    const newExperience = await Experience.create(experience);
     res.status(201).json({
       status: 201,
-      comment: newReplay
+      experience: newExperience
     });
   }
 
@@ -71,22 +55,22 @@ class ReplayCommentController {
    * @param {*} res - Response from the db
    * @returns {Object} Response
    */
-  async getOneReplay(req, res) {
-    const { replayId: id } = req.params;
-    const where = { id, isDeleted: false };
-    const replay = await replayComment.findOne({
+  async getOneExperience(req, res) {
+    const { experienceId } = req.params;
+    const where = { id: experienceId, isDeleted: false };
+    const experience = await Experience.findOne({
       where,
-      include: includeComment()
+      include: includeUser()
     });
-    if (!replay) {
+    if (!experience) {
       return res.status(404).json({
         status: 404,
-        message: 'No repaly found'
+        message: 'No experience found'
       });
     }
     res.status(200).json({
       status: 200,
-      replay
+      experience
     });
   }
 
@@ -96,23 +80,22 @@ class ReplayCommentController {
    * @param {*} res - Response from the db
    * @returns {Object} Response
    */
-  async updateReplay(req, res) {
-    const { replayId: id } = req.params;
-    const { text, img, isHidden } = req.body;
+  async updateExperience(req, res) {
+    const { experienceId: id } = req.params;
+    const { title, text, img } = req.body;
     const where = { id, isDeleted: false };
-    const replay = {
+    const experience = {
+      title,
       text,
-      img,
-      isHidden
+      img
     };
-    const updateReplay = await replayComment.update(replay, {
+    const updateExperience = await Experience.update(experience, {
       where
     });
-    if (updateReplay[0] === 1) {
+    if (updateExperience[0] === 1) {
       res.status(200).json({
         status: 200,
-        message: 'Repaly successfully updated',
-        replay
+        message: 'experience successfully updated'
       });
     }
   }
@@ -123,19 +106,19 @@ class ReplayCommentController {
    * @param {*} res - Response from the db
    * @returns {Object} Response
    */
-  async deleteReplay(req, res) {
-    const { replayId: id } = req.params;
+  async deleteExperience(req, res) {
+    const { experienceId: id } = req.params;
     const where = { id };
-    const repaly = {
+    const experience = {
       isDeleted: true
     };
-    const deleteComment = await replayComment.update(repaly, {
+    const deleteExperience = await Experience.update(experience, {
       where
     });
-    if (deleteComment[0] === 1) {
+    if (deleteExperience[0] === 1) {
       res.status(200).json({
         status: 200,
-        message: 'Replay successfully deleted'
+        message: 'Experience successfully deleted'
       });
     }
   }
@@ -146,12 +129,12 @@ class ReplayCommentController {
    * @param {*} res - Response from the db
    * @returns {Object} Response
    */
-  async reportReplayComment(req, res) {
-    const { replayId: entityId } = req.params;
+  async reportExperience(req, res) {
+    const { experienceId: entityId } = req.params;
     const { designation } = req.body;
     const { id: user } = req.user;
     const newReport = {
-      entity: REPLAY_EVENT_COMMENT,
+      entity: EXPERIENCE,
       designation,
       entityId,
       user
@@ -165,4 +148,4 @@ class ReplayCommentController {
   }
 }
 
-export default ReplayCommentController;
+export default ExperienceController;
