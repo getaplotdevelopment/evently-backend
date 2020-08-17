@@ -60,7 +60,7 @@ class ReplayCommentExperienceController {
       text,
       img,
       user,
-      ExperienceComent: commentId
+      experienceComent: commentId
     };
     const newReplay = await ReplayExperienceComment.create(replayToComment);
     res.status(201).json({

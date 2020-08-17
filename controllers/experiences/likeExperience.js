@@ -1,6 +1,6 @@
 import models from '../../models';
 
-const { likeExperience } = models;
+const { LikeExperience } = models;
 
 /**
  * @LikeExperienceController Controller
@@ -20,12 +20,12 @@ class LikeExperienceController {
     const where = { experience, user };
     const condition2 = { experience, user, hasLiked: false };
 
-    const findLikedExperience = await likeExperience.findOne({ where });
-    const findDislikeExperience = await likeExperience.findOne({
+    const findLikedExperience = await LikeExperience.findOne({ where });
+    const findDislikeExperience = await LikeExperience.findOne({
       where: condition2
     });
     if (findDislikeExperience) {
-      await likeExperience.update(
+      await LikeExperience.update(
         { experience, user, hasLiked: true },
         { where }
       );
@@ -35,13 +35,13 @@ class LikeExperienceController {
       });
     }
     if (!findLikedExperience) {
-      await likeExperience.create({ experience, user, hasLiked: true });
+      await LikeExperience.create({ experience, user, hasLiked: true });
       return res.status(200).json({
         status: 200,
         message: 'Experience liked successfully'
       });
     }
-    await likeExperience.update(
+    await LikeExperience.update(
       { experience, user, hasLiked: false },
       { where }
     );
