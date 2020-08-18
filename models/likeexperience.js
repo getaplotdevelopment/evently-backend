@@ -2,7 +2,8 @@ module.exports = (sequelize, DataTypes) => {
   const LikeExperience = sequelize.define(
     'LikeExperience',
     {
-      hasLiked: DataTypes.BOOLEAN,
+      hasLiked: { type: DataTypes.BOOLEAN, defaultValue: false },
+      hasDisliked: { type: DataTypes.BOOLEAN, defaultValue: false },
       experience: DataTypes.INTEGER,
       user: DataTypes.INTEGER
     },

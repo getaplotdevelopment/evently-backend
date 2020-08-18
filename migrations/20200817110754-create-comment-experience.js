@@ -1,4 +1,3 @@
-'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('CommentExperiences', {
@@ -18,8 +17,13 @@ module.exports = {
         type: Sequelize.BOOLEAN
       },
       isDeleted: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
       },
+      user: {
+        type: Sequelize.INTEGER
+      },
+      experience: { type: Sequelize.INTEGER },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

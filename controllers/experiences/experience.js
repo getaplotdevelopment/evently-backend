@@ -82,10 +82,9 @@ class ExperienceController {
    */
   async updateExperience(req, res) {
     const { experienceId: id } = req.params;
-    const { title, text, img } = req.body;
+    const { text, img } = req.body;
     const where = { id, isDeleted: false };
     const experience = {
-      title,
       text,
       img
     };
@@ -95,7 +94,8 @@ class ExperienceController {
     if (updateExperience[0] === 1) {
       res.status(200).json({
         status: 200,
-        message: 'experience successfully updated'
+        message: 'experience successfully updated',
+        text
       });
     }
   }

@@ -11,6 +11,9 @@ module.exports = {
       hasLiked: {
         type: Sequelize.BOOLEAN
       },
+      hasDisliked: {
+        type: Sequelize.BOOLEAN
+      },
       experience: {
         type: Sequelize.INTEGER
       },

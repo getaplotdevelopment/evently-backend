@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE'
     });
     CommentExperience.hasMany(models.ReplayExperienceComment, {
-      foreignKey: 'commentExperience',
+      foreignKey: 'experienceComment',
       allowNull: false
     });
     CommentExperience.hasMany(models.LikeCommentExperience, {

@@ -59,8 +59,8 @@ class CommentExperienceController {
    * @returns {Object} Response
    */
   async getOneComment(req, res) {
-    const { commentId } = req.params;
-    const where = { id: commentId, isDeleted: false };
+    const { commentId: id, experienceId: experience } = req.params;
+    const where = { id, experience, isDeleted: false };
     const comment = await CommentExperience.findOne({
       where,
       include: includeUser()
@@ -84,9 +84,9 @@ class CommentExperienceController {
    * @returns {Object} Response
    */
   async updateComment(req, res) {
-    const { commentId: id } = req.params;
+    const { commentId: id, experienceId: experience } = req.params;
     const { text, img, isHidden } = req.body;
-    const where = { id, isDeleted: false };
+    const where = { id, experience, isDeleted: false };
     const comment = {
       text,
       img,
@@ -110,8 +110,8 @@ class CommentExperienceController {
    * @returns {Object} Response
    */
   async deleteComment(req, res) {
-    const { commentId: id } = req.params;
-    const where = { id };
+    const { commentId: id, experienceId: experience } = req.params;
+    const where = { id, experience };
     const comment = {
       isDeleted: true
     };

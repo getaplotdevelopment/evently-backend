@@ -1,7 +1,7 @@
 import models from '../../models/index';
 import httpError from '../../helpers/errorsHandler/httpError';
 
-const { Experience, CommentExperience } = models;
+const { Experience, CommentExperience, ReplayExperienceComment } = models;
 
 const checkExperience = async (req, res, next) => {
   const { experienceId: id } = req.params;
@@ -23,5 +23,18 @@ const checkExperienceComment = async (req, res, next) => {
   }
   next();
 };
+const checkReplay = async (req, res, next) => {
+  const { replayId: id } = req.params;
+  if (isNaN(id)) {
+    throw new httpError(400, 'replay ID must be a number');
+  }
+  const replay = await ReplayExperienceComment.findOne({
+    where: { id }
+  });
+  if (!replay) {
+    throw new httpError(404, 'Replay not found');
+  }
+  next();
+};
 
-export { checkExperience, checkExperienceComment };
+export { checkExperience, checkExperienceComment, checkReplay };

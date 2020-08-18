@@ -31,7 +31,7 @@ const includeComment = () => {
   return [
     {
       model: CommentExperience,
-      as: 'commentExperiences',
+      as: 'comment',
       attributes: {
         exclude: ['createdAt', 'updatedAt']
       },
@@ -53,14 +53,14 @@ class ReplayCommentExperienceController {
    * @returns {Object} Response
    */
   async createCommentReplay(req, res) {
-    const { commentId } = req.params;
+    const { commentId: experienceComment } = req.params;
     const { text, img } = req.body;
     const { id: user } = req.user;
     const replayToComment = {
       text,
       img,
       user,
-      experienceComent: commentId
+      experienceComment
     };
     const newReplay = await ReplayExperienceComment.create(replayToComment);
     res.status(201).json({
@@ -82,12 +82,6 @@ class ReplayCommentExperienceController {
       where,
       include: includeComment()
     });
-    if (!replay) {
-      return res.status(404).json({
-        status: 404,
-        message: 'No repaly found'
-      });
-    }
     res.status(200).json({
       status: 200,
       replay

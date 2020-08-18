@@ -17,6 +17,9 @@ module.exports = {
       hasLiked: {
         type: Sequelize.BOOLEAN
       },
+      hasDisliked: {
+        type: Sequelize.BOOLEAN
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

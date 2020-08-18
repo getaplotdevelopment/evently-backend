@@ -9,17 +9,14 @@ import ExperienceLikeComment from '../../controllers/experiences/likeCommentExpe
 import auth from '../../middleware/users/auth';
 import {
   checkExperience,
-  checkExperienceComment
+  checkExperienceComment,
+  checkReplay
 } from '../../middleware/experience/checkExperience';
-import { checkReplay } from '../../middleware/commentEvent/checkReplay';
 import {
   validateExperience,
   validations
 } from '../../middleware/validations/validateAll';
 
-// const comment = new Comment();
-// const likeComment = new LikeComment();
-// const replayComment = new ReplayCommentController();
 const experience = new Experience();
 const experienceComment = new ExperienceComment();
 const experienceLike = new ExperienceLike();
@@ -96,7 +93,7 @@ router.put(
   asyncHandler(experienceComment.deleteComment)
 );
 router.post(
-  '/report-comment/:commentId',
+  '/report-comment-experience/:commentId',
   asyncHandler(checkToken),
   asyncHandler(auth),
   asyncHandler(checkExperienceComment),
@@ -151,11 +148,11 @@ router.put(
   asyncHandler(experienceCommentReplay.deleteReplay)
 );
 router.post(
-  '/report-replay/:replayId',
+  '/report-replay-comment-experience/:replayId',
   asyncHandler(checkToken),
   asyncHandler(auth),
   asyncHandler(checkReplay),
-  asyncHandler(experienceCommentReplay.reportReplayExperience)
+  asyncHandler(experienceCommentReplay.reportReplayCommentExperience)
 );
 
 export default router;
