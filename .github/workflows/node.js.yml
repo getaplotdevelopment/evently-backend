@@ -27,7 +27,7 @@ jobs:
           POSTGRES_DB: test_evently
         ports:
           # will assign a random free host port
-          - 5432/tcp
+          - '5432:5432'
         # needed because the postgres container does not provide a healthcheck
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     
@@ -38,6 +38,10 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
+    - name: Connect to PostgreSQL
+        # Runs a script that creates a PostgreSQL client, populates
+        # the client with data, and retrieves data
+      run: node client.js
     - run: npm run build --if-present
     - run: npm test
       env:
@@ -45,8 +49,8 @@ jobs:
         POSTGRES_HOST: postgres
         POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }} # get randomly assigned published port
         USERNAME_TEST: postgres
-        PASSWORD_DEV: postgres
-        DB_DEV: test_evently
+        PASSWORD_TEST: postgres
+        DB_TEST: test_evently
         SALT_ROUNDS: 10
         APP_URL: http://localhost:5000
         FACEBOOK_APP_ID: 605722766883263

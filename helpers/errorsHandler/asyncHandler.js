@@ -7,7 +7,7 @@ const asyncHandler = callback => async (req, res, next) => {
       errStatus === 500
         ? `Something failed: ${err.message} try again after`
         : err.message;
-    res.status(errStatus).send({
+    return res.status(errStatus).send({
       status: errStatus,
       error: errMsg
     });

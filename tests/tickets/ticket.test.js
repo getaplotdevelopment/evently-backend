@@ -14,15 +14,21 @@ const slug = 'slug-123456';
 const wrongSlug = 'slug-0987654321';
 const wrongTicketId = 50;
 
-describe('Tickets', () => {
-  it('should create the Ticket', async () => {
-    const res = await chai
-      .request(app)
-      .post('/api/users/login')
-      .set('Content-Type', 'application/json')
-      .send(loginOrganizer);
-    token = res.body.token;
+const newUser = async () => {
+  return await chai
+    .request(app)
+    .post('/api/users/login')
+    .set('Content-Type', 'application/json')
+    .send(loginOrganizer);
+};
 
+describe('Tickets', () => {
+  let userResponse;
+  before(async() => {
+    userResponse = await newUser();
+  });
+  it('should create the Ticket', async () => {      
+    token = userResponse.body.token;
     const createTicket = {
       price: 200,
       number: 50,
@@ -36,7 +42,7 @@ describe('Tickets', () => {
     response.should.have.status(201);
     response.body.should.be.a('object');
     ticketId = response.body.newCreatedTicket.id;
-  }).timeout(10000);
+  }).timeout(25000);
   it('should not allow to create a ticket with a redundant category', async () => {
     const createTicket = {
       price: 200,
