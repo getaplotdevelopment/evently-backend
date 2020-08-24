@@ -1,5 +1,6 @@
 import httpError from '../errorsHandler/httpError';
 import models from '../../models';
+
 const { Event } = models;
 export default async slug => {
   const event = await Event.findOne({

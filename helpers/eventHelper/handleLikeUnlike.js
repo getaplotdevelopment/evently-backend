@@ -1,4 +1,5 @@
 import models from '../../models';
+
 const { Event, Likes } = models;
 
 export default async (email, slug) => {
@@ -36,7 +37,7 @@ export default async (email, slug) => {
   likedEvents.forEach(event => {
     likedBy.push(event.email);
   });
-  const isLiked = likedEvents === [] ? false : true;
+  const isLiked = likedEvents !== [];
 
   await Event.update(
     { likedBy, isLiked },

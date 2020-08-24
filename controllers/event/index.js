@@ -7,7 +7,9 @@ import slugGenerator from '../../helpers/slugGenerator';
 import nearByCity from '../../helpers/googleMap/nearByCity';
 import models from '../../models';
 import getSingleEvent from '../../helpers/eventHelper/getSingleEvent';
+
 const { Op } = require('sequelize');
+
 const { Event, Likes, Ticket, TicketCategory } = models;
 
 const includeTicket = () => {
@@ -33,7 +35,7 @@ export const createEventController = async (req, res) => {
     location,
     availableTickets
   } = req.body;
-  let eventImage = req.file
+  const eventImage = req.file
     ? await uploadCloudinary(req.file.buffer)
     : req.body.eventImage;
   if (currentMode) {
@@ -114,7 +116,7 @@ export const updateEvents = async (req, res) => {
     });
   }
 
-  let eventImage = req.file ? await uploadCloudinary(req.file.buffer) : null;
+  const eventImage = req.file ? await uploadCloudinary(req.file.buffer) : null;
   if (req.file) {
     updateTo.eventImage = eventImage;
   }
@@ -206,7 +208,7 @@ export const getEventsNearCities = async (req, res) => {
     Event,
     includeTicket()
   );
-  let eventsNearCity = [];
+  const eventsNearCity = [];
   for (const event of data) {
     const destinations = [event.location.locations];
     const response = await nearByCity(origins, destinations);

@@ -1,6 +1,5 @@
 import express from 'express';
 
-
 import {
   makePayment,
   chargeCard,
@@ -13,9 +12,6 @@ import checkToken from '../../middleware/users/checkToken';
 
 const router = express.Router();
 
-router.post(
-  '/webhook',
-  asyncHandler(webhookPath)
-);
+router.post('/webhook', asyncHandler(webhookPath));
 
 export default router;

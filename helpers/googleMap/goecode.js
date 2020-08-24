@@ -24,7 +24,7 @@ export default async address => {
   });
   const { results, status } = locPayload.data;
   if (status !== 'ZERO_RESULTS' && status !== 'OK') {
-    throw new httpError(422, 'Google Map, ' + locPayload.data.error_message);
+    throw new httpError(422, `Google Map, ${locPayload.data.error_message}`);
   }
   if (results.length === 0) {
     return emptyLocation;

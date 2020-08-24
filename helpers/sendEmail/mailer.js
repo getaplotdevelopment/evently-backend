@@ -1,10 +1,6 @@
 import nodemailer from 'nodemailer';
-import {
-  emailTemplates
-} from './emailTemplates';
-import {
-  email
-} from '../../config/config';
+import { emailTemplates } from './emailTemplates';
+import { email } from '../../config/config';
 
 /**
  * Class module to send email
