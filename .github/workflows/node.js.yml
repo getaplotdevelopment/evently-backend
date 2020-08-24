@@ -1,0 +1,77 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Node.js CI
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x, 14.x]
+  
+    services:
+      postgres:
+        image: postgres:10.8
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test_evently
+        ports:
+          # will assign a random free host port
+          - '5432:5432'
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm ci
+    - name: Connect to PostgreSQL
+        # Runs a script that creates a PostgreSQL client, populates
+        # the client with data, and retrieves data
+      run: node client.js
+    - run: npm run build --if-present
+    - run: npm test
+      env:
+        CI: true
+        POSTGRES_HOST: postgres
+        POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }} # get randomly assigned published port
+        USERNAME_TEST: postgres
+        PASSWORD_TEST: postgres
+        DB_TEST: test_evently
+        SALT_ROUNDS: 10
+        APP_URL: http://localhost:5000
+        FACEBOOK_APP_ID: 605722766883263
+        FACEBOOK_APP_SECRET: 8f90c0a71f551a8ee9350ce670c8f3b1
+        FACEBOOK_CALLBACK_URI: http://localhost:5000/api/users
+        GOOGLE_CLIENT_ID: 893157647291-f0gi5aposlp2s3cen54iheg82a3lduek.apps.googleusercontent.com
+        GOOGLE_CLIENT_SECRET: k6dB0fIRZXs1JqlWFaQYBt0d
+        jwtSecret: evently2020
+        USERNAME_PRODUCTION: qidxzszktdlmxd
+        PASSWORD_PRODUCTION: 16971d44b1c39f42bd5815f219dba2783b448f32423d7c8da3940390113a3b00
+        DB_PRODUCTION: dcnb8sjhc650c4
+        DB_HOSTNAME: ec2-174-129-33-25.compute-1.amazonaws.com
+        SENDER_EMAIL: testsender100@gmail.com
+        SENDER_PASS: XVq6thCuu.
+        CLOUDINARY_URL: cloudinary://833837483928629:zMLthkvBncfdNqR6ZAZtX3bDRRc@dbsqqybjz
+        CLOUDNARY_PASS: eKse/7mSnT3AGzT
+        CLOUD_NAME: dbsqqybjz
+        CLOUD_API_KEY: 833837483928629
+        CLOUD_API_SECRET: zMLthkvBncfdNqR6ZAZtX3bDRRc
+        GOOGLE_MAP_KEY: AIzaSyBnbxrmOwA12GugOZSO2PFYeMzA0kRb7Ug
+        pwd: evently2020@
+        REDIS_URL: http://localhost:6379
+        PUBLIC_SECRET: FLWSECK_TEST-f6f396b315ff0fd72a9c6b8f102859b0-X
+        enckey: FLWSECK_TEST893116fa3e9b

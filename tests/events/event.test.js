@@ -14,6 +14,8 @@ import {
 
 chai.use(chaiHttp);
 chai.should();
+let user2;
+let user3;
 
 const newOrganizer = async () => {
   return await chai
@@ -21,6 +23,22 @@ const newOrganizer = async () => {
     .post('/api/users')
     .set('Content-Type', 'application/json')
     .send(signupUser2);
+};
+
+const loginUser3 = async () => {
+  return await chai
+    .request(app)
+    .post('/api/users/login')
+    .set('Content-Type', 'application/json')
+    .send(signupUser3);
+};
+
+const loginUser2 = async () => {
+  return await chai
+    .request(app)
+    .post('/api/users')
+    .set('Content-Type', 'application/json')
+    .send(signupUser5);
 };
 
 const loginOrganizer = async () => {
@@ -41,13 +59,19 @@ const createEvents = async (userObj, event = createEvent) => {
 };
 
 describe('Event', () => {
+  let eventResponse;
+  let loggedInOrganized;
+  let newUserResponse;
+  before( async () => {
+    // runs once before the first test in this block
+    newUserResponse = await newOrganizer(); 
+  });
   it('should create an event', async () => {
-    const response = await newOrganizer();
-    const res = await createEvents(response);
-    res.should.have.status(201);
-    res.body.should.be.a('object');
-    res.body.data.organizer.should.be.a('string');
-    res.body.data.favorited.should.be.false;
+    eventResponse = await createEvents(newUserResponse);
+    eventResponse.should.have.status(201);
+    eventResponse.body.should.be.a('object');
+    eventResponse.body.data.organizer.should.be.a('string');
+    eventResponse.body.data.favorited.should.be.false;
   }).timeout(10000);
 
   it('authorized only organizers to create event', async () => {
@@ -73,12 +97,11 @@ describe('Event', () => {
     res.text.should.include('Token is required');
   });
   it("currentMode should only be among ['draft', 'published', 'cancelled', 'unpublished']", async () => {
-    const response = await loginOrganizer();
-
+    loggedInOrganized = await loginOrganizer();  
     const res = await chai
       .request(app)
       .post('/api/events')
-      .set({ Authorization: 'Bearer ' + response.body.token })
+      .set({ Authorization: 'Bearer ' + loggedInOrganized.body.token })
       .send({
         title: 'title1 is good',
         description: 'desc',
@@ -91,11 +114,10 @@ describe('Event', () => {
   }).timeout(10000);
 
   it('Get organizer events', async () => {
-    const response = await loginOrganizer();
     const res = await chai
       .request(app)
       .get('/api/events')
-      .set({ Authorization: 'Bearer ' + response.body.token });
+      .set({ Authorization: 'Bearer ' + loggedInOrganized.body.token });
     res.should.have.status(200);
     res.body.count.should.be.a('number');
   });
@@ -120,30 +142,27 @@ describe('Event', () => {
   });
 
   it('should allow organizers to update their events', async () => {
-    const response = await loginOrganizer();
-    const res = await createEvents(response);
-    const slug = res.body.data.slug;
+    const slug = eventResponse.body.data.slug;
 
     const result = await chai
       .request(app)
       .patch(`/api/events/${slug}`)
-      .set({ Authorization: 'Bearer ' + response.body.token })
+      .set({ Authorization: 'Bearer ' + loggedInOrganized.body.token })
       .send({ description: 'description is changed' });
+    
     result.should.have.status(200);
     result.body.message.should.equal('Successfully Updated');
-    res.body.data.should.be.a('object');
+    eventResponse.body.data.should.be.a('object');
     result.text.should.include('description is changed');
   }).timeout(15000);
 
   it('should allow organizers to update events with validate currentMode', async () => {
-    const response = await loginOrganizer();
-    const res = await createEvents(response);
-    const slug = res.body.data.slug;
+    const slug = eventResponse.body.data.slug;
 
     const result = await chai
       .request(app)
       .patch(`/api/events/${slug}`)
-      .set({ Authorization: 'Bearer ' + response.body.token })
+      .set({ Authorization: 'Bearer ' + loggedInOrganized.body.token })
       .send({ currentMode: 'invalid' });
     result.should.have.status(422);
     result.text.should.include(
@@ -152,14 +171,8 @@ describe('Event', () => {
   }).timeout(10000);
 
   it('should allow Organizers to update only their events', async () => {
-    const user2 = await chai
-      .request(app)
-      .post('/api/users')
-      .set('Content-Type', 'application/json')
-      .send(signupUser5);
-    const user1 = await loginOrganizer();
-    const res = await createEvents(user1);
-    const slug = res.body.data.slug;
+    const slug = eventResponse.body.data.slug;
+    user2 = await loginUser2();  
 
     const result = await chai
       .request(app)
@@ -171,79 +184,54 @@ describe('Event', () => {
   }).timeout(10000);
 
   it('should allow users to like an event for the first time', async () => {
-    const user2 = await chai
-      .request(app)
-      .post('/api/users/login')
-      .set('Content-Type', 'application/json')
-      .send(signupUser3);
-
-    const user1 = await loginOrganizer();
-    const res = await createEvents(user1);
-    const slug = res.body.data.slug;
+    const slug = eventResponse.body.data.slug;
+    user3 = await loginUser3();  
 
     const result = await chai
       .request(app)
       .patch(`/api/events/${slug}/like`)
-      .set({ Authorization: 'Bearer ' + user2.body.token });
+      .set({ Authorization: 'Bearer ' + user3.body.token });
     result.should.have.status(200);
     result.body.isLiked.should.be.a('boolean');
     result.body.likedBy.should.be.a('array');
   });
 
   it('should allow users to update the event like', async () => {
-    const user2 = await chai
-      .request(app)
-      .post('/api/users/login')
-      .set('Content-Type', 'application/json')
-      .send(signupUser3);
-
-    const user1 = await loginOrganizer();
-    const res = await createEvents(user1);
-    const slug = res.body.data.slug;
+    const slug = eventResponse.body.data.slug;
 
     await chai
       .request(app)
       .patch(`/api/events/${slug}/like`)
-      .set({ Authorization: 'Bearer ' + user2.body.token });
+      .set({ Authorization: 'Bearer ' + user3.body.token });
 
     const result = await chai
       .request(app)
       .patch(`/api/events/${slug}/like`)
-      .set({ Authorization: 'Bearer ' + user2.body.token });
+      .set({ Authorization: 'Bearer ' + user3.body.token });
     result.should.have.status(200);
     result.body.isLiked.should.be.a('boolean');
     result.body.likedBy.should.be.a('array');
   });
 
   it('should allow users retrieve their liked events', async () => {
-    const user2 = await chai
-      .request(app)
-      .post('/api/users/login')
-      .set('Content-Type', 'application/json')
-      .send(signupUser3);
-
-    const user1 = await loginOrganizer();
-    const res = await createEvents(user1);
-    const slug = res.body.data.slug;
+    const slug = eventResponse.body.data.slug;
 
     await chai
       .request(app)
       .patch(`/api/events/${slug}/like`)
-      .set({ Authorization: 'Bearer ' + user2.body.token });
+      .set({ Authorization: 'Bearer ' + user3.body.token });
 
     const result = await chai
       .request(app)
       .get(`/api/events/liked`)
-      .set({ Authorization: 'Bearer ' + user2.body.token });
+      .set({ Authorization: 'Bearer ' + user3.body.token });
     result.should.have.status(200);
     result.body.count.should.equal(1);
     result.body.data.should.be.a('array');
   });
   it('should retrieve similar events', async () => {
-    const user1 = await loginOrganizer();
-    const eventSimilar = await createEvents(user1, similarEvent);
-    const eventResp = await createEvents(user1, createEvent);
-    const { slug } = eventResp.body.data;
+    const eventSimilar = await createEvents(loggedInOrganized, similarEvent);
+    const { slug } = eventResponse.body.data;
     const { category } = eventSimilar.body.data;
     const result = await chai.request(app).get(`/api/events/${slug}/similar`);
     result.should.have.status(200);
@@ -259,15 +247,13 @@ describe('Event', () => {
   });
 
   it('Should return null for invalid google location', async () => {
-    const response = await loginOrganizer();
-    const res = await createEvents(response, invalidLoc);
+    const res = await createEvents(loggedInOrganized, invalidLoc);
     res.should.have.status(201);
   }).timeout(10000);
 
   // Functionality needs to be updated
   it('should retrieve event from the near by city', async () => {
-    const user1 = await loginOrganizer();
-    const eventResp = await createEvents(user1, nearByCity);
+    const eventResp = await createEvents(loggedInOrganized, nearByCity);
     const { slug } = eventResp.body.data;
     const result = await chai
       .request(app)
@@ -286,8 +272,7 @@ describe('Event', () => {
     result.body.should.have.property('error').eql('Event not found');
   });
   it('should return [] if no available events near by', async () => {
-    const response = await loginOrganizer();
-    const res = await createEvents(response, invalidLoc);
+    const res = await createEvents(loggedInOrganized, invalidLoc);
     const { slug } = res.body.data;
     const result = await chai
       .request(app)

@@ -6,6 +6,7 @@ import models from '../../models/index';
 import generateToken from '../../helpers/generateToken/generateToken';
 
 import { signupUser4 } from '../testingData/files.json';
+import { async } from 'rxjs/internal/scheduler/async';
 
 chai.use(chaitHttp);
 chai.should();
@@ -21,15 +22,22 @@ const profile = new OrganizerProfile();
 //   await profile.destroy({ where: {}, truncate: true });
 // });
 
+const newUser = async () => {
+  return await chai
+    .request(app)
+    .post('/api/users')
+    .set('Content-Type', 'application/json')
+    .send(signupUser4);
+};
+
 describe('Profile', () => {
+  let userResponse;
+  before(async() => {
+    userResponse = await newUser();
+  });
   it('should create the profile', async () => {
-    const res = await chai
-      .request(app)
-      .post('/api/users')
-      .set('Content-Type', 'application/json')
-      .send(signupUser4);
-    token = res.body.token;
-    userId = res.body.user.id;
+    token = userResponse.body.token;
+    userId = userResponse.body.user.id;
 
     const user = await User.findOne({ where: { email: 'geta@gmail.com' } });
     const payload = {
