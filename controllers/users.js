@@ -409,7 +409,7 @@ class UserController {
         'avatar',
         'isActivated'
       ]
-    });    
+    });
     if (!isUserExist) {
       throw new httpError(404, 'User does not exist');
     }
@@ -419,13 +419,13 @@ class UserController {
     if (isFollowed) {
       throw new httpError(409, 'User already followed');
     }
-    const { dataValues: userObj } = isUserExist;    
+    const { dataValues: userObj } = isUserExist;
     const response = await Follow.create({
       id: userObj.id,
       follower: userObj.email,
       following
     });
-    userObj.email = undefined
+    userObj.email = undefined;
     response.follower = userObj;
     return res.send({ status: 200, follow: true, data: response });
   }

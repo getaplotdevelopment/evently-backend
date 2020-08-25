@@ -1,12 +1,10 @@
-
 import models from '../../models';
 
 const { PaymentRequests } = models;
 
-export const webhookPath = async(req, res) => {
-  
+export const webhookPath = async (req, res) => {
   const requestJson = req.body;
-  const { data } = requestJson
+  const { data } = requestJson;
 
   const newRequest = {
     verificationId: data.id,
@@ -19,9 +17,8 @@ export const webhookPath = async(req, res) => {
     paymentType: data.payment_type
   };
   console.log(newRequest);
-  
 
-  const dataObj = await PaymentRequests.create(newRequest);  
+  const dataObj = await PaymentRequests.create(newRequest);
 
   res.sendStatus(200);
 };

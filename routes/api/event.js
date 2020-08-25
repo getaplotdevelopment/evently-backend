@@ -54,12 +54,6 @@ router.patch(
 );
 router.get('/events/liked', asyncHandler(auth), asyncHandler(likedEvent));
 
-router.get(
-  '/events/:slug/similar',
-  asyncHandler(getSimilarEvents)
-  )
-router.get(
-  '/events/:slug/nearbycity',
-  asyncHandler(getEventsNearCities)
-)
+router.get('/events/:slug/similar', asyncHandler(getSimilarEvents));
+router.get('/events/:slug/nearbycity', asyncHandler(getEventsNearCities));
 export default router;

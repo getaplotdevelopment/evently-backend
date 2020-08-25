@@ -7,6 +7,7 @@
     "test": "NODE_ENV=test sequelize db:migrate:undo:all && npm run db:migrate:test && npm run db:migrate:seed:test && NODE_ENV=test nyc --reporter=html --reporter=text mocha --require babel-register tests/* --exit",
     "start": "npm run db:migrate && --require babel-register index.js",
     "dev": "NODE_ENV=development nodemon --require babel-register index.js",
+    "lint": "eslint . --fix",
     "db:migrate": "./node_modules/.bin/sequelize db:migrate",
     "db:seed": "./node_modules/.bin/sequelize db:seed:all",
     "db:seed:undo": "./node_modules/.bin/sequelize db:seed:undo:all",
@@ -19,6 +20,16 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/getaplotdev/evently-backend.git"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "set CI=true&&npm test"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix"
+    ]
   },
   "author": "getaplotdev",
   "license": "MIT",
@@ -71,6 +82,8 @@
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-react": "^7.17.0",
     "eslint-plugin-react-hooks": "^1.7.0",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.11",
     "mocha": "^7.0.0",
     "mock-fs": "^4.10.4",
     "mockery": "^2.1.0",

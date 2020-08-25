@@ -1,6 +1,7 @@
 import cloudinary from 'cloudinary';
 import sharp from 'sharp';
 import 'dotenv/config';
+
 const {
   CLOUD_NAME: cloud_name,
   CLOUD_API_KEY: api_key,

@@ -19,7 +19,7 @@ class TicketCategoryController {
     const { designation } = req.body;
 
     const { id, role } = req.user;
-    const isDefault = role === 3 ? true : false;
+    const isDefault = role === 3;
 
     const newTicketCategory = {
       designation,

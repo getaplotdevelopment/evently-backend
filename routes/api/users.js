@@ -87,9 +87,21 @@ router.put(
   asyncHandler(users.approveOrganizer)
 );
 
-router.patch('/location', asyncHandler(auth), asyncHandler(users.updateLocation));
-router.post('/:userId/follow', asyncHandler(auth), asyncHandler(users.followUser))
-router.delete('/:userId/unfollow', asyncHandler(auth), asyncHandler(users.unfollowUser))
+router.patch(
+  '/location',
+  asyncHandler(auth),
+  asyncHandler(users.updateLocation)
+);
+router.post(
+  '/:userId/follow',
+  asyncHandler(auth),
+  asyncHandler(users.followUser)
+);
+router.delete(
+  '/:userId/unfollow',
+  asyncHandler(auth),
+  asyncHandler(users.unfollowUser)
+);
 
 router.post('/logout', asyncHandler(auth), asyncHandler(users.logout));
 
