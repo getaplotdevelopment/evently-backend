@@ -5,9 +5,10 @@ import models from '../models/index';
 import cloudinary from '../helpers/fileUploadConfig/cloudinary';
 import httError from '../helpers/errorsHandler/httpError';
 import geocode from '../helpers/googleMap/goecode';
+import findOneHelper from '../helpers/rolesHelper/findOneHelper';
 
 dotenv.config();
-const { OrganizerProfile, User } = models;
+const { OrganizerProfile, User, Roles } = models;
 
 /**
  * @profile Controller
@@ -65,7 +66,10 @@ class ProfileController {
       social,
       organizer: id
     };
-    const role = 2;
+    const { dataValues } = await findOneHelper(Roles, {
+      designation: 'ORGANIZER'
+    });
+    const role = dataValues.id;
     const { dataValues: createdProfile } = await OrganizerProfile.create(
       newProfile
     );
