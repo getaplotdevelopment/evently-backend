@@ -13,6 +13,7 @@ import auth from '../../middleware/users/auth';
 import checkToken from '../../middleware/users/checkToken';
 import { checkEvent } from '../../middleware/event/checkEvent';
 import { checkTicketEvent } from '../../middleware/tickets/ticket';
+import { validateFreePayment, validations, validatePaidPayment } from '../../middleware/validations/validateAll';
 
 const router = express.Router();
 
@@ -29,6 +30,8 @@ router.post(
   '/:slug/pay',
   asyncHandler(checkToken),
   asyncHandler(auth),
+  validatePaidPayment,
+  validations,
   asyncHandler(checkEvent),
   asyncHandler(checkTicketEvent),
   asyncHandler(standardPayment)
@@ -38,6 +41,8 @@ router.post(
   '/:slug/free',
   asyncHandler(checkToken),
   asyncHandler(auth),
+  validateFreePayment,
+  validations,
   asyncHandler(checkEvent),
   asyncHandler(checkTicketEvent),
   asyncHandler(attendFree)

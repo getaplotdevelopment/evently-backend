@@ -207,7 +207,7 @@ export const attendFree = async (req, res) => {
       where: { ticketNumber: ticket_id, event }
     }
   );
-  res.send(dataValues);
+  res.send({message: 'success', data: dataValues});
 };
 
 export const cancelFreeAttendance = async (req, res) => {

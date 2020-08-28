@@ -104,6 +104,40 @@ const validateTicket = [
     .not()
     .isEmpty()
 ];
+const validateFreePayment = [
+  check('ticket_id', 'Ticket id(Number) is required')
+    .not()
+    .isEmpty(),
+  check('username', 'Username is required')
+    .not()
+    .isEmpty(),
+  check('email', 'Email is required')
+    .not()
+    .isEmpty(),
+  check('phone_number', 'Phone number is required')
+    .not()
+    .isEmpty()
+]
+const validatePaidPayment = [
+  check('ticket_id', 'Ticket id(Number) is required')
+    .not()
+    .isEmpty(),
+  check('fullname', 'Full Name is required')
+    .not()
+    .isEmpty(),
+  check('email', 'Email is required')
+    .not()
+    .isEmpty(),
+  check('phone_number', 'Phone number is required')
+    .not()
+    .isEmpty(),
+  check('currency', 'Currency is required')
+    .not()
+    .isEmpty(),
+  check('amount', 'Amount is required')
+    .not()
+    .isEmpty()
+]
 const validations = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -132,5 +166,7 @@ export {
   validateRole,
   validateTicketCategory,
   validateTicket,
-  validateFeedback
+  validateFeedback,
+  validateFreePayment,
+  validatePaidPayment
 };

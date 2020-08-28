@@ -59,13 +59,13 @@ router.get('/events/liked', asyncHandler(auth), asyncHandler(likedEvent));
 router.get('/events/:slug/similar', asyncHandler(getSimilarEvents));
 router.get('/events/:slug/nearbycity', asyncHandler(getEventsNearCities));
 router.get(
-  '/events/:slug/paid',
+  '/events/:slug/users',
   asyncHandler(checkToken),
   asyncHandler(authUser),
   asyncHandler(usersPaidForEvent)
 );
 router.get(
-  '/events/:slug/attendees',
+  '/events/:slug/attend',
   asyncHandler(checkToken),
   asyncHandler(authUser),
   asyncHandler(checkEvent),

@@ -377,52 +377,6 @@
         ]
       }
     },
-    "api/events/{slug}/paid": {
-      "post": {
-        "tags": ["Payment"],
-        "summary": "Pay for an event",
-        "description": "Users should be able to pay for an event",
-        "operationId": "pay event",
-        "produces": ["application/xml", "application/json"],
-        "parameters": [
-          {
-            "in": "header",
-            "name": "Authorization",
-            "description": "Add the token",
-            "type": "string",
-            "required": true,
-            "example": "Bearer token"
-          },
-          {
-            "in": "path",
-            "name": "slug",
-            "description": "Provide the event slug",
-            "type": "string",
-            "required": true,
-            "example": "slug-123456789"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/Event"
-            }
-          },
-          "400": {
-            "description": "Invalid ID supplied"
-          },
-          "404": {
-            "description": "Event not found"
-          }
-        },
-        "security": [
-          {
-            "api_key": []
-          }
-        ]
-      }
-    },
     "api/events/{slug}/nearbyevent": {
       "get": {
         "tags": ["Events"],
@@ -1617,6 +1571,192 @@
           }
         }
       }
+    },
+    "api/payments/{slug}/free": {
+      "post": {
+        "tags": ["Payments/Bookings"],
+        "summary": "attend free event",
+        "description": "Users can attend to free events by booking a ticket",
+        "operationId": "attend free event",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Provide the user token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Booked a free event",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PaymentFree"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "404": {
+            "description": "Item not found"
+          }
+        }
+      }
+    },
+    "api/payments/{slug}/{ticketNumber}": {
+      "put": {
+        "tags": ["Payments/Bookings"],
+        "summary": "Cancel free event attendance",
+        "description": "Cancel free event attendance",
+        "operationId": "Cancel free event attendance",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Provide the user token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Booked a free event",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/PaymentFree"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "404": {
+            "description": "Item not found"
+          }
+        }
+      }
+    },
+    "api/events/{slug}/users": {
+      "get": {
+        "tags": ["Payments/Bookings"],
+        "summary": "attendance list + canceled users",
+        "description": "Fetch users who showed interest in the event by booking an attendance ticket (canceled users inclusive)",
+        "operationId": "users who atleast booked a ticket",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Provide the Organizer token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Booked a ticket",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/PaymentFree"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "404": {
+            "description": "Item not found"
+          }
+        }
+      }
+    },
+    "api/events/{slug}/attend": {
+      "get": {
+        "tags": ["Payments/Bookings"],
+        "summary": "attendance list",
+        "description": "Fetch users whose attendance is confirmed",
+        "operationId": "attendance list",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Provide the Organizer token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "attendance list",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/PaymentFree"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "404": {
+            "description": "Item not found"
+          }
+        }
+      }
+    },
+    "api/payments/{slug}/pay": {
+      "post": {
+        "tags": ["Payments/Bookings"],
+        "summary": "pay for a paid event",
+        "description": "Pay amount with momo or card to book an attendance ticket",
+        "operationId": "pay for a paid event",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Provide the user token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Booked a ticket for a paid event",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/PaymentPaid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "404": {
+            "description": "Item not found"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "something went wrong"
+          }
+        }
+      }
     }
   },
   "securityDefinitions": {
@@ -1863,6 +2003,64 @@
       },
       "xml": {
         "name": "Event"
+      }
+    },
+    "PaymentFree": {
+      "type": "object",
+      "required": ["ticket_id", "username", "email", "phone_number"],
+      "properties": {
+        "ticket_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "username": {
+          "type": "string",
+          "example": "John Doe"
+        },
+        "email": {
+          "type": "string",
+          "example": "google@gmail.com"
+        },
+        "phone_number": {
+          "type": "string",
+          "example": "0778XXXXXXXX"
+        }
+      },
+      "xml": {
+        "name": "Payments/Bookings"
+      }
+    },
+    "PaymentPaid": {
+      "type": "object",
+      "required": ["ticket_id", "amount", "currency", "phone_number"],
+      "properties": {
+        "ticket_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "fullname": {
+          "type": "string",
+          "example": "John Doe"
+        },
+        "email": {
+          "type": "string",
+          "example": "google@gmail.com"
+        },
+        "phone_number": {
+          "type": "string",
+          "example": "0778XXXXXXXX"
+        },
+        "amount": {
+          "type": "integer",
+          "example": "50000"
+        },
+        "currency": {
+          "type": "string",
+          "example": "UGX"
+        }
+      },
+      "xml": {
+        "name": "Payments/Bookings"
       }
     }
   },
