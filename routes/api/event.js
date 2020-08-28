@@ -11,10 +11,7 @@ import {
   getEventsNearCities
 } from '../../controllers/event';
 import { checkEvent } from '../../middleware/event/checkEvent';
-import {
-  usersPaidForEvent,
-  eventAttendees
-} from '../../controllers/payments'
+import { usersPaidForEvent, eventAttendees } from '../../controllers/payments';
 import asyncHandler from '../../helpers/errorsHandler/asyncHandler';
 import {
   validateEvent,
@@ -59,25 +56,19 @@ router.patch(
 );
 router.get('/events/liked', asyncHandler(auth), asyncHandler(likedEvent));
 
-router.get(
-  '/events/:slug/similar',
-  asyncHandler(getSimilarEvents)
-  )
-router.get(
-  '/events/:slug/nearbycity',
-  asyncHandler(getEventsNearCities)
-)
+router.get('/events/:slug/similar', asyncHandler(getSimilarEvents));
+router.get('/events/:slug/nearbycity', asyncHandler(getEventsNearCities));
 router.get(
   '/events/:slug/paid',
   asyncHandler(checkToken),
   asyncHandler(authUser),
   asyncHandler(usersPaidForEvent)
-)
+);
 router.get(
   '/events/:slug/attendees',
   asyncHandler(checkToken),
   asyncHandler(authUser),
   asyncHandler(checkEvent),
   asyncHandler(eventAttendees)
-)
+);
 export default router;

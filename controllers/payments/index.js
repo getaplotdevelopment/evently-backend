@@ -1,15 +1,16 @@
-import models from '../../models';
 import random from 'lodash.random';
 import axios from 'axios';
 
 import { v4 as uuidv4 } from 'uuid';
+import models from '../../models';
+
 const { Event, PaymentEvents, PaymentRequests, Ticket } = models;
 const { PUBLIC_SECRET, enckey } = process.env;
 
-var TICKET_NO, EVENT_SLUG, ORGANIZER;
+let TICKET_NO, EVENT_SLUG, ORGANIZER;
 
 const verifyPayment = async payload => {
-  const verificationId = payload.verificationId;
+  const { verificationId } = payload;
   console.log('verificationId', verificationId);
   console.log(
     'TICKET_NO, EVENT_SLUG, ORGINIZER',
@@ -25,7 +26,7 @@ const verifyPayment = async payload => {
   const results = await axios({
     url: `https://api.flutterwave.com/v3/transactions/${verificationId}/verify`,
     method: 'GET',
-    headers: { Authorization: 'Bearer ' + PUBLIC_SECRET }
+    headers: { Authorization: `Bearer ${PUBLIC_SECRET}` }
   });
 
   const { data } = results.data;
@@ -77,7 +78,7 @@ export const webhookPath = async (req, res) => {
 };
 
 export const standardPayment = async (req, res) => {
-  const tx_ref = 'GAT-' + random(100000000, 200000000);
+  const tx_ref = `GAT-${random(100000000, 200000000)}`;
   const redirect_url = 'https://google.com';
   const { slug } = req.params;
   const { dataValues } = await Event.findOne({
@@ -120,7 +121,7 @@ export const standardPayment = async (req, res) => {
     url: 'https://api.flutterwave.com/v3/payments',
     method: 'post',
     data: payload,
-    headers: { Authorization: 'Bearer ' + PUBLIC_SECRET }
+    headers: { Authorization: `Bearer ${PUBLIC_SECRET}` }
   });
   const { data } = hostedLink;
   return res.status(200).send(data);

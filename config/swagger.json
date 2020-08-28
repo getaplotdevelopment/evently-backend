@@ -1214,6 +1214,64 @@
             "description": "User not found"
           }
         }
+      },
+      "put": {
+        "tags": ["ticket"],
+        "summary": "update all tickets by category",
+        "description": "",
+        "operationId": "update category price and status",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Add the token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Update ticket category price and status",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateTicketsByCategory"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "updated successfully",
+            "schema": {
+              "updatedSummary": {
+                "properties": {
+                  "ticket": {
+                    "type": "string",
+                    "example": "ticket name"
+                  },
+                  "status": {
+                    "type": "string",
+                    "example": "booked"
+                  },
+                  "price": {
+                    "type": "interger",
+                    "example": 40000
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "something went wrong"
+          },
+          "409": {
+            "description": "User not Organizer"
+          }
+        }
       }
     },
     "api/feedback": {
@@ -1350,7 +1408,7 @@
         }
       }
     },
-    "api/ticket/ticketId": {
+    "api/ticket/ticketNumber": {
       "post": {
         "tags": ["ticket"],
         "summary": "get one ticket",
@@ -1409,7 +1467,7 @@
             "description": "update ticket object",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/Ticket"
+              "$ref": "#/definitions/UpdateTicket"
             }
           }
         ],
@@ -1596,15 +1654,45 @@
     "Ticket": {
       "type": "object",
       "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64"
+        "status": {
+          "type": "string"
         },
         "price": {
-          "type": "integer",
-          "format": "int64"
+          "type": "array",
+          "format": "[{'vvip': 2, 'table': 1, 'vip': 1}]"
         },
-        "number": {
+        "category": {
+          "type": "array",
+          "format": "[{'vvip': 2000, 'table': 1000, 'vip': 1000}]"
+        }
+      },
+      "xml": {
+        "name": "Category"
+      }
+    },
+    "UpdateTicketsByCategory": {
+      "type": "object",
+      "properties": {
+        "price": {
+          "type": "array",
+          "format": "[{'vvip': 2, 'table': 1, 'vip': 1}]"
+        },
+        "status": {
+          "type": "array",
+          "format": "[{'vvip': 'available', 'table': 'booked'}]"
+        }
+      },
+      "xml": {
+        "name": "Category"
+      }
+    },
+    "UpdateTicket": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        },
+        "price": {
           "type": "integer",
           "format": "int64"
         },

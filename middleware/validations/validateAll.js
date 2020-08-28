@@ -91,13 +91,16 @@ const validateTicketCategory = [
     .isEmpty()
 ];
 const validateTicket = [
-  check('price', 'Price is required')
+  check(
+    'price',
+    'Ticket Prices are required e.g [{"vvip": 9000, "table": 80000, "regular": 7000, "vip": 5000}]'
+  )
     .not()
     .isEmpty(),
-  check('number', 'Number of ticket is required')
-    .not()
-    .isEmpty(),
-  check('category', 'Ticker category is required')
+  check(
+    'category',
+    'Ticket categories are required e.g [{"vvip": 2, "table": 3, "vip": 4}]'
+  )
     .not()
     .isEmpty()
 ];
