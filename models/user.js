@@ -13,8 +13,8 @@ module.exports = (sequelize, DataTypes) => {
       phoneNumber: { type: DataTypes.STRING },
       location: { type: DataTypes.JSON },
       role: {
-        type: DataTypes.INTEGER,
-        references: { model: 'Roles', key: 'id' }
+        type: DataTypes.STRING,
+        references: { model: 'Roles' }
       },
       isDeactivated: { type: DataTypes.BOOLEAN, defaultValue: false },
       isApproved: { type: DataTypes.BOOLEAN, defaultValue: false }

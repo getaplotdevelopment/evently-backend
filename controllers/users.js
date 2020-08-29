@@ -49,7 +49,7 @@ class UserController {
     const { dataValues } = await findOneHelper(Roles, {
       designation: roleDesignation
     });
-    const role = dataValues.id;
+    const role = dataValues.designation;
 
     const newUser = {
       firstName,
