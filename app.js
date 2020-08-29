@@ -9,6 +9,7 @@ import swaggerDocument from './config/swagger.json';
 import { HTTP_NOT_FOUND } from './constants/httpStatusCode';
 import sockets from './services/socket';
 import routes from './routes';
+import 'dotenv/config';
 
 const app = express();
 const server = http.createServer(app);
