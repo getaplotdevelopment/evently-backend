@@ -91,16 +91,53 @@ const validateTicketCategory = [
     .isEmpty()
 ];
 const validateTicket = [
-  check('price', 'Price is required')
+  check(
+    'price',
+    'Ticket Prices are required e.g [{"vvip": 9000, "table": 80000, "regular": 7000, "vip": 5000}]'
+  )
     .not()
     .isEmpty(),
-  check('number', 'Number of ticket is required')
-    .not()
-    .isEmpty(),
-  check('category', 'Ticker category is required')
+  check(
+    'category',
+    'Ticket categories are required e.g [{"vvip": 2, "table": 3, "vip": 4}]'
+  )
     .not()
     .isEmpty()
 ];
+const validateFreePayment = [
+  check('ticket_id', 'Ticket id(Number) is required')
+    .not()
+    .isEmpty(),
+  check('username', 'Username is required')
+    .not()
+    .isEmpty(),
+  check('email', 'Email is required')
+    .not()
+    .isEmpty(),
+  check('phone_number', 'Phone number is required')
+    .not()
+    .isEmpty()
+]
+const validatePaidPayment = [
+  check('ticket_id', 'Ticket id(Number) is required')
+    .not()
+    .isEmpty(),
+  check('fullname', 'Full Name is required')
+    .not()
+    .isEmpty(),
+  check('email', 'Email is required')
+    .not()
+    .isEmpty(),
+  check('phone_number', 'Phone number is required')
+    .not()
+    .isEmpty(),
+  check('currency', 'Currency is required')
+    .not()
+    .isEmpty(),
+  check('amount', 'Amount is required')
+    .not()
+    .isEmpty()
+]
 const validations = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -129,5 +166,7 @@ export {
   validateRole,
   validateTicketCategory,
   validateTicket,
-  validateFeedback
+  validateFeedback,
+  validateFreePayment,
+  validatePaidPayment
 };

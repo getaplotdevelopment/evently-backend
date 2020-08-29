@@ -12,6 +12,10 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   PaymentRequests.associate = function(models) {
     // associations can be defined here
+    PaymentRequests.hasMany(models.PaymentEvents, {
+      foreignKey: 'refID',
+      allowNull: false
+    });
   };
   return PaymentRequests;
 };

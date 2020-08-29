@@ -16,53 +16,71 @@ class TicketController {
    */
   async createTicket(req, res) {
     const { slug } = req.params;
-    const { price, number, category } = req.body;
+    const { price, category } = req.body;
+    const createdTicketSummary = [];
     const { id } = req.organizer;
-    const newTicket = {
-      price,
-      number,
-      category,
-      organizer: id,
-      event: slug
-    };
+    const availableTickets = [];
 
-    const createdTicket = await Ticket.create(newTicket);
-    const ticketCategory = await TicketCategory.findOne({
-      where: { id: category }
+    const allTickets = await TicketCategory.findAll({});
+
+    allTickets.forEach(item => {
+      availableTickets.push({
+        name: item.designation.toUpperCase(),
+        id: item.id
+      });
     });
-    const currentOrganizer = await User.findOne({ where: { id } });
-    const currentEvent = await Event.findOne({ where: { slug } });
 
-    const newCategory = {
-      id: ticketCategory.id,
-      designation: ticketCategory.designation
+    const createTicketsByCategory = async (category, number, price) => {
+      const newTicket = {
+        price,
+        category,
+        organizer: id,
+        event: slug,
+        status: 'available'
+      };
+
+      let count = await Ticket.count({ organizer: id, event: slug });
+
+      for (let i = 1; i <= number; i++) {
+        count += 1;
+        newTicket.ticketNumber = count;
+        const createdTicket = await Ticket.create(newTicket);
+      }
     };
 
-    const newOrganizer = {
-      id: currentOrganizer.id,
-      firstName: currentOrganizer.firstName,
-      lastName: currentOrganizer.lastName,
-      userName: currentOrganizer.userName,
-      email: currentOrganizer.email,
-      avatar: currentOrganizer.avatar
+    const categoryMapper = category => {
+      return availableTickets.find(({ name }) => name === category);
     };
 
-    const newEvent = {
-      slug: currentEvent.slug,
-      title: currentEvent.title,
-      description: currentEvent.description,
-      location: currentEvent.location
-    };
+    for (const ticket in category[0]) {
+      const ticketsPerCategory = category[0][ticket];
+      const availableCategory = await categoryMapper(ticket.toUpperCase());
+      if (availableCategory) {
+        const ticketPrice = price[0][ticket];
+        await createTicketsByCategory(
+          availableCategory.id,
+          ticketsPerCategory,
+          ticketPrice
+        );
+        const summary = {
+          category: availableCategory.name,
+          tickets: ticketsPerCategory,
+          price: ticketPrice
+        };
+        createdTicketSummary.push(summary);
+      }
+    }
 
-    const newCreatedTicket = {
-      id: createdTicket.id,
-      price: createdTicket.price,
-      number: createdTicket.number,
-      category: newCategory,
-      organizer: newOrganizer,
-      event: newEvent
-    };
-    res.status(201).json({ status: 201, newCreatedTicket });
+    if (createdTicketSummary.length == 0) {
+      return res.status(204).json({
+        status: 204,
+        message: 'No tickets created, Ticket category does not exist.',
+        createdTicketSummary
+      });
+    }
+    res
+      .status(201)
+      .json({ status: 201, message: 'success', createdTicketSummary });
   }
 
   /**
@@ -72,7 +90,7 @@ class TicketController {
    * @returns {Object} Response
    */
   async getAllTicket(req, res) {
-    const ticket = await Ticket.findAll({
+    const tickets = await Ticket.findAll({
       include: [
         {
           model: User,
@@ -116,9 +134,16 @@ class TicketController {
           attributes: { exclude: ['createdAt', 'updatedAt'] }
         }
       ],
-      attributes: ['id', 'price', 'number', 'createdAt', 'updatedAt']
+      attributes: [
+        'id',
+        'price',
+        'ticketNumber',
+        'status',
+        'createdAt',
+        'updatedAt'
+      ]
     });
-    res.status(200).json({ status: 200, ticket });
+    res.status(200).json({ status: 200, tickets });
   }
 
   /**
@@ -176,7 +201,14 @@ class TicketController {
           attributes: { exclude: ['createdAt', 'updatedAt'] }
         }
       ],
-      attributes: ['id', 'price', 'number', 'createdAt', 'updatedAt']
+      attributes: [
+        'id',
+        'price',
+        'ticketNumber',
+        'status',
+        'createdAt',
+        'updatedAt'
+      ]
     });
     res.status(200).json({ status: 200, ticket });
   }
@@ -190,7 +222,7 @@ class TicketController {
   async getOneTicket(req, res) {
     const { ticketId, slug } = req.params;
     const ticket = await Ticket.findOne({
-      where: { id: ticketId, event: slug },
+      where: { ticketNumber: ticketId, event: slug },
       include: [
         {
           model: User,
@@ -234,7 +266,14 @@ class TicketController {
           attributes: { exclude: ['createdAt', 'updatedAt'] }
         }
       ],
-      attributes: ['id', 'price', 'number', 'createdAt', 'updatedAt']
+      attributes: [
+        'id',
+        'price',
+        'ticketNumber',
+        'status',
+        'createdAt',
+        'updatedAt'
+      ]
     });
     res.status(200).json({ status: 200, ticket });
   }
@@ -248,19 +287,94 @@ class TicketController {
   async updateTicket(req, res) {
     const { id } = req.organizer;
     const { ticketId, slug } = req.params;
-    const { price, number, category } = req.body;
+    const { price, status, category } = req.body;
     const updateTicket = {
       price,
-      number,
+      status,
       category,
       organizer: id,
       event: slug
     };
 
     const updatedTicket = await Ticket.update(updateTicket, {
-      where: { id: ticketId, event: slug }
+      where: { ticketNumber: ticketId, event: slug }
     });
     res.status(200).json({ status: 200, updateTicket });
+  }
+
+  /**
+   *
+   * @param {Object} req - Requests from client
+   * @param {*} res - Response from the db
+   * @returns {Object} Response
+   */
+  async updateTicketsByCategoty(req, res) {
+    const { id } = req.organizer;
+    const { slug } = req.params;
+    const { price, status } = req.body;
+    const availableTickets = [];
+
+    const allTickets = await TicketCategory.findAll({});
+
+    allTickets.forEach(item => {
+      availableTickets.push({
+        name: item.designation.toUpperCase(),
+        id: item.id
+      });
+    });
+
+    const updateTicketsByCategory = async (category, price, status) => {
+      const updateTicket = {
+        price,
+        organizer: id,
+        event: slug,
+        status
+      };
+
+      const updatedTicket = await Ticket.update(updateTicket, {
+        where: { category, event: slug }
+      });
+    };
+
+    const categoryMapper = category => {
+      return availableTickets.find(({ name }) => name === category);
+    };
+    const updatedSummary = [];
+
+    if (price.length !== 0) {
+      for (const ticket in price[0]) {
+        const ticketPrice = price[0][ticket];
+        const availableCategory = await categoryMapper(ticket.toUpperCase());
+        if (availableCategory) {
+          await updateTicketsByCategory(availableCategory.id, ticketPrice);
+          const summary = {};
+          summary.ticket = availableCategory.name;
+          summary.price = ticketPrice;
+          updatedSummary.push(summary);
+        }
+      }
+    }
+
+    if (status.length !== 0) {
+      for (const ticket in status[0]) {
+        const newStatus = status[0][ticket];
+        const availableCategory = await categoryMapper(ticket.toUpperCase());
+        if (availableCategory) {
+          await updateTicketsByCategory(
+            availableCategory.id,
+            undefined,
+            newStatus
+          );
+          const summary = {};
+          summary.ticket = availableCategory.name;
+          summary.status = newStatus;
+          updatedSummary.push(summary);
+        }
+      }
+    }
+    res
+      .status(200)
+      .json({ status: 200, message: 'updated successfully', updatedSummary });
   }
 }
 

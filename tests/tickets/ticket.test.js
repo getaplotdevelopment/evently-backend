@@ -12,7 +12,7 @@ let token;
 let ticketId;
 const slug = 'slug-123456';
 const wrongSlug = 'slug-0987654321';
-const wrongTicketId = 50;
+const wrongTicketId = 50000;
 
 describe('Tickets', () => {
   it('should create the Ticket', async () => {
@@ -24,9 +24,8 @@ describe('Tickets', () => {
     token = res.body.token;
 
     const createTicket = {
-      price: 200,
-      number: 50,
-      category: 1
+      price: [{"vvip": 200, "regular": 300, "table": 800}],
+      category: [{"vvip": 1, "regular": 1, "table": 1}]
     };
     const response = await chai
       .request(app)
@@ -35,31 +34,30 @@ describe('Tickets', () => {
       .send(createTicket);
     response.should.have.status(201);
     response.body.should.be.a('object');
-    ticketId = response.body.newCreatedTicket.id;
+    ticketId = 1;    
   }).timeout(10000);
-  it('should not allow to create a ticket with a redundant category', async () => {
+  it('should only create ticket with available category', async () => {
     const createTicket = {
-      price: 200,
-      number: 50,
-      category: 1
+      price: [{"vvip": 200, "regular": 300, "table": 800}],
+      category: [{"notExist": 1}]
     };
     const res = await chai
       .request(app)
       .post(`/api/ticket/${slug}`)
       .set('Authorization', `Bearer ${token}`)
-      .send(createTicket);
-    res.should.have.status(404);
+      .send(createTicket);    
+    res.should.have.status(204);
     res.body.should.be.a('object');
   });
   it('should update a ticket', async () => {
     const updatedTicketCategory = {
-      designation: 'VVIP'
+      status: 'booked'
     };
     const res = await chai
       .request(app)
       .put(`/api/ticket/${slug}/${ticketId}`)
       .set('Authorization', `Bearer ${token}`)
-      .send(updatedTicketCategory);
+      .send(updatedTicketCategory);    
     res.should.have.status(200);
     res.body.should.be.a('object');
   });

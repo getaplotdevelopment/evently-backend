@@ -10,6 +10,10 @@ const checkEvent = async (req, res, next) => {
   });
   if (!event) {
     throw new httpError(404, 'Event not found');
+  } else {
+    const { dataValues } = event;
+    req.organizerEmail = dataValues.organizer;
+    req.event = slug;
   }
   next();
 };

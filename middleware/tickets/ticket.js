@@ -21,7 +21,19 @@ const checkTicketExist = async (req, res, next) => {
 const checkTicket = async (req, res, next) => {
   const { ticketId } = req.params;
   const ticket = await Ticket.findOne({
-    where: { id: ticketId }
+    where: { ticketNumber: ticketId }
+  });
+  if (!ticket) {
+    throw new httpError(404, 'Ticket not found');
+  }
+  next();
+};
+
+const checkTicketEvent = async (req, res, next) => {
+  const { slug } = req.params;
+  const { ticket_id } = req.body;
+  const ticket = await Ticket.findOne({
+    where: { ticketNumber: ticket_id, event: slug }
   });
   if (!ticket) {
     throw new httpError(404, 'Ticket not found');
@@ -45,4 +57,4 @@ const checkAccessTicket = async (req, res, next) => {
   next();
 };
 
-export { checkTicketExist, checkTicket, checkAccessTicket };
+export { checkTicketExist, checkTicket, checkAccessTicket, checkTicketEvent };

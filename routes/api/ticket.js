@@ -23,7 +23,7 @@ router.post(
   '/:slug',
   asyncHandler(checkToken),
   asyncHandler(authUser),
-  asyncHandler(checkTicketExist),
+  // asyncHandler(checkTicketExist),
   validateTicket,
   validations,
   asyncHandler(checkEvent),
@@ -53,6 +53,14 @@ router.put(
   asyncHandler(checkTicket),
   asyncHandler(checkAccessTicket),
   asyncHandler(ticket.updateTicket)
+);
+router.put(
+  '/:slug/',
+  asyncHandler(checkToken),
+  asyncHandler(authUser),
+  asyncHandler(checkEvent),
+  asyncHandler(checkAccessTicket),
+  asyncHandler(ticket.updateTicketsByCategoty)
 );
 
 export default router;
