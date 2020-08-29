@@ -1,10 +1,10 @@
 import authHelper from '../../helpers/authHelper';
-import authStrategy from '../../helpers/authStrategy';
+import authStrategy from '../../helpers/adminOrgStrategy';
 
 export default async (req, res, next) => {
   const email = await authHelper(req);
-  const condition2 = { email };
-  const condition = [
+  const condition = { email };
+  const condition2 = [
     { designation: 'SUPER USER' },
     { designation: 'ORGANIZER' }
   ];

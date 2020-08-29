@@ -127,12 +127,6 @@ class UserController {
       where: {
         email
       },
-      include: [
-        {
-          model: Roles,
-          as: 'roles'
-        }
-      ],
       attributes: [
         'id',
         'firstName',
@@ -144,12 +138,6 @@ class UserController {
         'role'
       ]
     });
-    const assignedRole = await Roles.findOne({
-      where: {
-        id: user.role
-      }
-    });
-    const { designation: role } = assignedRole.dataValues;
     const { id, firstName, lastName, userName, avatar, isActivated } = user;
     const payload = {
       id,
@@ -158,8 +146,7 @@ class UserController {
       userName,
       avatar,
       email: user.email,
-      isActivated,
-      role
+      isActivated
     };
     await UserActivity.create({
       designation: 'login',
