@@ -69,7 +69,7 @@ class UserController {
     const userInstance = await User.create(newUser);
     const createdUser = userInstance.dataValues;
     const assignedRole = await findOneHelper(Roles, {
-      id: createdUser.role
+      designation: createdUser.role
     });
 
     const { designation } = assignedRole.dataValues;

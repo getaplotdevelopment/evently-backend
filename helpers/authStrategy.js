@@ -7,15 +7,7 @@ const { User, Roles } = models;
 export default async (condition, condition2) => {
   const user = await User.findOne({
     where: condition2,
-    include: [
-      {
-        model: Roles,
-        as: 'roles',
-        where: {
-          [Op.or]: condition
-        }
-      }
-    ]
+    [Op.or]: condition
   });
 
   if (!user) {

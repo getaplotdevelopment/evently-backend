@@ -32,8 +32,14 @@ class UserActivityController {
       where,
       include
     });
-
-    res.status(200).json({
+    if (!userActivities.length) {
+      return res.status(200).json({
+        status: 200,
+        userActivities,
+        userActivitiesCount: 0
+      });
+    }
+    return res.status(200).json({
       status: 200,
       userActivities
     });
