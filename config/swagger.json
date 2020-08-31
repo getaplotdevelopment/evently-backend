@@ -469,6 +469,418 @@
         ]
       }
     },
+    "api/event/{slug}/post-comment": {
+      "post": {
+        "tags": ["Events"],
+        "summary": "Create event comments",
+        "description": "Create event comments ",
+        "operationId": "",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "description": "Provide the event slug",
+            "type": "string",
+            "required": true,
+            "example": "slug-123456789"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "successfully response",
+            "schema": {
+              "properties": {
+                "user": {
+                  "properties": {
+                    "text": "comment text",
+                    "ishidden": true,
+                    "img": "www.mypic.avatar.png",
+                    "user": 1,
+                    "event": "awesome-18445"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "api/event/{slug}/event-comment/1": {
+      "get": {
+        "tags": ["Event comment"],
+        "summary": "Retrieve a single event comment.",
+        "description": "Retruns a single comment",
+        "operationId": "",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "description": "Provide the event slug",
+            "type": "string",
+            "required": true,
+            "example": "slug-123456789"
+          },
+          {
+            "in": "path",
+            "name": "commentId",
+            "description": "Provide the comment id",
+            "type": "integer",
+            "required": true,
+            "example": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Event"
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Event not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "api/event/{slug}/event-comment/1": {
+      "put": {
+        "tags": ["Event comment"],
+        "summary": "Update a single event comment.",
+        "description": "Update a single comment",
+        "operationId": "",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "description": "Provide the event slug",
+            "type": "string",
+            "required": true,
+            "example": "slug-123456789"
+          },
+          {
+            "in": "path",
+            "name": "commentId",
+            "description": "Provide the comment id",
+            "type": "integer",
+            "required": true,
+            "example": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Event"
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Event not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "api/event/{slug}/event-comment/1": {
+      "delete": {
+        "tags": ["Event comment"],
+        "summary": "delete a single event comment.",
+        "description": "delete a single comment",
+        "operationId": "",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "description": "Provide the event slug",
+            "type": "string",
+            "required": true,
+            "example": "slug-123456789"
+          },
+          {
+            "in": "path",
+            "name": "commentId",
+            "description": "Provide the comment id",
+            "type": "integer",
+            "required": true,
+            "example": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Event"
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Event not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "api/event/comment/1/like": {
+      "put": {
+        "tags": ["Like event comment"],
+        "summary": "Like a single event",
+        "description": "like a comment event",
+        "operationId": "",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "comment id",
+            "description": "Provide the comment id",
+            "type": "string",
+            "required": true,
+            "example": "1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Event"
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Event not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "api/event/comment/1/dislike": {
+      "put": {
+        "tags": ["dislike event comment"],
+        "summary": "dislike a single event",
+        "description": "dislike a comment event",
+        "operationId": "",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "comment id",
+            "description": "Provide the comment id",
+            "type": "string",
+            "required": true,
+            "example": "1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Event"
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Event not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "api/event/comment/:commentId/replay": {
+      "post": {
+        "tags": ["Replay"],
+        "summary": "Create event Replay comments",
+        "description": "Create Replay to event comment ",
+        "operationId": "",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "commentId",
+            "description": "Provide the comment Id",
+            "type": "integer",
+            "required": true,
+            "example": "1"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "successfully response",
+            "schema": {
+              "properties": {
+                "user": {
+                  "properties": {
+                    "text": "comment text",
+                    "ishidden": true,
+                    "img": "www.mypic.avatar.png",
+                    "user": 1,
+                    "event": "awesome-18445"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "api/event/comment/:commentId/replay/1": {
+      "get": {
+        "tags": ["Replay"],
+        "summary": "get one Replay comments",
+        "description": "get Replay to event comment ",
+        "operationId": "",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "commentId",
+            "description": "Provide the comment Id",
+            "type": "integer",
+            "required": true,
+            "example": "1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Event"
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Event not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "api/event/comment/:commentId/replay/1": {
+      "put": {
+        "tags": ["Replay"],
+        "summary": "update one Replay comments",
+        "description": "update Replay to event comment ",
+        "operationId": "",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "commentId",
+            "description": "Provide the comment Id",
+            "type": "integer",
+            "required": true,
+            "example": "1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Event"
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Event not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "api/event/comment/:commentId/replay/1": {
+      "delete": {
+        "tags": ["Replay"],
+        "summary": "delete one Replay comments",
+        "description": "delete Replay to event comment ",
+        "operationId": "",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "commentId",
+            "description": "Provide the comment Id",
+            "type": "integer",
+            "required": true,
+            "example": "1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Event"
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Event not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
     "api/users": {
       "post": {
         "tags": ["users"],
