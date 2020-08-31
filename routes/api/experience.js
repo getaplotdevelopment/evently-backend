@@ -40,6 +40,12 @@ router.get(
   asyncHandler(checkExperience),
   asyncHandler(experience.getOneExperience)
 );
+router.get(
+  '/',
+  asyncHandler(checkToken),
+  asyncHandler(auth),
+  asyncHandler(experience.getAllExperience)
+);
 router.put(
   '/:experienceId/update-experience',
   asyncHandler(checkToken),
@@ -107,12 +113,27 @@ router.put(
   asyncHandler(experienceLike.likeExperience)
 );
 router.put(
+  '/:experienceId/dislike',
+  asyncHandler(checkToken),
+  asyncHandler(auth),
+  asyncHandler(checkExperience),
+  asyncHandler(experienceLike.dislikeExperience)
+);
+router.put(
   '/:experienceId/comment/:commentId/like',
   asyncHandler(checkToken),
   asyncHandler(auth),
   asyncHandler(checkExperience),
   asyncHandler(checkExperienceComment),
   asyncHandler(experienceCommentLike.LikeCommentExperience)
+);
+router.put(
+  '/:experienceId/comment/:commentId/dislike',
+  asyncHandler(checkToken),
+  asyncHandler(auth),
+  asyncHandler(checkExperience),
+  asyncHandler(checkExperienceComment),
+  asyncHandler(experienceCommentLike.dislikeCommentExperience)
 );
 router.post(
   '/comment/:commentId/replay',
@@ -131,6 +152,7 @@ router.get(
   asyncHandler(checkReplay),
   asyncHandler(experienceCommentReplay.getOneReplay)
 );
+
 router.put(
   '/comment/:commentId/replay/:replayId',
   asyncHandler(checkToken),

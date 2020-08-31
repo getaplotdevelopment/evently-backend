@@ -18,40 +18,75 @@ class LikeExperienceCommentController {
     const { commentId: commentExperience } = req.params;
     const { id: user } = req.user;
     const where = { commentExperience, user };
-    const condition2 = { commentExperience, user, hasLiked: false };
 
     const findLikedComment = await LikeCommentExperience.findOne({ where });
-    const findDisLikeComment = await LikeCommentExperience.findOne({
-      where: condition2
-    });
-    if (findDisLikeComment) {
-      await LikeCommentExperience.update(
-        { commentExperience, user, hasLiked: true },
-        { where }
-      );
-      return res.status(200).json({
-        status: 200,
-        message: 'Comment liked successfully'
-      });
-    }
     if (!findLikedComment) {
       await LikeCommentExperience.create({
         commentExperience,
         user,
         hasLiked: true
       });
-      return res.status(200).json({
-        status: 200,
-        message: 'Comment liked successfully'
+      return res.status(201).json({
+        status: 201,
+        message: 'Experience comment liked successfully'
       });
     }
     await LikeCommentExperience.update(
-      { commentExperience, user, hasLiked: false },
-      { where }
+      {
+        commentExperience,
+        user,
+        hasLiked: !findLikedComment.hasLiked
+      },
+      {
+        where
+      }
     );
     return res.status(200).json({
       status: 200,
-      message: 'Comment disliked successfully'
+      message: findLikedComment.hasLiked
+        ? 'Experience comment unliked successfully'
+        : 'Experience comment liked successfully'
+    });
+  }
+
+  /**
+   *
+   * @param {Object} req - Requests from client
+   * @param {*} res - Response from the db
+   * @returns {Object} Response
+   */
+  async dislikeCommentExperience(req, res) {
+    const { commentId: commentExperience } = req.params;
+    const { id: user } = req.user;
+    const where = { commentExperience, user };
+
+    const findLikedComment = await LikeCommentExperience.findOne({ where });
+    if (!findLikedComment) {
+      await LikeCommentExperience.create({
+        commentExperience,
+        user,
+        hasDisliked: true
+      });
+      return res.status(201).json({
+        status: 201,
+        message: 'Experience comment disliked successfully'
+      });
+    }
+    await LikeCommentExperience.update(
+      {
+        commentExperience,
+        user,
+        hasDisliked: !findLikedComment.hasDisliked
+      },
+      {
+        where
+      }
+    );
+    return res.status(200).json({
+      status: 200,
+      message: findLikedComment.hasDisliked
+        ? 'Experience comment undisliked successfully'
+        : 'Experience comment disliked successfully'
     });
   }
 }

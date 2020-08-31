@@ -82,7 +82,13 @@ class ReplayCommentExperienceController {
       where,
       include: includeComment()
     });
-    res.status(200).json({
+    if (!replay) {
+      return res.status(404).json({
+        status: 404,
+        message: 'Comment replay not found'
+      });
+    }
+    return res.status(200).json({
       status: 200,
       replay
     });
@@ -105,8 +111,14 @@ class ReplayCommentExperienceController {
     const updateReplay = await ReplayExperienceComment.update(replay, {
       where
     });
+    if (updateReplay[0] === 0) {
+      return res.status(404).json({
+        status: 404,
+        message: 'Comment replay not found'
+      });
+    }
     if (updateReplay[0] === 1) {
-      res.status(200).json({
+      return res.status(200).json({
         status: 200,
         message: 'Repaly successfully updated',
         replay

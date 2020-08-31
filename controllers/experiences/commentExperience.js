@@ -1,7 +1,12 @@
 import models from '../../models';
 import { EXPERIENCE_COMMENT } from '../../constants/reports';
 
-const { User, CommentExperience, ReportContent } = models;
+const {
+  User,
+  CommentExperience,
+  ReportContent,
+  ReplayExperienceComment
+} = models;
 
 const includeUser = () => {
   return [
@@ -18,6 +23,9 @@ const includeUser = () => {
           'updatedAt'
         ]
       }
+    },
+    {
+      model: ReplayExperienceComment
     }
   ];
 };
@@ -95,8 +103,14 @@ class CommentExperienceController {
     const updateComment = await CommentExperience.update(comment, {
       where
     });
+    if (updateComment[0] === 0) {
+      return res.status(404).json({
+        status: 404,
+        message: 'No comment found'
+      });
+    }
     if (updateComment[0] === 1) {
-      res.status(200).json({
+      return res.status(200).json({
         status: 200,
         message: 'Experience successfully updated'
       });

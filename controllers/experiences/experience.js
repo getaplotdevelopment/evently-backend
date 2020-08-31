@@ -1,7 +1,13 @@
 import models from '../../models';
 import { EXPERIENCE } from '../../constants/reports';
 
-const { User, Experience, ReportContent } = models;
+const {
+  User,
+  Experience,
+  ReportContent,
+  CommentExperience,
+  ReplayExperienceComment
+} = models;
 
 const includeUser = () => {
   return [
@@ -18,6 +24,10 @@ const includeUser = () => {
           'updatedAt'
         ]
       }
+    },
+    {
+      model: CommentExperience,
+      include: [{ model: ReplayExperienceComment }]
     }
   ];
 };
@@ -80,6 +90,28 @@ class ExperienceController {
    * @param {*} res - Response from the db
    * @returns {Object} Response
    */
+  async getAllExperience(req, res) {
+    const experience = await Experience.findAll({
+      include: includeUser()
+    });
+    if (!experience) {
+      return res.status(404).json({
+        status: 404,
+        message: 'No experience found'
+      });
+    }
+    res.status(200).json({
+      status: 200,
+      experience
+    });
+  }
+
+  /**
+   *
+   * @param {Object} req - Requests from client
+   * @param {*} res - Response from the db
+   * @returns {Object} Response
+   */
   async updateExperience(req, res) {
     const { experienceId: id } = req.params;
     const { text, img } = req.body;
@@ -91,8 +123,15 @@ class ExperienceController {
     const updateExperience = await Experience.update(experience, {
       where
     });
+    if (updateExperience[0] === 0) {
+      return res.status(404).json({
+        status: 404,
+        message: 'experience not found'
+      });
+    }
+
     if (updateExperience[0] === 1) {
-      res.status(200).json({
+      return res.status(200).json({
         status: 200,
         message: 'experience successfully updated',
         text
