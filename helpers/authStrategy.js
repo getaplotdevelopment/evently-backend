@@ -10,7 +10,6 @@ export default async (condition, condition2) => {
       [Op.and]: [condition, condition2]
     }
   });
-  console.log('user', user);
   if (!user) {
     throw new httpError(
       403,

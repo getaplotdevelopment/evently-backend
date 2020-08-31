@@ -8,7 +8,6 @@ export default async (req, res, next) => {
   const condition2 = { role: 'SUPER USER' };
   const superUser = await authStrategy(condition, condition2);
   const { dataValues } = superUser;
-  // console.log('superUser', superUser);
   req.superUser = dataValues;
   next();
 };
