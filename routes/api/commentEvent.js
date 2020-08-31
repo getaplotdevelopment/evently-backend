@@ -67,6 +67,13 @@ router.put(
   asyncHandler(checkComment),
   asyncHandler(likeComment.likeComment)
 );
+router.put(
+  '/comment/:commentId/dislike',
+  asyncHandler(checkToken),
+  asyncHandler(auth),
+  asyncHandler(checkComment),
+  asyncHandler(likeComment.dislikeComment)
+);
 router.post(
   '/comment/:commentId/replay',
   asyncHandler(checkToken),
