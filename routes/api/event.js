@@ -8,7 +8,9 @@ import {
   likeUnlikeEvent,
   likedEvent,
   getSimilarEvents,
-  getEventsNearCities
+  getEventsNearCities,
+  getUserLocationEvents,
+  singleEvent
 } from '../../controllers/event';
 import { checkEvent } from '../../middleware/event/checkEvent';
 import { usersPaidForEvent, eventAttendees } from '../../controllers/payments';
@@ -41,6 +43,7 @@ router.get(
   asyncHandler(getOrganizerEvents)
 );
 router.get('/events/all', asyncHandler(getAllEvents));
+router.get('/events/userlocation', asyncHandler(getUserLocationEvents));
 router.patch(
   '/events/:slug',
   upload.single('eventImage'),
@@ -70,5 +73,9 @@ router.get(
   asyncHandler(authUser),
   asyncHandler(checkEvent),
   asyncHandler(eventAttendees)
+);
+router.get(
+  '/events/:slug',
+  asyncHandler(singleEvent)
 );
 export default router;

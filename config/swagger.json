@@ -161,6 +161,34 @@
         ]
       }
     },
+    "api/events/userLocation": {
+      "get": {
+        "tags": ["Events"],
+        "summary": "Get a list of all events within the users current location (16km)",
+        "description": "Returns a list of events",
+        "operationId": "events with user location",
+        "produces": ["application/xml", "application/json"],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Event"
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Event not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
     "api/events/all?title=awesome title&&location.coutry=Uganda": {
       "get": {
         "tags": ["Events"],
@@ -232,6 +260,32 @@
         "security": [
           {
             "Eventstore_auth": ["write:Events", "read:Events"]
+          }
+        ]
+      },
+      "get": {
+        "tags": ["Events"],
+        "summary": "Get single event",
+        "description": "Returns a single events",
+        "operationId": "single event",
+        "produces": ["application/xml", "application/json"],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Event"
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Event not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
           }
         ]
       }

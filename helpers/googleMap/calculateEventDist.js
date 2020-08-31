@@ -13,7 +13,7 @@ export const isInCityRange = async ({ distance, duration }) => {
   return { status: false };
 };
 
-export default async (origins, destinations) => {
+export const nearByCity = async (origins, destinations) => {
   const client = new Client({});
   const locPayload = await client.distancematrix({
     params: {
@@ -26,3 +26,25 @@ export default async (origins, destinations) => {
   const distanceInKm = rows[0].elements[0];
   return isInCityRange(distanceInKm);
 };
+
+export const userLocationEvents = async (origins, destinations) => {  
+  const client = new Client({});
+  const locPayload = await client.distancematrix({
+    params: {
+      key: GOOGLE_MAP_KEY,
+      origins,
+      destinations
+    }
+  });
+  const { status, rows } = locPayload.data;
+  const { distance, duration } = rows[0].elements[0];
+  const { text } = distance;
+  const eventDistance = text.split(' ')[0];
+  const averageCityDistance = 15; // km
+  if (eventDistance <= averageCityDistance) {
+    return { distance, duration, status: true };
+  }
+  return { status: false };
+};
+
+
