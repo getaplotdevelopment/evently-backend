@@ -59,14 +59,13 @@ class CommentEventController {
    * @returns {Object} Response
    */
   async getOneComment(req, res) {
-    const { commentId } = req.params;
-    const where = { id: commentId, isDeleted: false };
+    const { commentId, slug } = req.params;
+    const where = { id: commentId, isDeleted: false, event: slug };
     const comment = await commentEvent.findOne({
       where,
       include: includeUser()
     });
     if (!comment) {
-      console.log('here');
       return res.status(404).json({
         status: 404,
         message: 'No comment found'
@@ -85,9 +84,9 @@ class CommentEventController {
    * @returns {Object} Response
    */
   async updateComment(req, res) {
-    const { commentId: id } = req.params;
+    const { commentId: id, slug } = req.params;
     const { text, img, isHidden } = req.body;
-    const where = { id, isDeleted: false };
+    const where = { id, isDeleted: false, event: slug };
     const comment = {
       text,
       img,
@@ -96,10 +95,18 @@ class CommentEventController {
     const updateComment = await commentEvent.update(comment, {
       where
     });
+    console.log('updateComment', updateComment);
+    if (updateComment[0] === 0) {
+      return res.status(404).json({
+        status: 404,
+        message: 'No comment found'
+      });
+    }
     if (updateComment[0] === 1) {
       res.status(200).json({
         status: 200,
-        message: 'event successfully updated'
+        message: 'event successfully updated',
+        comment
       });
     }
   }
@@ -111,14 +118,21 @@ class CommentEventController {
    * @returns {Object} Response
    */
   async deleteComment(req, res) {
-    const { commentId: id } = req.params;
+    const { commentId: id, slug } = req.params;
     const where = { id };
     const comment = {
-      isDeleted: true
+      isDeleted: true,
+      event: slug
     };
     const deleteComment = await commentEvent.update(comment, {
       where
     });
+    if (deleteComment[0] === 0) {
+      return res.status(404).json({
+        status: 404,
+        message: 'No comment found'
+      });
+    }
     if (deleteComment[0] === 1) {
       res.status(200).json({
         status: 200,

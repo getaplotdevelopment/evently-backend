@@ -72,8 +72,8 @@ class ReplayCommentController {
    * @returns {Object} Response
    */
   async getOneReplay(req, res) {
-    const { replayId: id } = req.params;
-    const where = { id, isDeleted: false };
+    const { replayId: id, commentId } = req.params;
+    const where = { id, isDeleted: false, commentEvent: commentId };
     const replay = await replayComment.findOne({
       where,
       include: includeComment()
@@ -97,9 +97,9 @@ class ReplayCommentController {
    * @returns {Object} Response
    */
   async updateReplay(req, res) {
-    const { replayId: id } = req.params;
+    const { replayId: id, commentId } = req.params;
     const { text, img, isHidden } = req.body;
-    const where = { id, isDeleted: false };
+    const where = { id, isDeleted: false, commentEvent: commentId };
     const replay = {
       text,
       img,
@@ -124,8 +124,8 @@ class ReplayCommentController {
    * @returns {Object} Response
    */
   async deleteReplay(req, res) {
-    const { replayId: id } = req.params;
-    const where = { id };
+    const { replayId: id, commentId } = req.params;
+    const where = { id, commentEvent: commentId };
     const repaly = {
       isDeleted: true
     };

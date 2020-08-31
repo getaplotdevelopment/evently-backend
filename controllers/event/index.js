@@ -11,14 +11,21 @@ import axios from 'axios';
 
 const { Op } = require('sequelize');
 
-const { Event, Likes, Ticket, TicketCategory } = models;
+const {
+  Event,
+  Likes,
+  Ticket,
+  TicketCategory,
+  commentEvent,
+  replayComment
+} = models;
 
 const includeTicket = () => {
   return [
     {
-      model: Ticket,
-      include: [{ model: TicketCategory, as: 'ticketCategory' }]
-    }
+      model: Ticket
+    },
+    { model: commentEvent, include: [{ model: replayComment }] }
   ];
 };
 export const createEventController = async (req, res) => {

@@ -75,23 +75,26 @@ router.post(
   asyncHandler(replayComment.createCommentReplay)
 );
 router.get(
-  '/comment/replay/:replayId',
+  '/comment/:commentId/replay/:replayId',
   asyncHandler(checkToken),
   asyncHandler(auth),
+  asyncHandler(checkComment),
   asyncHandler(checkReplay),
   asyncHandler(replayComment.getOneReplay)
 );
 router.put(
-  '/comment/replay/:replayId',
+  '/comment/:commentId/replay/:replayId',
   asyncHandler(checkToken),
   asyncHandler(auth),
+  asyncHandler(checkComment),
   asyncHandler(checkReplay),
   asyncHandler(replayComment.updateReplay)
 );
 router.put(
-  '/comment/delete-replay/:replayId',
+  '/comment/:commentId/delete-replay/:replayId',
   asyncHandler(checkToken),
   asyncHandler(auth),
+  asyncHandler(checkComment),
   asyncHandler(checkReplay),
   asyncHandler(replayComment.deleteReplay)
 );
