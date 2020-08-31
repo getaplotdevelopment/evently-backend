@@ -13,8 +13,8 @@ module.exports = (sequelize, DataTypes) => {
       phoneNumber: { type: DataTypes.STRING },
       location: { type: DataTypes.JSON },
       role: {
-        type: DataTypes.INTEGER,
-        references: { model: 'Roles', key: 'id' }
+        type: DataTypes.STRING,
+        references: { model: 'Roles', key: 'designation' }
       },
       isDeactivated: { type: DataTypes.BOOLEAN, defaultValue: false },
       isApproved: { type: DataTypes.BOOLEAN, defaultValue: false }
@@ -52,6 +52,30 @@ module.exports = (sequelize, DataTypes) => {
     User.hasMany(models.Follow, {
       foreignKey: 'id'
     });
+    // User.hasMany(models.Forum, {
+    //   foreignKey: 'connectedUser',
+    //   allowNull: false
+    // });
+    // User.hasMany(models.commentEvent, {
+    //   foreignKey: 'user',
+    //   allowNull: false
+    // });
+    // User.hasMany(models.likeComment, {
+    //   foreignKey: 'user',
+    //   allowNull: false
+    // });
+    // User.hasMany(models.replayComment, {
+    //   foreignKey: 'user',
+    //   allowNull: false
+    // });
+    // User.hasMany(models.shareComment, {
+    //   foreignKey: 'users',
+    //   allowNull: false
+    // });
+    // User.hasMany(models.CommentExperience, {
+    //   foreignKey: 'user',
+    //   allowNull: false
+    // });
   };
   return User;
 };

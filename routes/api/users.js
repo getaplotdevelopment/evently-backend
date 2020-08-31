@@ -1,5 +1,6 @@
 import express from 'express';
 import Users from '../../controllers/users';
+import UserActivity from '../../controllers/userActivity';
 import {
   validateUser,
   validations,
@@ -23,6 +24,7 @@ import checkToken from '../../middleware/users/checkToken';
 import deactivateUser from '../../middleware/users/canDeactivateUser';
 
 const users = new Users();
+const userActivity = new UserActivity();
 
 const router = express.Router();
 
@@ -104,5 +106,10 @@ router.delete(
 );
 
 router.post('/logout', asyncHandler(auth), asyncHandler(users.logout));
+router.get(
+  '/user-activity/:userId',
+  asyncHandler(isAdminAuth),
+  asyncHandler(userActivity.getUserActivity)
+);
 
 export default router;

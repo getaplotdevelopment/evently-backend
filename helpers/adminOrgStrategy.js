@@ -7,7 +7,7 @@ const { User, Roles } = models;
 export default async (condition, condition2) => {
   const user = await User.findOne({
     where: {
-      [Op.and]: [condition, condition2]
+      [Op.and]: [condition, { [Op.or]: condition2 }]
     }
   });
   if (!user) {

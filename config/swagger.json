@@ -823,6 +823,42 @@
         }
       }
     },
+    "api/users/user-activiy/{userId}": {
+      "get": {
+        "tags": ["users"],
+        "summary": "get user activities",
+        "description": "",
+        "operationId": "",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Add the token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "description": "provide the user id",
+            "type": "string",
+            "required": true,
+            "example": "002"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User activities obeject"
+          },
+          "404": {
+            "description": "User does not have any activity yet"
+          }
+        }
+      }
+    },
 
     "api/profile": {
       "post": {
@@ -2061,6 +2097,27 @@
       },
       "xml": {
         "name": "Payments/Bookings"
+      }
+    },
+    "userActivity": {
+      "type": "object",
+      "required": ["designation", "userId"],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "designation": {
+          "type": "string",
+          "example": "Registration"
+        },
+        "userId": {
+          "type": "integer",
+          "example": 3
+        }
+      },
+      "xml": {
+        "name": "UserActiviy"
       }
     }
   },

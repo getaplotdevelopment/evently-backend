@@ -8,7 +8,7 @@ import geocode from '../helpers/googleMap/goecode';
 import findOneHelper from '../helpers/rolesHelper/findOneHelper';
 
 dotenv.config();
-const { OrganizerProfile, User, Roles } = models;
+const { OrganizerProfile, User, UserActivity, Roles } = models;
 
 /**
  * @profile Controller
@@ -69,7 +69,8 @@ class ProfileController {
     const { dataValues } = await findOneHelper(Roles, {
       designation: 'ORGANIZER'
     });
-    const role = dataValues.id;
+    const role = dataValues.designation;
+    await UserActivity.create({ designation: 'Creating profile', userId: id });
     const { dataValues: createdProfile } = await OrganizerProfile.create(
       newProfile
     );
@@ -145,6 +146,7 @@ class ProfileController {
       urls.push(newPath);
       fs.unlinkSync(path);
     }
+    await UserActivity.create({ designation: 'Updating profile', userId: id });
     const profilePhoto = files.length ? urls[0].url : undefined;
     const coverPhoto = files.length > 1 ? urls[1].url : undefined;
     const formatted_address = await geocode(location);
