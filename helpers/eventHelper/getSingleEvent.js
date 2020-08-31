@@ -1,13 +1,17 @@
 import httpError from '../errorsHandler/httpError';
 import models from '../../models';
-const { Ticket, TicketCategory, Event } = models;
+const { Ticket, TicketCategory, Event, PaymentEvents } = models;
 
 export default async slug => {
   const event = await Event.findOne({
     where: { slug },
     include: [{
       model: Ticket,
-      include: [{ model: TicketCategory, as: 'ticketCategory' }]
+      include: [{ model: TicketCategory, as: 'ticketCategory' }] 
+    },
+    {
+      model: PaymentEvents,
+      include: [{ model: Event, as: 'events' }] 
     }]
   });
   if (event === null) {
