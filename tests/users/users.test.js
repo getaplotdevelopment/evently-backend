@@ -4,7 +4,7 @@ import chaiHttp from 'chai-http';
 import mockery from 'mockery';
 import nodemailerMock from 'nodemailer-mock';
 import generateToken from '../../helpers/generateToken/generateToken';
-import app from '../../index';
+import { app } from '../../app';
 import {
   signupUser,
   signupUser2,
