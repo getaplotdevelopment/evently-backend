@@ -11,13 +11,12 @@ let TICKET_NO, EVENT_SLUG, ORGANIZER;
 
 const verifyPayment = async payload => {
   const { verificationId } = payload;
-  console.log('verificationId', verificationId);
-  console.log(
-    'TICKET_NO, EVENT_SLUG, ORGINIZER',
-    TICKET_NO,
-    EVENT_SLUG,
-    ORGANIZER
-  );
+  // console.log(
+  //   'TICKET_NO, EVENT_SLUG, ORGINIZER',
+  //   TICKET_NO,
+  //   EVENT_SLUG,
+  //   ORGANIZER
+  // );
 
   const organizer = ORGANIZER;
   const ticketNo = TICKET_NO;
@@ -207,7 +206,7 @@ export const attendFree = async (req, res) => {
       where: { ticketNumber: ticket_id, event }
     }
   );
-  res.send({message: 'success', data: dataValues});
+  res.send({ message: 'success', data: dataValues });
 };
 
 export const cancelFreeAttendance = async (req, res) => {

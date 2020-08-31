@@ -3,7 +3,6 @@ import authStrategy from '../../helpers/authStrategy';
 
 export default async (req, res, next) => {
   const email = await authHelper(req);
-  console.log('email', email);
   const condition = { email };
   const condition2 = { role: 'SUPER USER' };
   const superUser = await authStrategy(condition, condition2);
