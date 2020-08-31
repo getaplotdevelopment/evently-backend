@@ -9,7 +9,8 @@ import {
   likedEvent,
   getSimilarEvents,
   getEventsNearCities,
-  getUserLocationEvents
+  getUserLocationEvents,
+  singleEvent
 } from '../../controllers/event';
 import { checkEvent } from '../../middleware/event/checkEvent';
 import { usersPaidForEvent, eventAttendees } from '../../controllers/payments';
@@ -72,5 +73,9 @@ router.get(
   asyncHandler(authUser),
   asyncHandler(checkEvent),
   asyncHandler(eventAttendees)
+);
+router.get(
+  '/events/:slug',
+  asyncHandler(singleEvent)
 );
 export default router;

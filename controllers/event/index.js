@@ -10,8 +10,6 @@ import getSingleEvent from '../../helpers/eventHelper/getSingleEvent';
 import axios from 'axios';
 
 const { Op } = require('sequelize');
-var geoip = require('geoip-lite');
-
 
 const { Event, Likes, Ticket, TicketCategory } = models;
 
@@ -167,6 +165,12 @@ export const likedEvent = async (req, res) => {
   );
   const data = await mapResponse;
   res.send({ status: 200, pages, count, data });
+};
+
+export const singleEvent = async (req, res) => {
+  const { slug } = req.params;
+  const event = await getSingleEvent(slug);
+  res.send({ status: 200, event });
 };
 
 export const getSimilarEvents = async (req, res) => {
