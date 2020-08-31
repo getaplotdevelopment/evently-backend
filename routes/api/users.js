@@ -77,7 +77,7 @@ router.put(
 router.put(
   '/reactivate-user/',
   asyncHandler(isAdminAuth),
-  asyncHandler(deactivateUser),
+  // asyncHandler(deactivateUser),
   asyncHandler(checkUserId),
   asyncHandler(users.reactivateUser)
 );

@@ -210,8 +210,8 @@ describe('Activate user account', () => {
     res.should.have.status(403);
   });
   it('should deactivate user account', async () => {
+    const loginAdminRes = await loginAUser(superUser);
     const response = await newUser(toBeDeactivated);
-
     const {
       token,
       user: { id }
@@ -221,7 +221,7 @@ describe('Activate user account', () => {
       .request(app)
       .put('/api/users/deactivate-user')
       .send({ id })
-      .set('Authorization', `Bearer ${token}`);
+      .set('Authorization', `Bearer ${loginAdminRes.body.token}`);
     res.should.have.status(200);
   });
   it('should not deactivate user account with a wrong ID', async () => {
