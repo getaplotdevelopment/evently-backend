@@ -38,8 +38,8 @@ node_modules
 .env
 
 #package-lock
-package-lock.json
-yarn.lock
+# package-lock.json
+# yarn.lock
 
 #nyc
 .nyc_output
