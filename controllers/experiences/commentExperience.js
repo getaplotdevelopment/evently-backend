@@ -5,7 +5,8 @@ const {
   User,
   CommentExperience,
   ReportContent,
-  ReplayExperienceComment
+  ReplayExperienceComment,
+  LikeCommentExperience
 } = models;
 
 const includeUser = () => {
@@ -26,6 +27,10 @@ const includeUser = () => {
     },
     {
       model: ReplayExperienceComment
+    },
+    {
+      model: LikeCommentExperience,
+      include: [{ model: User, as: 'owner' }]
     }
   ];
 };
@@ -54,9 +59,10 @@ class CommentExperienceController {
       experience: id
     };
     const newComment = await CommentExperience.create(comment);
+    const createdComment = { ...newComment.dataValues, user: req.user };
     res.status(201).json({
       status: 201,
-      comment: newComment
+      createdComment
     });
   }
 
@@ -129,13 +135,24 @@ class CommentExperienceController {
     const comment = {
       isDeleted: true
     };
-    const deleteComment = await CommentExperience.update(comment, {
-      where
-    });
-    if (deleteComment[0] === 1) {
+    const [updatedRow, [updatedComment]] = await CommentExperience.update(
+      comment,
+      {
+        where,
+        returning: true
+      }
+    );
+
+    const {
+      dataValues: { isDeleted }
+    } = updatedComment;
+
+    if (updatedRow === 1) {
       res.status(200).json({
         status: 200,
-        message: 'Comment successfully deleted'
+        message: isDeleted
+          ? 'Comment already deleted'
+          : 'Comment successfully deleted'
       });
     }
   }

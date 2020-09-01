@@ -6,7 +6,8 @@ const {
   Experience,
   ReportContent,
   CommentExperience,
-  ReplayExperienceComment
+  ReplayExperienceComment,
+  LikeExperience
 } = models;
 
 const includeUser = () => {
@@ -28,6 +29,10 @@ const includeUser = () => {
     {
       model: CommentExperience,
       include: [{ model: ReplayExperienceComment }]
+    },
+    {
+      model: LikeExperience,
+      include: [{ model: User, as: 'owner' }]
     }
   ];
 };
@@ -53,9 +58,10 @@ class ExperienceController {
       user
     };
     const newExperience = await Experience.create(experience);
+    const createdExperience = { ...newExperience.dataValues, user: req.user };
     res.status(201).json({
       status: 201,
-      experience: newExperience
+      createdExperience
     });
   }
 
@@ -91,7 +97,9 @@ class ExperienceController {
    * @returns {Object} Response
    */
   async getAllExperience(req, res) {
+    const where = { isDeleted: false };
     const experience = await Experience.findAll({
+      where,
       include: includeUser()
     });
     if (!experience) {
@@ -151,13 +159,23 @@ class ExperienceController {
     const experience = {
       isDeleted: true
     };
-    const deleteExperience = await Experience.update(experience, {
-      where
-    });
-    if (deleteExperience[0] === 1) {
+    const [updatedRow, [updatedExperience]] = await Experience.update(
+      experience,
+      {
+        where,
+        returning: true
+      }
+    );
+    const {
+      dataValues: { isDeleted }
+    } = updatedExperience;
+
+    if (updatedRow === 1) {
       res.status(200).json({
         status: 200,
-        message: 'Experience successfully deleted'
+        message: isDeleted
+          ? 'Experience already deleted'
+          : 'Experience successfully deleted'
       });
     }
   }

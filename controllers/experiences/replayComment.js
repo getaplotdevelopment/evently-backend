@@ -63,9 +63,10 @@ class ReplayCommentExperienceController {
       experienceComment
     };
     const newReplay = await ReplayExperienceComment.create(replayToComment);
+    const createdReplay = { ...newReplay.dataValues, user: req.user };
     res.status(201).json({
       status: 201,
-      comment: newReplay
+      createdReplay
     });
   }
 
@@ -138,13 +139,22 @@ class ReplayCommentExperienceController {
     const repaly = {
       isDeleted: true
     };
-    const deleteComment = await ReplayExperienceComment.update(repaly, {
-      where
-    });
-    if (deleteComment[0] === 1) {
+    const [updatedRow, [updatedReplay]] = await ReplayExperienceComment.update(
+      repaly,
+      {
+        where,
+        returning: true
+      }
+    );
+    const {
+      dataValues: { isDeleted }
+    } = updatedReplay;
+    if (updatedRow === 1) {
       res.status(200).json({
         status: 200,
-        message: 'Replay successfully deleted'
+        message: isDeleted
+          ? 'Replay already deleted'
+          : 'Replay successfully deleted'
       });
     }
   }

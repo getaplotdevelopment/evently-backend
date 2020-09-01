@@ -59,9 +59,10 @@ class ReplayCommentController {
       commentEvent: commentId
     };
     const newReplay = await replayComment.create(replayToComment);
+    const createdReplay = { ...newReplay.dataValues, user: req.user };
     res.status(201).json({
       status: 201,
-      comment: newReplay
+      createdReplay
     });
   }
 
@@ -108,6 +109,12 @@ class ReplayCommentController {
     const updateReplay = await replayComment.update(replay, {
       where
     });
+    if (updateReplay[0] === 0) {
+      res.status(404).json({
+        status: 404,
+        message: 'Repaly not found'
+      });
+    }
     if (updateReplay[0] === 1) {
       res.status(200).json({
         status: 200,
@@ -129,13 +136,25 @@ class ReplayCommentController {
     const repaly = {
       isDeleted: true
     };
-    const deleteComment = await replayComment.update(repaly, {
-      where
+    const [updatedRow, [updatedReplay]] = await replayComment.update(repaly, {
+      where,
+      returning: true
     });
-    if (deleteComment[0] === 1) {
+    const {
+      dataValues: { isDeleted }
+    } = updatedReplay;
+    if (updatedRow === 0) {
       res.status(200).json({
         status: 200,
-        message: 'Replay successfully deleted'
+        message: 'Replay not found'
+      });
+    }
+    if (updatedRow === 1) {
+      res.status(200).json({
+        status: 200,
+        message: isDeleted
+          ? 'Replay already deleted'
+          : 'Replay successfully deleted'
       });
     }
   }

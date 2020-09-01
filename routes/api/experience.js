@@ -10,7 +10,11 @@ import auth from '../../middleware/users/auth';
 import {
   checkExperience,
   checkExperienceComment,
-  checkReplay
+  checkReplay,
+  checkExperienceOwner,
+  checkExperienceOwnerOrAdmin,
+  checkCommentOwner,
+  checkCommentOwnerOradmin
 } from '../../middleware/experience/checkExperience';
 import {
   validateExperience,
@@ -51,6 +55,7 @@ router.put(
   asyncHandler(checkToken),
   asyncHandler(auth),
   asyncHandler(checkExperience),
+  asyncHandler(checkExperienceOwner),
   asyncHandler(experience.updateExperience)
 );
 router.put(
@@ -58,6 +63,7 @@ router.put(
   asyncHandler(checkToken),
   asyncHandler(auth),
   asyncHandler(checkExperience),
+  asyncHandler(checkExperienceOwnerOrAdmin),
   asyncHandler(experience.deleteExperience)
 );
 router.post(
@@ -88,6 +94,7 @@ router.put(
   asyncHandler(auth),
   asyncHandler(checkExperience),
   asyncHandler(checkExperienceComment),
+  asyncHandler(checkCommentOwner),
   asyncHandler(experienceComment.updateComment)
 );
 router.put(
@@ -96,6 +103,7 @@ router.put(
   asyncHandler(auth),
   asyncHandler(checkExperience),
   asyncHandler(checkExperienceComment),
+  asyncHandler(checkCommentOwnerOradmin),
   asyncHandler(experienceComment.deleteComment)
 );
 router.post(

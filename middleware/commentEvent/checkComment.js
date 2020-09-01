@@ -17,5 +17,29 @@ const checkComment = async (req, res, next) => {
   }
   next();
 };
+const checkCommentOwner = async (req, res, next) => {
+  const { commentId: id } = req.params;
+  const { user } = req;
+  const comment = await commentEvent.findOne({
+    where: { id }
+  });
+  const { dataValues } = comment;
+  if (dataValues.user !== user.id) {
+    throw new httpError(403, 'Unauthorized to perform this action');
+  }
+  next();
+};
+const checkCommentOwnerOrAdmin = async (req, res, next) => {
+  const { commentId: id } = req.params;
+  const { user } = req;
+  const comment = await commentEvent.findOne({
+    where: { id }
+  });
+  const { dataValues } = comment;
+  if (dataValues.user !== user.id || user.role !== 'SUPER USER') {
+    throw new httpError(403, 'Unauthorized to perform this action');
+  }
+  next();
+};
 
-export { checkComment };
+export { checkComment, checkCommentOwner, checkCommentOwnerOrAdmin };

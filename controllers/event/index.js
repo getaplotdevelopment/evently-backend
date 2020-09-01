@@ -1,13 +1,16 @@
+import axios from 'axios';
 import eventStatuschecker from '../../helpers/eventHelper/eventStatuschecker';
 import getEvents from '../../helpers/eventHelper/getEvent';
 import handleLikeUnlike from '../../helpers/eventHelper/handleLikeUnlike';
 import uploadCloudinary from '../../helpers/eventHelper/uploadCloudinary';
 import geocode from '../../helpers/googleMap/goecode';
 import slugGenerator from '../../helpers/slugGenerator';
-import { nearByCity, userLocationEvents } from '../../helpers/googleMap/calculateEventDist';
+import {
+  nearByCity,
+  userLocationEvents
+} from '../../helpers/googleMap/calculateEventDist';
 import models from '../../models';
 import getSingleEvent from '../../helpers/eventHelper/getSingleEvent';
-import axios from 'axios';
 
 const { Op } = require('sequelize');
 
@@ -25,7 +28,11 @@ const includeTicket = () => {
     {
       model: Ticket
     },
-    { model: commentEvent, include: [{ model: replayComment }] }
+    {
+      model: commentEvent,
+      where: { isDeleted: false },
+      include: [{ model: replayComment }]
+    }
   ];
 };
 export const createEventController = async (req, res) => {
@@ -241,8 +248,8 @@ export const getUserLocationEvents = async (req, res) => {
     url: `http://ip-api.com/json/?fields=8581119`,
     method: 'GET'
   });
-  const { lat, lon } = results.data
-  
+  const { lat, lon } = results.data;
+
   const searchParams = req.query;
   const { pages, count, data } = await getEvents(
     searchParams,
@@ -251,11 +258,11 @@ export const getUserLocationEvents = async (req, res) => {
     includeTicket()
   );
   const eventsInUsersLocation = [];
-  const origins = [{ lat, lng: lon}]
+  const origins = [{ lat, lng: lon }];
   // TODO: Improve the performance. O(n) -> 0(logn)
-  for (const event of data) {    
-    const destinations = [event.location.locations];    
-    const response = await userLocationEvents(origins, destinations);    
+  for (const event of data) {
+    const destinations = [event.location.locations];
+    const response = await userLocationEvents(origins, destinations);
     if (response.status) {
       event.dataValues.distance = response.distance;
       event.dataValues.duration = response.duration;
@@ -265,5 +272,9 @@ export const getUserLocationEvents = async (req, res) => {
   if (eventsInUsersLocation.length === 0) {
     return res.send({ status: 200, pages, count, data });
   }
-  res.send({ status: 200, count: eventsInUsersLocation.length, data: eventsInUsersLocation });
+  res.send({
+    status: 200,
+    count: eventsInUsersLocation.length,
+    data: eventsInUsersLocation
+  });
 };

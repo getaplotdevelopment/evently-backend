@@ -1,7 +1,7 @@
 import models from '../../models';
 import { EVENT_COMMENT } from '../../constants/reports';
 
-const { User, commentEvent, Event, ReportContent } = models;
+const { User, commentEvent, Event, ReportContent, likeComment } = models;
 
 const includeUser = () => {
   return [
@@ -18,6 +18,10 @@ const includeUser = () => {
           'updatedAt'
         ]
       }
+    },
+    {
+      model: likeComment,
+      include: [{ model: User, as: 'owner' }]
     }
   ];
 };
@@ -38,6 +42,7 @@ class CommentEventController {
     const { slug } = req.params;
     const { text, img, isHidden } = req.body;
     const { id: user } = req.user;
+
     const comment = {
       text,
       img,
@@ -46,9 +51,10 @@ class CommentEventController {
       event: slug
     };
     const newComment = await commentEvent.create(comment);
+    const createdComment = { ...newComment.dataValues, user: req.user };
     res.status(201).json({
       status: 201,
-      comment: newComment
+      createdComment
     });
   }
 
@@ -95,7 +101,6 @@ class CommentEventController {
     const updateComment = await commentEvent.update(comment, {
       where
     });
-    console.log('updateComment', updateComment);
     if (updateComment[0] === 0) {
       return res.status(404).json({
         status: 404,
@@ -124,19 +129,25 @@ class CommentEventController {
       isDeleted: true,
       event: slug
     };
-    const deleteComment = await commentEvent.update(comment, {
-      where
+    const [updatedRow, [updatedComment]] = await commentEvent.update(comment, {
+      where,
+      returning: true
     });
-    if (deleteComment[0] === 0) {
+    const {
+      dataValues: { isDeleted }
+    } = updatedComment;
+    if (updatedRow === 0) {
       return res.status(404).json({
         status: 404,
         message: 'No comment found'
       });
     }
-    if (deleteComment[0] === 1) {
+    if (updatedRow === 1) {
       res.status(200).json({
         status: 200,
-        message: 'Comment successfully deleted'
+        message: isDeleted
+          ? 'Comment already deleted'
+          : 'Comment successfully deleted'
       });
     }
   }

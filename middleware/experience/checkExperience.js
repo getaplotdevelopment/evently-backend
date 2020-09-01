@@ -36,5 +36,87 @@ const checkReplay = async (req, res, next) => {
   }
   next();
 };
+const checkExperienceOwner = async (req, res, next) => {
+  const { experienceId: id } = req.params;
+  const { user } = req;
+  const experience = await Experience.findOne({
+    where: { id }
+  });
+  const { dataValues } = experience;
+  if (dataValues.user !== user.id) {
+    throw new httpError(403, 'Unauthorized to perform this action');
+  }
+  next();
+};
+const checkExperienceOwnerOrAdmin = async (req, res, next) => {
+  const { experienceId: id } = req.params;
+  const { user } = req;
+  const experience = await Experience.findOne({
+    where: { id }
+  });
+  const { dataValues } = experience;
+  if (dataValues.user !== user.id || user.role !== 'SUPER USER') {
+    throw new httpError(403, 'Unauthorized to perform this action');
+  }
+  next();
+};
+const checkCommentOwner = async (req, res, next) => {
+  const { commentId: id } = req.params;
+  const { user } = req;
+  const comment = await Experience.findOne({
+    where: { id }
+  });
+  const { dataValues } = comment;
+  if (dataValues.user !== user.id) {
+    throw new httpError(403, 'Unauthorized to perform this action');
+  }
+  next();
+};
+const checkCommentOwnerOradmin = async (req, res, next) => {
+  const { commentId: id } = req.params;
+  const { user } = req;
+  const comment = await Experience.findOne({
+    where: { id }
+  });
+  const { dataValues } = comment;
+  if (dataValues.user !== user.id || user.role !== 'SUPER USER') {
+    throw new httpError(403, 'Unauthorized to perform this action');
+  }
+  next();
+};
+const checkReplayOwner = async (req, res, next) => {
+  const { replayId: id } = req.params;
+  const { user } = req;
+  const replay = await Experience.findOne({
+    where: { id }
+  });
+  const { dataValues } = replay;
+  if (dataValues.user !== user.id) {
+    throw new httpError(403, 'Unauthorized to perform this action');
+  }
+  next();
+};
+const checkReplayOwnerOradmin = async (req, res, next) => {
+  const { replayId: id } = req.params;
+  const { user } = req;
+  const replay = await Experience.findOne({
+    where: { id }
+  });
+  const { dataValues } = replay;
+  if (dataValues.user !== user.id || user.role !== 'SUPER USER') {
+    throw new httpError(403, 'Unauthorized to perform this action');
+  }
+  next();
+};
 
-export { checkExperience, checkExperienceComment, checkReplay };
+export {
+  checkExperience,
+  checkExperienceComment,
+  checkReplay,
+  checkExperienceOwner,
+  checkExperienceOwnerOrAdmin,
+  checkCommentOwner,
+  checkCommentOwnerOradmin,
+  checkReplayOwner,
+  checkReplayOwnerOradmin
+};

@@ -17,5 +17,29 @@ const checkReplay = async (req, res, next) => {
   }
   next();
 };
+const checkReplayOwner = async (req, res, next) => {
+  const { replayId: id } = req.params;
+  const { user } = req;
+  const replay = await replayComment.findOne({
+    where: { id }
+  });
+  const { dataValues } = replay;
+  if (dataValues.user !== user.id) {
+    throw new httpError(403, 'Unauthorized to perform this action');
+  }
+  next();
+};
+const checkReplayOwnerOrAdmin = async (req, res, next) => {
+  const { replayId: id } = req.params;
+  const { user } = req;
+  const replay = await replayComment.findOne({
+    where: { id }
+  });
+  const { dataValues } = replay;
+  if (dataValues.user !== user.id || user.role !== 'SUPER USER') {
+    throw new httpError(403, 'Unauthorized to perform this action');
+  }
+  next();
+};
 
-export { checkReplay };
+export { checkReplay, checkReplayOwner, checkReplayOwnerOrAdmin };

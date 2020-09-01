@@ -5,8 +5,16 @@ import Comment from '../../controllers/commentEvent/commentEvent';
 import LikeComment from '../../controllers/commentEvent/likeComment';
 import auth from '../../middleware/users/auth';
 import { checkEvent } from '../../middleware/event/checkEvent';
-import { checkComment } from '../../middleware/commentEvent/checkComment';
-import { checkReplay } from '../../middleware/commentEvent/checkReplay';
+import {
+  checkComment,
+  checkCommentOwner,
+  checkCommentOwnerOrAdmin
+} from '../../middleware/commentEvent/checkComment';
+import {
+  checkReplay,
+  checkReplayOwner,
+  checkReplayOwnerOrAdmin
+} from '../../middleware/commentEvent/checkReplay';
 import {
   validateComment,
   validations
@@ -42,6 +50,7 @@ router.put(
   asyncHandler(auth),
   asyncHandler(checkEvent),
   asyncHandler(checkComment),
+  asyncHandler(checkCommentOwner),
   asyncHandler(comment.updateComment)
 );
 router.put(
@@ -50,6 +59,7 @@ router.put(
   asyncHandler(auth),
   asyncHandler(checkEvent),
   asyncHandler(checkComment),
+  asyncHandler(checkCommentOwnerOrAdmin),
   asyncHandler(comment.deleteComment)
 );
 router.put(
@@ -95,6 +105,7 @@ router.put(
   asyncHandler(auth),
   asyncHandler(checkComment),
   asyncHandler(checkReplay),
+  asyncHandler(checkReplayOwner),
   asyncHandler(replayComment.updateReplay)
 );
 router.put(
@@ -103,6 +114,7 @@ router.put(
   asyncHandler(auth),
   asyncHandler(checkComment),
   asyncHandler(checkReplay),
+  asyncHandler(checkReplayOwnerOrAdmin),
   asyncHandler(replayComment.deleteReplay)
 );
 router.post(
