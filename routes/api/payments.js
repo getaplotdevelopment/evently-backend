@@ -6,13 +6,14 @@ import {
   standardPayment,
   webhookPath,
   attendFree,
-  cancelFreeAttendance
+  cancelFreeAttendance,
+  paymentRefund
 } from '../../controllers/payments';
 import asyncHandler from '../../helpers/errorsHandler/asyncHandler';
 import auth from '../../middleware/users/auth';
 import checkToken from '../../middleware/users/checkToken';
 import { checkEvent } from '../../middleware/event/checkEvent';
-import { checkTicketEvent } from '../../middleware/tickets/ticket';
+import { checkTicketEvent, checkPaidEventTicket } from '../../middleware/tickets/ticket';
 import { validateFreePayment, validations, validatePaidPayment } from '../../middleware/validations/validateAll';
 
 const router = express.Router();
@@ -53,7 +54,17 @@ router.put(
   asyncHandler(checkToken),
   asyncHandler(auth),
   asyncHandler(checkEvent),
+  asyncHandler(checkPaidEventTicket),
   asyncHandler(cancelFreeAttendance)
+);
+
+router.post(
+  '/:slug/:ticketId/refund',
+  asyncHandler(checkToken),
+  asyncHandler(auth), //TODO: Only allow suoer admin to perform this operation
+  asyncHandler(checkEvent),
+  asyncHandler(checkPaidEventTicket),
+  asyncHandler(paymentRefund)
 );
 
 export default router;

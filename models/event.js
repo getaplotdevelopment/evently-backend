@@ -54,6 +54,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'event',
       allowNull: false
     });
+    Event.hasMany(models.PaymentRefunds, {
+      foreignKey: 'event',
+      allowNull: false
+    });
   };
   return Event;
 };

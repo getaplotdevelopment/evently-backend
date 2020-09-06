@@ -40,6 +40,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'ticketNo',
       allowNull: false
     });
+    Ticket.hasMany(models.PaymentRefunds, {
+      foreignKey: 'ticketNo',
+      allowNull: false
+    });
   };
   return Ticket;
 };
