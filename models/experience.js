@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
     'Experience',
     {
       text: DataTypes.TEXT,
-      img: DataTypes.STRING,
+      img: DataTypes.ARRAY('STRING'),
       isDeleted: DataTypes.BOOLEAN,
       user: DataTypes.INTEGER
     },

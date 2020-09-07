@@ -12,7 +12,7 @@ module.exports = {
         type: Sequelize.TEXT
       },
       img: {
-        type: Sequelize.STRING
+        type: Sequelize.ARRAY(Sequelize.STRING)
       },
       isDeleted: {
         type: Sequelize.BOOLEAN,
