@@ -52,7 +52,6 @@ class ExperienceController {
   async createExperience(req, res) {
     const { text, img } = req.body;
     const { id: user } = req.user;
-    console.log('img', img);
     const experience = {
       text,
       img,
