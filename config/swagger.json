@@ -2174,6 +2174,48 @@
         }
       }
     },
+    "api/payments/{slug}/{ticketNumber}/refund": {
+      "post": {
+        "tags": ["Payments/Bookings"],
+        "summary": "refund payment",
+        "description": "payment refunds",
+        "operationId": "refund payment",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Provide the Admin token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "amount to refund",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/Refund-amount"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "404": {
+            "description": "Item not found"
+          },
+          "400": {
+            "description": "Operation not successful"
+          },
+          "403": {
+            "description": "Invalid credentials"
+          }
+        }
+      }
+    },
     "api/events/{slug}/users": {
       "get": {
         "tags": ["Payments/Bookings"],
@@ -2489,6 +2531,14 @@
       "properties": {
         "email": {
           "type": "string"
+        }
+      }
+    },
+    "Refund-amount": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "integer"
         }
       }
     },
