@@ -6,8 +6,7 @@
   "scripts": {
     "test": "NODE_ENV=test sequelize db:migrate:undo:all && npm run db:migrate:test && npm run db:migrate:seed:test && NODE_ENV=test nyc --reporter=html --reporter=text mocha --require babel-register tests/* --exit",
     "start": "npm run db:migrate && npm run db:seed:undo && npm run db:seed && --require babel-register index.js",
-    "dev": "NODE_ENV=development nodemon --require babel-register index.js",
-    "lint": "eslint . --fix",
+    "dev": "NODE_ENV=development && nodemon --require babel-register index.js",
     "db:migrate": "./node_modules/.bin/sequelize db:migrate",
     "db:seed": "./node_modules/.bin/sequelize db:seed:all",
     "db:seed:undo": "./node_modules/.bin/sequelize db:seed:undo:all",
@@ -52,8 +51,11 @@
     "express-validator": "^6.3.1",
     "fs": "0.0.1-security",
     "gravatar": "^1.8.0",
+    "http": "0.0.1-security",
+    "http-errors": "^1.8.0",
     "jsonwebtoken": "^8.5.1",
     "lodash.random": "^3.2.0",
+    "moment": "^2.27.0",
     "multer": "^1.4.2",
     "nodemailer": "^6.4.2",
     "passport": "^0.4.1",
@@ -69,7 +71,9 @@
     "slugify": "^1.3.6",
     "swagger-ui-express": "^4.1.2",
     "uuid": "^7.0.3",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0"
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "socket.io": "^2.3.0",
+    "web-push": "^3.4.4"
   },
   "devDependencies": {
     "chai": "^4.2.0",

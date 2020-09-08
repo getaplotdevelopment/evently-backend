@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import app from '../../index';
+import { app } from '../../app';
 import {
   createEvent,
   signupUser2,
@@ -41,7 +41,7 @@ const createEvents = async (userObj, event = createEvent) => {
 };
 
 describe('Event', () => {
-  it('should create an event', async () => {
+  it('a should create an event', async () => {
     const response = await newOrganizer();
     const res = await createEvents(response);
     res.should.have.status(201);

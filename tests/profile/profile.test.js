@@ -1,7 +1,7 @@
 /* eslint-disable no-shadow */
 import chai from 'chai';
 import chaitHttp from 'chai-http';
-import app from '../../index';
+import { app } from '../../app';
 import models from '../../models/index';
 import generateToken from '../../helpers/generateToken/generateToken';
 

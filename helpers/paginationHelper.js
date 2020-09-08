@@ -1,6 +1,6 @@
 export default async (searchParams, model, attributes, include) => {
   const limit = 10;
-  const currentPage = searchParams.page || 1;
+  const currentPage = (searchParams && searchParams.page) || 1;
   const offset = limit * currentPage - limit;
 
   const { count: countAll, rows: data } = await model.findAndCountAll({
