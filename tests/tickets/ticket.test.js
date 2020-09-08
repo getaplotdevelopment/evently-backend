@@ -24,8 +24,8 @@ describe('Tickets', () => {
     token = res.body.token;
 
     const createTicket = {
-      price: [{"vvip": 200, "regular": 300, "table": 800}],
-      category: [{"vvip": 1, "regular": 1, "table": 1}]
+      price: [{ vvip: 200, regular: 300, table: 800 }],
+      category: [{ vvip: 1, regular: 1, table: 1 }]
     };
     const response = await chai
       .request(app)
@@ -34,19 +34,19 @@ describe('Tickets', () => {
       .send(createTicket);
     response.should.have.status(201);
     response.body.should.be.a('object');
-    ticketId = 1;    
+    ticketId = 1;
   }).timeout(10000);
   it('should only create ticket with available category', async () => {
     const createTicket = {
-      price: [{"vvip": 200, "regular": 300, "table": 800}],
-      category: [{"notExist": 1}]
+      price: [{ vvip: 200, regular: 300, table: 800 }],
+      category: [{ notExist: 1 }]
     };
     const res = await chai
       .request(app)
       .post(`/api/ticket/${slug}`)
       .set('Authorization', `Bearer ${token}`)
-      .send(createTicket);    
-    res.should.have.status(204);
+      .send(createTicket);
+    res.should.have.status(404);
     res.body.should.be.a('object');
   });
   it('should update a ticket', async () => {
@@ -57,7 +57,7 @@ describe('Tickets', () => {
       .request(app)
       .put(`/api/ticket/${slug}/${ticketId}`)
       .set('Authorization', `Bearer ${token}`)
-      .send(updatedTicketCategory);    
+      .send(updatedTicketCategory);
     res.should.have.status(200);
     res.body.should.be.a('object');
   });
