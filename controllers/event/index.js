@@ -30,7 +30,6 @@ const includeTicket = () => {
     },
     {
       model: commentEvent,
-      where: { isDeleted: false },
       include: [{ model: replayComment }]
     }
   ];
