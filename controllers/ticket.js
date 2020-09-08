@@ -72,8 +72,8 @@ class TicketController {
     }
 
     if (createdTicketSummary.length == 0) {
-      return res.status(204).json({
-        status: 204,
+      return res.status(200).json({
+        status: 200,
         message: 'No tickets created, Ticket category does not exist.',
         createdTicketSummary
       });

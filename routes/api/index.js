@@ -11,6 +11,7 @@ import commentEvent from './commentEvent';
 import experience from './experience';
 import push from './push';
 import report from './report';
+import payments from './payments';
 
 const router = Router();
 
@@ -25,4 +26,5 @@ router.use('/event', commentEvent);
 router.use('/experience', experience);
 router.use('/push', push);
 router.use('/report', report);
+router.use('/payments', payments);
 export default router;
