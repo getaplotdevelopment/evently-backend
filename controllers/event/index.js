@@ -11,6 +11,8 @@ import {
 } from '../../helpers/googleMap/calculateEventDist';
 import models from '../../models';
 import getSingleEvent from '../../helpers/eventHelper/getSingleEvent';
+import 'dotenv/config';
+import sendEmail from '../../helpers/sendEmail/callMailer';
 
 const { Op } = require('sequelize');
 
@@ -18,12 +20,12 @@ const {
   Event,
   Likes,
   Ticket,
-  TicketCategory,
   commentEvent,
   replayComment,
   PaymentEvents,
   User
 } = models;
+const { USER_LOCATION_URL } = process.env;
 
 const includeTicket = () => {
   return [
@@ -36,25 +38,27 @@ const includeTicket = () => {
     },
     {
       model: Likes,
-      include: [{ 
-        model: User,
-        as: 'likedBy',
-        attributes: {
-          exclude: [
-            'password',
-            'isActivated',
-            'deviceToken',
-            'role',
-            'createdAt',
-            'updatedAt'
-          ]
+      include: [
+        {
+          model: User,
+          as: 'likedBy',
+          attributes: {
+            exclude: [
+              'password',
+              'isActivated',
+              'deviceToken',
+              'role',
+              'createdAt',
+              'updatedAt'
+            ]
+          }
         }
-      }],
+      ]
     },
     {
       model: PaymentEvents,
       include: [{ model: Event, as: 'events' }]
-    },
+    }
   ];
 };
 export const createEventController = async (req, res) => {
@@ -121,7 +125,7 @@ export const createEventController = async (req, res) => {
 export const getOrganizerEvents = async (req, res) => {
   const { email } = req.organizer;
   const searchParams = req.query;
-  const filterBy = { 'organizer.email' : email };
+  const filterBy = { 'organizer.email': email };
   const { pages, count, data } = await getEvents(
     searchParams,
     filterBy,
@@ -199,21 +203,23 @@ export const likedEvent = async (req, res) => {
       },
       {
         model: Likes,
-        include: [{ 
-          model: User,
-          as: 'likedBy',
-          attributes: {
-            exclude: [
-              'password',
-              'isActivated',
-              'deviceToken',
-              'role',
-              'createdAt',
-              'updatedAt'
-            ]
-          },
-          where: {email}
-        }],
+        include: [
+          {
+            model: User,
+            as: 'likedBy',
+            attributes: {
+              exclude: [
+                'password',
+                'isActivated',
+                'deviceToken',
+                'role',
+                'createdAt',
+                'updatedAt'
+              ]
+            },
+            where: { email }
+          }
+        ]
       }
     ];
   };
@@ -292,7 +298,7 @@ export const getEventsNearCities = async (req, res) => {
 
 export const getUserLocationEvents = async (req, res) => {
   const results = await axios({
-    url: `http://ip-api.com/json/?fields=8581119`,
+    url: USER_LOCATION_URL,
     method: 'GET'
   });
   const { lat, lon } = results.data;
@@ -324,4 +330,55 @@ export const getUserLocationEvents = async (req, res) => {
     count: eventsInUsersLocation.length,
     data: eventsInUsersLocation
   });
+};
+export const updateEventStatus = async (req, res) => {
+  let token = req.headers.authorization;
+  token = token.replace('Bearer', '');
+  const { slug } = req.params;
+  const condition = { slug, eventType: false };
+  const where = { paymentMethod: 'free' };
+  const { eventStatus } = req.body;
+  const paymentEvents = await PaymentEvents.findAll({
+    where
+  });
+  let template;
+  if (eventStatus === 'canceled') {
+    template = 'freeEventCancellation';
+  }
+  if (eventStatus === 'postponed') {
+    template = 'freeEventPostponed';
+  }
+  if (eventStatus === 'paused') {
+    template = 'freeEventPaused';
+  }
+  if (eventStatus === 'live') {
+    template = 'freeEventLive';
+  }
+
+  paymentEvents.map(paymentEvent => {
+    const {
+      dataValues: {
+        customer: { email }
+      }
+    } = paymentEvent;
+    sendEmail(email, token.trim(), template);
+  });
+
+  const cancelEvent = await Event.update(
+    {
+      eventStatus
+    },
+    {
+      where: condition
+    }
+  );
+  if (cancelEvent[0] == 1) {
+    res.status(200).json({
+      status: 200,
+      message:
+        eventStatus === 'live'
+          ? `Event is live`
+          : `Event successfuly ${eventStatus}`
+    });
+  }
 };
