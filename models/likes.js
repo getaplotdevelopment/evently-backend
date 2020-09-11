@@ -3,9 +3,8 @@ module.exports = (sequelize, DataTypes) => {
   const Likes = sequelize.define(
     'Likes',
     {
-      email: {
-        type: DataTypes.STRING,
-        references: { model: 'User', key: 'email' }
+      user: {
+        type: DataTypes.INTEGER
       },
       slug: {
         type: DataTypes.STRING,
@@ -13,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       isLiked: {
         type: DataTypes.BOOLEAN,
-        defaultValue: false
+        defaultValue: true
       }
     },
     {}
@@ -21,8 +20,8 @@ module.exports = (sequelize, DataTypes) => {
   Likes.associate = function(models) {
     // associations can be defined here
     Likes.belongsTo(models.User, {
-      as: 'likedByKey',
-      foreignKey: 'email',
+      as: 'likedBy',
+      foreignKey: 'user',
       onDelete: 'CASCADE'
     });
     Likes.belongsTo(models.Event, {

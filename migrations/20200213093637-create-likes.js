@@ -8,8 +8,8 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      email: {
-        type: Sequelize.STRING
+      user: {
+        type: Sequelize.INTEGER
       },
       slug: {
         type: Sequelize.STRING

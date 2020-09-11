@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     });
     User.hasMany(models.Likes, {
-      foreignKey: 'email'
+      foreignKey: 'user'
     });
     User.hasMany(models.Ticket, {
       foreignKey: 'organizer',

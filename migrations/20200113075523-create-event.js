@@ -64,10 +64,6 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         defaultValue: false
       },
-      likedBy: {
-        type: Sequelize.ARRAY(Sequelize.STRING),
-        defaultValue: []
-      },
       currentMode: {
         type: Sequelize.STRING,
         defaultValue: 'draft'
