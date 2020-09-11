@@ -55,7 +55,7 @@ const checkExperienceOwnerOrAdmin = async (req, res, next) => {
     where: { id }
   });
   const { dataValues } = experience;
-  if (dataValues.user !== user.id || user.role !== 'SUPER USER') {
+  if (dataValues.user !== user.id && user.role !== 'SUPER USER') {
     throw new httpError(403, 'Unauthorized to perform this action');
   }
   next();
@@ -79,7 +79,7 @@ const checkCommentOwnerOradmin = async (req, res, next) => {
     where: { id }
   });
   const { dataValues } = comment;
-  if (dataValues.user !== user.id || user.role !== 'SUPER USER') {
+  if (dataValues.user !== user.id && user.role !== 'SUPER USER') {
     throw new httpError(403, 'Unauthorized to perform this action');
   }
   next();
@@ -103,7 +103,7 @@ const checkReplayOwnerOradmin = async (req, res, next) => {
     where: { id }
   });
   const { dataValues } = replay;
-  if (dataValues.user !== user.id || user.role !== 'SUPER USER') {
+  if (dataValues.user !== user.id && user.role !== 'SUPER USER') {
     throw new httpError(403, 'Unauthorized to perform this action');
   }
   next();

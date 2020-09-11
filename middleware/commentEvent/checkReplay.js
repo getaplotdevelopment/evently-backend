@@ -36,7 +36,7 @@ const checkReplayOwnerOrAdmin = async (req, res, next) => {
     where: { id }
   });
   const { dataValues } = replay;
-  if (dataValues.user !== user.id || user.role !== 'SUPER USER') {
+  if (dataValues.user !== user.id && user.role !== 'SUPER USER') {
     throw new httpError(403, 'Unauthorized to perform this action');
   }
   next();

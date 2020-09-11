@@ -63,7 +63,17 @@ class ReplayCommentExperienceController {
       experienceComment
     };
     const newReplay = await ReplayExperienceComment.create(replayToComment);
-    const createdReplay = { ...newReplay.dataValues, user: req.user };
+    const createdReplay = {
+      ...newReplay.dataValues,
+      user: {
+        firstName: req.user.firstName,
+        lastName: req.user.lastName,
+        userName: req.user.userName,
+        email: req.user.email,
+        avatar: req.user.avatar,
+        phoneNumber: req.user.phoneNumber
+      }
+    };
     res.status(201).json({
       status: 201,
       createdReplay
@@ -105,11 +115,11 @@ class ReplayCommentExperienceController {
     const { replayId: id } = req.params;
     const { text, img } = req.body;
     const where = { id, isDeleted: false };
-    const replay = {
+    const newReplay = {
       text,
       img
     };
-    const updateReplay = await ReplayExperienceComment.update(replay, {
+    const updateReplay = await ReplayExperienceComment.update(newReplay, {
       where
     });
     if (updateReplay[0] === 0) {
@@ -118,6 +128,17 @@ class ReplayCommentExperienceController {
         message: 'Comment replay not found'
       });
     }
+    const replay = {
+      ...newReplay,
+      user: {
+        firstName: req.user.firstName,
+        lastName: req.user.lastName,
+        userName: req.user.userName,
+        email: req.user.email,
+        avatar: req.user.avtar,
+        phoneNumber: req.user.phoneNumber
+      }
+    };
     if (updateReplay[0] === 1) {
       return res.status(200).json({
         status: 200,

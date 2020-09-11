@@ -59,10 +59,20 @@ class ReplayCommentController {
       commentEvent: commentId
     };
     const newReplay = await replayComment.create(replayToComment);
-    const createdReplay = { ...newReplay.dataValues, user: req.user };
+    const replay = {
+      ...newReplay.dataValues,
+      user: {
+        firstName: req.user.firstName,
+        lastName: req.user.lastName,
+        userName: req.user.userName,
+        email: req.user.email,
+        avatar: req.user.avatar,
+        phoneNumber: req.user.phoneNumber
+      }
+    };
     res.status(201).json({
       status: 201,
-      createdReplay
+      replay
     });
   }
 
@@ -101,12 +111,12 @@ class ReplayCommentController {
     const { replayId: id, commentId } = req.params;
     const { text, img, isHidden } = req.body;
     const where = { id, isDeleted: false, commentEvent: commentId };
-    const replay = {
+    const newReplay = {
       text,
       img,
       isHidden
     };
-    const updateReplay = await replayComment.update(replay, {
+    const updateReplay = await replayComment.update(newReplay, {
       where
     });
     if (updateReplay[0] === 0) {
@@ -115,6 +125,19 @@ class ReplayCommentController {
         message: 'Repaly not found'
       });
     }
+    const replay = {
+      ...newReplay,
+      user: {
+        user: {
+          firstName: req.user.firstName,
+          lastName: req.user.lastName,
+          userName: req.user.userName,
+          email: req.user.email,
+          avatar: req.user.avtar,
+          phoneNumber: req.user.phoneNumber
+        }
+      }
+    };
     if (updateReplay[0] === 1) {
       res.status(200).json({
         status: 200,
