@@ -55,6 +55,7 @@ router.patch(
   '/events/:slug/like',
   asyncHandler(checkToken),
   asyncHandler(auth),
+  asyncHandler(checkEvent),
   asyncHandler(likeUnlikeEvent)
 );
 router.get('/events/liked', asyncHandler(auth), asyncHandler(likedEvent));

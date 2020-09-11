@@ -362,7 +362,7 @@
           {
             "in": "header",
             "name": "Authorization",
-            "description": "Add the token",
+            "description": "Add the user token",
             "type": "string",
             "required": true,
             "example": "Bearer token"

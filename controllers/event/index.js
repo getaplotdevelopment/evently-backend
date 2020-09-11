@@ -20,7 +20,8 @@ const {
   Ticket,
   TicketCategory,
   commentEvent,
-  replayComment
+  replayComment,
+  User
 } = models;
 
 const includeTicket = () => {
@@ -31,6 +32,23 @@ const includeTicket = () => {
     {
       model: commentEvent,
       include: [{ model: replayComment }]
+    },
+    {
+      model: Likes,
+      include: [{ 
+        model: User,
+        as: 'likedBy',
+        attributes: {
+          exclude: [
+            'password',
+            'isActivated',
+            'deviceToken',
+            'role',
+            'createdAt',
+            'updatedAt'
+          ]
+        }
+      }],
     }
   ];
 };
@@ -147,37 +165,53 @@ export const updateEvents = async (req, res) => {
 };
 
 export const likeUnlikeEvent = async (req, res) => {
-  const { email } = req.user;
+  const { id: user } = req.user;
   const { slug } = req.params;
-  const { data, isLiked, likedBy } = await handleLikeUnlike(email, slug);
+  const { data, isLiked, likedBy } = await handleLikeUnlike(user, slug);
   res.send({ status: 200, isLiked, data, likedBy });
 };
 
 export const likedEvent = async (req, res) => {
   const { email } = req.user;
   const searchParams = req.query;
+  const includeModels = () => {
+    return [
+      {
+        model: Ticket
+      },
+      {
+        model: commentEvent,
+        include: [{ model: replayComment }]
+      },
+      {
+        model: Likes,
+        include: [{ 
+          model: User,
+          as: 'likedBy',
+          attributes: {
+            exclude: [
+              'password',
+              'isActivated',
+              'deviceToken',
+              'role',
+              'createdAt',
+              'updatedAt'
+            ]
+          },
+          where: {email}
+        }],
+      }
+    ];
+  };
   searchParams.sort = 'updatedAt:desc';
-  const filterBy = { email, isLiked: true };
+  const filterBy = { isLiked: true };
   const { pages, count, data: liked } = await getEvents(
     searchParams,
     filterBy,
-    Likes,
-    null
+    Event,
+    includeModels()
   );
-  const jsonObj = JSON.parse(JSON.stringify(liked));
-
-  const mapResponse = Promise.all(
-    jsonObj.map(async item => {
-      const { slug } = item;
-      const event = await Event.findAll({
-        where: { slug }
-      });
-      item.event = event[0];
-      return item;
-    })
-  );
-  const data = await mapResponse;
-  res.send({ status: 200, pages, count, data });
+  res.send({ status: 200, pages, count, liked });
 };
 
 export const singleEvent = async (req, res) => {

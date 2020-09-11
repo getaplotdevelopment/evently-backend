@@ -7,7 +7,9 @@ const {
   Event,
   PaymentEvents,
   commentEvent,
-  replayComment
+  replayComment, 
+  Likes,
+  User
 } = models;
 
 export default async slug => {
@@ -25,6 +27,24 @@ export default async slug => {
       {
         model: commentEvent,
         include: [{ model: replayComment }]
+      },
+      {
+        model: Likes,
+        include: [{ 
+          model: User,
+          as: 'likedBy',
+          attributes: {
+            exclude: [
+              'password',
+              'isActivated',
+              'deviceToken',
+              'role',
+              'createdAt',
+              'updatedAt'
+            ]
+          }
+        }],
+        
       }
     ]
   });

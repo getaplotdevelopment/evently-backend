@@ -2,12 +2,12 @@ import models from '../../models';
 
 const { Event, Likes } = models;
 
-export default async (email, slug) => {
+export default async (user, slug) => {
   let data;
 
   const likeObj = {
     slug,
-    email
+    user
   };
 
   const likeValues = await Likes.findOne({
@@ -27,23 +27,19 @@ export default async (email, slug) => {
   } else {
     data = await Likes.create(likeObj);
   }
-  const likedBy = [];
-  const likedEvents = await Likes.findAll({
+  const likedBy = await Likes.findAll({
     where: {
       slug,
       isLiked: true
     }
   });
-  likedEvents.forEach(event => {
-    likedBy.push(event.email);
-  });
-  const isLiked = likedEvents !== [];
-
+  const isLiked = likedBy.length !== 0;
   await Event.update(
-    { likedBy, isLiked },
+    { isLiked },
     {
       where: { slug }
     }
   );
+  
   return { data, likedBy, isLiked };
 };
