@@ -622,6 +622,51 @@ class UserController {
       isDeactivated: updatedAccount.dataValues.isDeactivated
     });
   }
+
+  /**
+   * @param {Object} req - Request from user
+   * @param {Object} res - Response to the user
+   * @returns {Object} Response
+   */
+  async fetchAdminList(req, res) {
+    const where = { role: 'SUPER USER' };
+    const admins = await User.findAll({
+      where
+    });
+    if (!admins) {
+      return res.status(404).json({
+        status: 404,
+        message: "We don't currently have a user with this role"
+      });
+    }
+    return res.status(200).json({
+      status: 200,
+      admins
+    });
+  }
+
+  /**
+   * @param {Object} req - Request from user
+   * @param {Object} res - Response to the user
+   * @returns {Object} Response
+   */
+  async fetchOrgnizers(req, res) {
+    const where = { role: 'ORGANIZER' };
+    const organizers = await User.findAll({
+      where
+    });
+    console.log('organizers', organizers.length);
+    if (!organizers.length) {
+      return res.status(404).json({
+        status: 404,
+        message: "We don't currently have a user with this role"
+      });
+    }
+    return res.status(200).json({
+      status: 200,
+      organizers
+    });
+  }
 }
 
 export default UserController;

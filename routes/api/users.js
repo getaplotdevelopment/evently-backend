@@ -111,5 +111,15 @@ router.get(
   asyncHandler(isAdminAuth),
   asyncHandler(userActivity.getUserActivity)
 );
+router.get(
+  '/admins',
+  asyncHandler(isAdminAuth),
+  asyncHandler(users.fetchAdminList)
+);
+router.get(
+  '/organizers',
+  asyncHandler(isAdminAuth),
+  asyncHandler(users.fetchOrgnizers)
+);
 
 export default router;
