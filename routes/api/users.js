@@ -15,7 +15,8 @@ import {
   isActivate,
   isDeactivated,
   checkUserId,
-  checkOrganizerId
+  checkOrganizerId,
+  checkFollowUser
 } from '../../middleware/users/checkUser';
 import asyncHandler from '../../helpers/errorsHandler/asyncHandler';
 import auth from '../../middleware/users/auth';
@@ -97,11 +98,13 @@ router.patch(
 router.post(
   '/:userId/follow',
   asyncHandler(auth),
+  asyncHandler(checkFollowUser),
   asyncHandler(users.followUser)
 );
 router.delete(
   '/:userId/unfollow',
   asyncHandler(auth),
+  asyncHandler(checkFollowUser),
   asyncHandler(users.unfollowUser)
 );
 

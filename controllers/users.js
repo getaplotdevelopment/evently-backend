@@ -447,11 +447,11 @@ class UserController {
    * @returns {Object} Response
    */
   async followUser(req, res) {
-    const { userId: follower } = req.params;
-    const { email: following } = req.user;
+    const { userId: following } = req.params;
+    const { email: follower } = req.user;
     const isUserExist = await User.findOne({
       where: {
-        id: follower
+        id: following
       },
       attributes: [
         'id',
@@ -463,26 +463,34 @@ class UserController {
         'isActivated'
       ]
     });
+    const { dataValues: userObj } = isUserExist;
     if (!isUserExist) {
       throw new httpError(404, 'User does not exist');
     }
     const isFollowed = await Follow.findOne({
       where: {
-        id: follower,
-        following
+        follower,
+        following: userObj.email
       }
     });
     if (isFollowed) {
       throw new httpError(409, 'User already followed');
     }
-    const { dataValues: userObj } = isUserExist;
+
     const response = await Follow.create({
       id: userObj.id,
-      follower: userObj.email,
-      following
+      following: userObj.email,
+      follower
     });
     userObj.email = undefined;
-    response.follower = userObj;
+    response.following = userObj;
+    response.follower = {
+      firstName: req.user.firstName,
+      lastName: req.user.lastName,
+      userName: req.user.userName,
+      avatar: req.user.avatar,
+      emai: req.user.email
+    };
     return res.send({
       status: 200,
       follow: true,
@@ -496,29 +504,30 @@ class UserController {
    * @returns {Object} Response
    */
   async unfollowUser(req, res) {
-    const { userId: id } = req.params;
-    const { email: following } = req.user;
+    const { userId: following } = req.params;
+    const { email: follower } = req.user;
     const isUserExist = await User.findOne({
       where: {
-        id
+        id: following
       }
     });
     if (!isUserExist) {
       throw new httpError(404, 'User does not exist');
     }
+    const { dataValues: userObj } = isUserExist;
     const isunFollowed = await Follow.findOne({
       where: {
-        id,
-        following
+        follower,
+        following: userObj.email
       }
     });
     if (!isunFollowed) {
-      throw new httpError(404, 'User does not exist');
+      throw new httpError(404, 'User already unfollowed');
     }
-    const dataValues = await Follow.destroy({
+    await Follow.destroy({
       where: {
-        id,
-        following
+        follower,
+        following: userObj.email
       }
     });
     return res.send({
