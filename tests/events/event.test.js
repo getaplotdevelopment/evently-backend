@@ -236,8 +236,8 @@ describe('Event', () => {
       .get(`/api/events/liked`)
       .set({ Authorization: 'Bearer ' + user2.body.token });
     result.should.have.status(200);
-    result.body.count.should.equal(1);
-    result.body.data.should.be.a('array');
+    result.body.count.should.equal(2);
+    result.body.liked.should.be.a('array');
   });
   it('should retrieve similar events', async () => {
     const user1 = await loginOrganizer();
