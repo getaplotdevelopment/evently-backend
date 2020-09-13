@@ -52,6 +52,7 @@ class CommentEventController {
     };
     const newComment = await commentEvent.create(comment);
     const createdComment = { ...newComment.dataValues, user: req.user };
+    Event.increment({ popularityCount: 2 }, { where: { slug } });
     res.status(201).json({
       status: 201,
       createdComment

@@ -26,6 +26,7 @@ export default async (user, slug) => {
     data = row[1][0];
   } else {
     data = await Likes.create(likeObj);
+    Event.increment({ popularityCount: 2 }, { where: { slug } });
   }
   const likedBy = await Likes.findAll({
     where: {
@@ -40,6 +41,6 @@ export default async (user, slug) => {
       where: { slug }
     }
   );
-  
+
   return { data, likedBy, isLiked };
 };

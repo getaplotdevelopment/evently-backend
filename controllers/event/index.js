@@ -21,6 +21,7 @@ const {
   TicketCategory,
   commentEvent,
   replayComment,
+  PaymentEvents,
   User
 } = models;
 
@@ -49,7 +50,11 @@ const includeTicket = () => {
           ]
         }
       }],
-    }
+    },
+    {
+      model: PaymentEvents,
+      include: [{ model: Event, as: 'events' }]
+    },
   ];
 };
 export const createEventController = async (req, res) => {

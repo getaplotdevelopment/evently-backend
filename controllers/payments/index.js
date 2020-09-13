@@ -43,6 +43,7 @@ const verifyPayment = async payload => {
       refID: data.tx_ref
     };
     const { dataValues } = await PaymentEvents.create(paidPayload);
+    Event.increment({ popularityCount: 2 }, { where: { slug: event } });
     await Ticket.update(
       { status: 'booked' },
       {
@@ -200,6 +201,7 @@ export const attendFree = async (req, res) => {
   };
 
   const { dataValues } = await PaymentEvents.create(freePayload);
+  Event.increment({ popularityCount: 2 }, { where: { slug: event } });
   await Ticket.update(
     { status: 'booked' },
     {
@@ -228,6 +230,7 @@ export const cancelFreeAttendance = async (req, res) => {
       where: { ticketNumber: ticketId, event }
     }
   );
+  Event.decrement({ popularityCount: 1 }, { where: { slug: event } });
   res.send({
     status: 200,
     message: 'Attendance has been cancelled.'

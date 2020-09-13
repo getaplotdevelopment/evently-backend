@@ -1,5 +1,5 @@
 export default async (searchParams, filterBy, model, include) => {
-  const limit = 25;
+  const limit = searchParams.limit || 25;
   const currentPage = searchParams.page || 1;
   const offset = limit * currentPage - limit;
   const order = [];
@@ -15,15 +15,18 @@ export default async (searchParams, filterBy, model, include) => {
 
   delete searchParams.page;
   delete searchParams.sort;
+  delete searchParams.limit;
 
-  const { count: countAll, rows: data } = await model.findAndCountAll({
+  const { rows: data } = await model.findAndCountAll({
     where: filterBy,
     limit,
     offset,
     order,
     include
   });
+  const countAll = await model.count();
   const pages = Math.ceil(countAll / limit);
+  
   const count = data.length;
   return { pages, count, data };
 };

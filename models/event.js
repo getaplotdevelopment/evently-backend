@@ -27,7 +27,8 @@ module.exports = (sequelize, DataTypes) => {
       updatedAt: DataTypes.DATE,
       isLiked: DataTypes.BOOLEAN,
       availableTickets: DataTypes.ARRAY('JSON'),
-      isDeleted: { type: DataTypes.BOOLEAN, defaultValue: false }
+      isDeleted: { type: DataTypes.BOOLEAN, defaultValue: false },
+      popularityCount: DataTypes.INTEGER
     },
     {}
   );
