@@ -9,7 +9,7 @@ router.use('/api', api);
 // Get home page
 
 router.get('/', (_, res) => {
-  res.status(200).json({
+  return res.status(200).json({
     status: 200,
     message: 'Welcome to get a plot'
   });
