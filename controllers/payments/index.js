@@ -246,7 +246,7 @@ export const paymentRefund = async (req, res) => {
   const { amount } = req.body;
   const { paymentMethod, transactionID } = req.payment;
 
-  if (paymentMethod !== 'free') {
+  if (paymentMethod === 'free') {
     return res.status(400).send({
       status: 400,
       message: 'No refunds for a free event'
