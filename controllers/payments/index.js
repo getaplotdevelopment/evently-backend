@@ -4,8 +4,14 @@ import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import models from '../../models';
 
-const { Event, PaymentEvents, PaymentRequests, Ticket } = models;
-const { PUBLIC_SECRET, enckey } = process.env;
+const {
+  Event,
+  PaymentEvents,
+  PaymentRequests,
+  Ticket,
+  PaymentRefunds
+} = models;
+const { PUBLIC_SECRET, enckey, FLUTTERWAVE_URL } = process.env;
 
 let TICKET_NO, EVENT_SLUG, ORGANIZER;
 
@@ -23,7 +29,7 @@ const verifyPayment = async payload => {
   const event = EVENT_SLUG;
 
   const results = await axios({
-    url: `https://api.flutterwave.com/v3/transactions/${verificationId}/verify`,
+    url: `${FLUTTERWAVE_URL}transactions/${verificationId}/verify`,
     method: 'GET',
     headers: { Authorization: `Bearer ${PUBLIC_SECRET}` }
   });
@@ -118,7 +124,7 @@ export const standardPayment = async (req, res) => {
     enckey
   };
   const hostedLink = await axios({
-    url: 'https://api.flutterwave.com/v3/payments',
+    url: `${FLUTTERWAVE_URL}payments`,
     method: 'post',
     data: payload,
     headers: { Authorization: `Bearer ${PUBLIC_SECRET}` }
@@ -214,7 +220,6 @@ export const attendFree = async (req, res) => {
 export const cancelFreeAttendance = async (req, res) => {
   const { event } = req;
   const { ticketId } = req.params;
-
   const { dataValues } = await PaymentEvents.update(
     { attendanceStatus: false },
     {
@@ -235,4 +240,37 @@ export const cancelFreeAttendance = async (req, res) => {
     status: 200,
     message: 'Attendance has been cancelled.'
   });
+};
+
+export const paymentRefund = async (req, res) => {
+  const { amount } = req.body;
+  const { paymentMethod, transactionID } = req.payment;
+
+  if (paymentMethod !== 'free') {
+    return res.status(400).send({
+      status: 400,
+      message: 'No refunds for a free event'
+    });
+  }
+
+  const results = await axios({
+    url: `${FLUTTERWAVE_URL}transactions/${transactionID}/refund`,
+    method: 'post',
+    data: { amount },
+    headers: { Authorization: `Bearer ${PUBLIC_SECRET}` }
+  });
+  const { data, status, message } = results.data;
+  const refundObject = {
+    ...req.payment,
+    refundID: data.id,
+    accountID: data.account_id,
+    txID: data.tx_id,
+    flwRef: data.flw_ref,
+    walletID: data.wallet_id,
+    amountRefunded: data.amount_refunded,
+    status: data.status,
+    meta: data.meta
+  };
+  const { dataValues } = await PaymentRefunds.create(refundObject);
+  res.send({ status, message, dataValues });
 };

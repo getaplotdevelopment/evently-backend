@@ -1,7 +1,7 @@
 import models from '../../models/index';
 import httpError from '../../helpers/errorsHandler/httpError';
 
-const { Ticket } = models;
+const { Ticket, PaymentEvents } = models;
 
 const checkTicketExist = async (req, res, next) => {
   const { category } = req.body;
@@ -41,6 +41,19 @@ const checkTicketEvent = async (req, res, next) => {
   next();
 };
 
+const checkPaidEventTicket = async (req, res, next) => {
+  const { slug, ticketId } = req.params;
+  const ticket = await PaymentEvents.findOne({
+    where: { ticketNo: ticketId, event: slug }
+  });
+  if (!ticket) {
+    throw new httpError(404, 'Ticket not found');
+  }
+  const { dataValues } = ticket;
+  req.payment = dataValues
+  next();
+};
+
 const checkAccessTicket = async (req, res, next) => {
   const { id } = req.organizer;
 
@@ -57,4 +70,4 @@ const checkAccessTicket = async (req, res, next) => {
   next();
 };
 
-export { checkTicketExist, checkTicket, checkAccessTicket, checkTicketEvent };
+export { checkTicketExist, checkTicket, checkAccessTicket, checkTicketEvent, checkPaidEventTicket };

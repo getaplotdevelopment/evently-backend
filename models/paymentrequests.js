@@ -16,6 +16,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'refID',
       allowNull: false
     });
+    PaymentRequests.hasMany(models.PaymentRefunds, {
+      foreignKey: 'refID',
+      allowNull: false
+    });
   };
   return PaymentRequests;
 };
