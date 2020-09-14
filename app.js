@@ -23,12 +23,8 @@ app.use((req, _, next) => {
   req.io = io;
   next();
 });
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(routes);
-app.use((req, res, next) => {
-  next(createError(HTTP_NOT_FOUND, 'resource not found'));
-});
-
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+// app.use(express.static(path.join(__dirname, 'public')));
+app.use(routes);
 
 export { app, server };
