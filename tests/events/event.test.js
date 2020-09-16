@@ -46,7 +46,7 @@ describe('Event', () => {
     const res = await createEvents(response);
     res.should.have.status(201);
     res.body.should.be.a('object');
-    res.body.data.organizer.should.be.a('string');
+    res.body.data.organizer.should.be.a('object');
     res.body.data.favorited.should.be.false;
   }).timeout(10000);
 
