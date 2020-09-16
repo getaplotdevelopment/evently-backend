@@ -463,10 +463,11 @@ class UserController {
         'isActivated'
       ]
     });
-    const { dataValues: userObj } = isUserExist;
+
     if (!isUserExist) {
       throw new httpError(404, 'User does not exist');
     }
+    const { dataValues: userObj } = isUserExist;
     const isFollowed = await Follow.findOne({
       where: {
         follower,
@@ -664,7 +665,7 @@ class UserController {
     const organizers = await User.findAll({
       where
     });
-    console.log('organizers', organizers.length);
+
     if (!organizers.length) {
       return res.status(404).json({
         status: 404,

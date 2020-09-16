@@ -8,11 +8,9 @@ webpush.setVapidDetails(
   process.env.PUBLIC_VAPID_KEY,
   process.env.PRIVATE_VAPID_KEY
 );
-console.log('here');
 
 // subscribe to the route
 router.post('/subscribe', (req, res) => {
-  console.log('here we go');
   // Get pushSubscription object
   const subscription = req.body;
 
@@ -23,7 +21,6 @@ router.post('/subscribe', (req, res) => {
   const payload = JSON.stringify({ title: 'Push Test' });
 
   // Pass object into sendNotification
-  console.log('subscription', subscription);
   webpush
     .sendNotification(subscription, 'work please')
     .catch(err => console.log('err', err));
