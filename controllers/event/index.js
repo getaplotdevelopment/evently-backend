@@ -103,7 +103,15 @@ export const createEventController = async (req, res) => {
     currentMode,
     eventType,
     location: formatted_address,
-    organizer: email,
+    organizer: {
+      id,
+      firstName,
+      lastName,
+      userName,
+      email,
+      avatar,
+      isOrganizer
+    },
     availableTickets
   };
   const data = await Event.create(newEvent);
