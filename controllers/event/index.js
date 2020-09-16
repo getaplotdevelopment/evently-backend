@@ -148,11 +148,13 @@ export const getAllEvents = async (req, res) => {
 };
 
 export const updateEvents = async (req, res) => {
+  let temp;
   const { email } = req.organizer;
   const { slug } = req.params;
+  const where = { paymentMethod: 'free' };
   const updateTo = JSON.parse(JSON.stringify(req.body));
   if (updateTo.currentMode) {
-    await eventStatuschecker(updateTo.currentMode.split(','));
+    temp = await eventStatuschecker(updateTo.currentMode.split(','));
   }
   const { dataValues } = await Event.findOne({
     where: { slug }
@@ -165,14 +167,19 @@ export const updateEvents = async (req, res) => {
       message: 'Unauthorized to perform this action'
     });
   }
-
-  const eventImage = req.file ? await uploadCloudinary(req.file.buffer) : null;
-  if (req.file) {
-    updateTo.eventImage = eventImage;
-  }
+  const paymentEvents = await PaymentEvents.findAll({
+    where
+  });
   const [result, [data]] = await Event.update(updateTo, {
     where: { slug },
     returning: true
+  });
+
+  paymentEvents.map(paymentEvent => {
+    const {
+      dataValues: { customer }
+    } = paymentEvent;
+    sendEmail(customer.email, undefined, temp);
   });
 
   res.send({
