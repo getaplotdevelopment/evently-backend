@@ -121,9 +121,7 @@ const checkFeedbackOwner = async (req, res, next) => {
   next();
 };
 const checkFollowUser = async (req, res, next) => {
-  console.log('req.params', req.params.userId);
   const { userId } = req.params;
-  console.log('req.user.id', req.user.id);
   if (userId == req.user.id) {
     throw new httpError(403, 'Un-authorized, you can not follow yourself');
   }
