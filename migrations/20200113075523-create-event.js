@@ -53,7 +53,7 @@ module.exports = {
         defaultValue: 0
       },
       organizer: {
-        type: Sequelize.STRING,
+        type: Sequelize.JSON,
         model: 'Users',
         key: 'email'
       },
@@ -70,6 +70,10 @@ module.exports = {
       },
       availableTickets: {
         type: Sequelize.ARRAY(Sequelize.JSON)
+      },
+      popularityCount: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0
       },
       createdAt: {
         allowNull: false,

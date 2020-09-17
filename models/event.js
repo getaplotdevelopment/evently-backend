@@ -22,11 +22,12 @@ module.exports = (sequelize, DataTypes) => {
       favoritedCount: DataTypes.INTEGER,
       eventImage: DataTypes.STRING,
       currentMode: DataTypes.STRING,
-      organizer: DataTypes.STRING,
+      organizer: DataTypes.JSON,
       createdAt: DataTypes.DATE,
       updatedAt: DataTypes.DATE,
       isLiked: DataTypes.BOOLEAN,
       availableTickets: DataTypes.ARRAY('JSON'),
+      popularityCount: DataTypes.INTEGER,
       isDeleted: { type: DataTypes.BOOLEAN, defaultValue: false },
       popularityCount: DataTypes.INTEGER
     },

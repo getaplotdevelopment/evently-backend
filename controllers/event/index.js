@@ -103,7 +103,15 @@ export const createEventController = async (req, res) => {
     currentMode,
     eventType,
     location: formatted_address,
-    organizer: email,
+    organizer: {
+      id,
+      firstName,
+      lastName,
+      userName,
+      email,
+      avatar,
+      isOrganizer
+    },
     availableTickets
   };
   const data = await Event.create(newEvent);
@@ -113,7 +121,7 @@ export const createEventController = async (req, res) => {
 export const getOrganizerEvents = async (req, res) => {
   const { email } = req.organizer;
   const searchParams = req.query;
-  const filterBy = { organizer: email };
+  const filterBy = { 'organizer.email' : email };
   const { pages, count, data } = await getEvents(
     searchParams,
     filterBy,
@@ -145,8 +153,9 @@ export const updateEvents = async (req, res) => {
   const { dataValues } = await Event.findOne({
     where: { slug }
   });
+  const { organizer } = dataValues;
 
-  if (email !== dataValues.organizer) {
+  if (email !== organizer.email) {
     return res.status(403).send({
       status: 403,
       message: 'Unauthorized to perform this action'
