@@ -23,14 +23,16 @@ const {
   commentEvent,
   replayComment,
   PaymentEvents,
-  User
+  User,
+  TicketCategory
 } = models;
 const { USER_LOCATION_URL } = process.env;
 
 const includeTicket = () => {
   return [
     {
-      model: Ticket
+      model: Ticket,
+      include: [{ model: TicketCategory, as: 'ticketCategory' }]
     },
     {
       model: commentEvent,
