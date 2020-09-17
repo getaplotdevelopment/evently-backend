@@ -29,7 +29,7 @@ const verifyPayment = async payload => {
   const event = EVENT_SLUG;
 
   const results = await axios({
-    url: `${FLUTTERWAVE_URL}transactions/1541923/verify`,
+    url: `${FLUTTERWAVE_URL}transactions/${verificationId}/verify`,
     method: 'GET',
     headers: { Authorization: `Bearer ${PUBLIC_SECRET}` }
   });
@@ -53,8 +53,7 @@ const verifyPayment = async payload => {
     await Ticket.update(
       { status: 'booked' },
       {
-        ticketNumber: ticketNo,
-        event
+        where: { ticketNumber: ticketNo, event }
       }
     );
   } else {

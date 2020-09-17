@@ -33,7 +33,7 @@ const checkTicketEvent = async (req, res, next) => {
   const { slug } = req.params;
   const { ticket_id } = req.body;
   const ticket = await Ticket.findOne({
-    where: { ticketNumber: ticket_id, event: slug }
+    where: { ticketNumber: ticket_id, event: slug, status: 'available' }
   });
   if (!ticket) {
     throw new httpError(404, 'Ticket not found');
