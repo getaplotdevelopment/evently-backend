@@ -29,7 +29,7 @@ const verifyPayment = async payload => {
   const event = EVENT_SLUG;
 
   const results = await axios({
-    url: `${FLUTTERWAVE_URL}transactions/${verificationId}/verify`,
+    url: `${FLUTTERWAVE_URL}transactions/1541923/verify`,
     method: 'GET',
     headers: { Authorization: `Bearer ${PUBLIC_SECRET}` }
   });
@@ -91,7 +91,7 @@ export const standardPayment = async (req, res) => {
     where: { slug }
   });
 
-  ORGANIZER = dataValues.organizer;
+  ORGANIZER = dataValues.organizer.email;
   EVENT_SLUG = slug;
 
   const {
@@ -135,22 +135,12 @@ export const standardPayment = async (req, res) => {
 
 export const usersPaidForEvent = async (req, res) => {
   const { slug } = req.params;
-  const { email } = req.organizer;
 
   const { count, rows: data } = await PaymentEvents.findAndCountAll({
     where: {
       event: slug
     }
   });
-
-  const { organizer } = data[0];
-
-  if (email !== organizer) {
-    return res.status(403).send({
-      status: 403,
-      message: 'Unauthorized to perform this action'
-    });
-  }
 
   return res.send({
     message: 'success',
@@ -161,22 +151,12 @@ export const usersPaidForEvent = async (req, res) => {
 
 export const eventAttendees = async (req, res) => {
   const { slug } = req.params;
-  const { email } = req.organizer;
   const { count, rows: data } = await PaymentEvents.findAndCountAll({
     where: {
       event: slug,
       attendanceStatus: 'true'
     }
   });
-
-  const { organizer } = data[0];
-
-  if (email !== organizer) {
-    return res.status(403).send({
-      status: 403,
-      message: 'Unauthorized to perform this action'
-    });
-  }
 
   return res.send({
     message: 'success',
@@ -192,7 +172,7 @@ export const attendFree = async (req, res) => {
   const freePayload = {
     paymentID: uuidv4(),
     amount: 0,
-    organizer: organizerEmail,
+    organizer: organizerEmail.email,
     event,
     transactionID: null,
     attendanceStatus: true,

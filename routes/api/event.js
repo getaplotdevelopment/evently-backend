@@ -65,13 +65,13 @@ router.get('/events/:slug/nearbycity', asyncHandler(getEventsNearCities));
 router.get(
   '/events/:slug/users',
   asyncHandler(checkToken),
-  asyncHandler(authUser),
+  asyncHandler(auth),
   asyncHandler(usersPaidForEvent)
 );
 router.get(
   '/events/:slug/attend',
   asyncHandler(checkToken),
-  asyncHandler(authUser),
+  asyncHandler(auth),
   asyncHandler(checkEvent),
   asyncHandler(eventAttendees)
 );
