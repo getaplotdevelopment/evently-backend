@@ -470,18 +470,47 @@ class UserController {
     const { dataValues: userObj } = isUserExist;
     const isFollowed = await Follow.findOne({
       where: {
-        follower,
-        following: userObj.email
+        isFollowing: true,
+        following: userObj.email,
+        follower
       }
     });
     if (isFollowed) {
       throw new httpError(409, 'User already followed');
     }
-
+    const canFollow = await Follow.findOne({
+      where: {
+        isFollowing: false,
+        following: userObj.email,
+        follower
+      }
+    });
+    if (canFollow) {
+      const [rowCount, [data]] = await Follow.update(
+        {
+          isFollowing: true
+        },
+        {
+          where: {
+            isFollowing: false,
+            following: userObj.email,
+            follower
+          },
+          returning: true
+        }
+      );
+      userObj.email = undefined;
+      return res.send({
+        status: 200,
+        follow: true,
+        data: userObj
+      });
+    }
     const response = await Follow.create({
       id: userObj.id,
       following: userObj.email,
-      follower
+      follower,
+      isFollowing: true
     });
     userObj.email = undefined;
     response.following = userObj;
@@ -519,21 +548,31 @@ class UserController {
     const isunFollowed = await Follow.findOne({
       where: {
         follower,
-        following: userObj.email
+        following: userObj.email,
+        isFollowing: true
       }
     });
     if (!isunFollowed) {
       throw new httpError(404, 'User already unfollowed');
     }
-    await Follow.destroy({
-      where: {
-        follower,
-        following: userObj.email
+    await Follow.update(
+      { isFollowing: false },
+      {
+        where: {
+          follower,
+          following: userObj.email
+        }
       }
-    });
+    );
     return res.send({
       status: 200,
       follow: false,
+      user: {
+        firstname: userObj.firstName,
+        lastname: userObj.lastName,
+        username: userObj.userName,
+        avatar: userObj.avatar
+      },
       message: 'User unfollowed'
     });
   }

@@ -153,7 +153,7 @@ export const updateEvents = async (req, res) => {
   let temp;
   const { email } = req.organizer;
   const { slug } = req.params;
-  const where = { paymentMethod: 'free' };
+  const condition = { paymentMethod: 'free' };
   const updateTo = JSON.parse(JSON.stringify(req.body));
   if (updateTo.currentMode) {
     temp = await eventStatuschecker(updateTo.currentMode.split(','));
@@ -170,7 +170,7 @@ export const updateEvents = async (req, res) => {
     });
   }
   const paymentEvents = await PaymentEvents.findAll({
-    where
+    where: condition
   });
   const [result, [data]] = await Event.update(updateTo, {
     where: { slug },
@@ -339,55 +339,4 @@ export const getUserLocationEvents = async (req, res) => {
     count: eventsInUsersLocation.length,
     data: eventsInUsersLocation
   });
-};
-export const updateEventStatus = async (req, res) => {
-  let token = req.headers.authorization;
-  token = token.replace('Bearer', '');
-  const { slug } = req.params;
-  const condition = { slug, eventType: false };
-  const where = { paymentMethod: 'free' };
-  const { eventStatus } = req.body;
-  const paymentEvents = await PaymentEvents.findAll({
-    where
-  });
-  let template;
-  if (eventStatus === 'canceled') {
-    template = 'freeEventCancellation';
-  }
-  if (eventStatus === 'postponed') {
-    template = 'freeEventPostponed';
-  }
-  if (eventStatus === 'paused') {
-    template = 'freeEventPaused';
-  }
-  if (eventStatus === 'live') {
-    template = 'freeEventLive';
-  }
-
-  paymentEvents.map(paymentEvent => {
-    const {
-      dataValues: {
-        customer: { email }
-      }
-    } = paymentEvent;
-    sendEmail(email, token.trim(), template);
-  });
-
-  const cancelEvent = await Event.update(
-    {
-      eventStatus
-    },
-    {
-      where: condition
-    }
-  );
-  if (cancelEvent[0] == 1) {
-    res.status(200).json({
-      status: 200,
-      message:
-        eventStatus === 'live'
-          ? `Event is live`
-          : `Event successfuly ${eventStatus}`
-    });
-  }
 };
