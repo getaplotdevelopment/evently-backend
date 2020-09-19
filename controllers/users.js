@@ -447,11 +447,11 @@ class UserController {
    * @returns {Object} Response
    */
   async followUser(req, res) {
-    const { userId: follower } = req.params;
-    const { email: following } = req.user;
+    const { userId: following } = req.params;
+    const { email: follower } = req.user;
     const isUserExist = await User.findOne({
       where: {
-        id: follower
+        id: following
       },
       attributes: [
         'id',
@@ -463,26 +463,64 @@ class UserController {
         'isActivated'
       ]
     });
+
     if (!isUserExist) {
       throw new httpError(404, 'User does not exist');
     }
+    const { dataValues: userObj } = isUserExist;
     const isFollowed = await Follow.findOne({
       where: {
-        id: follower,
-        following
+        isFollowing: true,
+        following: userObj.email,
+        follower
       }
     });
     if (isFollowed) {
       throw new httpError(409, 'User already followed');
     }
-    const { dataValues: userObj } = isUserExist;
+    const canFollow = await Follow.findOne({
+      where: {
+        isFollowing: false,
+        following: userObj.email,
+        follower
+      }
+    });
+    if (canFollow) {
+      const [rowCount, [data]] = await Follow.update(
+        {
+          isFollowing: true
+        },
+        {
+          where: {
+            isFollowing: false,
+            following: userObj.email,
+            follower
+          },
+          returning: true
+        }
+      );
+      userObj.email = undefined;
+      return res.send({
+        status: 200,
+        follow: true,
+        data: userObj
+      });
+    }
     const response = await Follow.create({
       id: userObj.id,
-      follower: userObj.email,
-      following
+      following: userObj.email,
+      follower,
+      isFollowing: true
     });
     userObj.email = undefined;
-    response.follower = userObj;
+    response.following = userObj;
+    response.follower = {
+      firstName: req.user.firstName,
+      lastName: req.user.lastName,
+      userName: req.user.userName,
+      avatar: req.user.avatar,
+      emai: req.user.email
+    };
     return res.send({
       status: 200,
       follow: true,
@@ -496,34 +534,45 @@ class UserController {
    * @returns {Object} Response
    */
   async unfollowUser(req, res) {
-    const { userId: id } = req.params;
-    const { email: following } = req.user;
+    const { userId: following } = req.params;
+    const { email: follower } = req.user;
     const isUserExist = await User.findOne({
       where: {
-        id
+        id: following
       }
     });
     if (!isUserExist) {
       throw new httpError(404, 'User does not exist');
     }
+    const { dataValues: userObj } = isUserExist;
     const isunFollowed = await Follow.findOne({
       where: {
-        id,
-        following
+        follower,
+        following: userObj.email,
+        isFollowing: true
       }
     });
     if (!isunFollowed) {
-      throw new httpError(404, 'User does not exist');
+      throw new httpError(404, 'User already unfollowed');
     }
-    const dataValues = await Follow.destroy({
-      where: {
-        id,
-        following
+    await Follow.update(
+      { isFollowing: false },
+      {
+        where: {
+          follower,
+          following: userObj.email
+        }
       }
-    });
+    );
     return res.send({
       status: 200,
       follow: false,
+      user: {
+        firstname: userObj.firstName,
+        lastname: userObj.lastName,
+        username: userObj.userName,
+        avatar: userObj.avatar
+      },
       message: 'User unfollowed'
     });
   }
@@ -620,6 +669,51 @@ class UserController {
       status: 200,
       accountsUpdated: rowsUpdated,
       isDeactivated: updatedAccount.dataValues.isDeactivated
+    });
+  }
+
+  /**
+   * @param {Object} req - Request from user
+   * @param {Object} res - Response to the user
+   * @returns {Object} Response
+   */
+  async fetchAdminList(req, res) {
+    const where = { role: 'SUPER USER' };
+    const admins = await User.findAll({
+      where
+    });
+    if (!admins) {
+      return res.status(404).json({
+        status: 404,
+        message: "We don't currently have a user with this role"
+      });
+    }
+    return res.status(200).json({
+      status: 200,
+      admins
+    });
+  }
+
+  /**
+   * @param {Object} req - Request from user
+   * @param {Object} res - Response to the user
+   * @returns {Object} Response
+   */
+  async fetchOrgnizers(req, res) {
+    const where = { role: 'ORGANIZER' };
+    const organizers = await User.findAll({
+      where
+    });
+
+    if (!organizers.length) {
+      return res.status(404).json({
+        status: 404,
+        message: "We don't currently have a user with this role"
+      });
+    }
+    return res.status(200).json({
+      status: 200,
+      organizers
     });
   }
 }

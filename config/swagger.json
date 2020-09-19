@@ -2329,6 +2329,50 @@
           }
         }
       }
+    },
+    "api/users/admins": {
+      "get": {
+        "tags": ["Admins"],
+        "summary": "Get a list of super users",
+        "description": "Returns a list of super users",
+        "operationId": "all all super users",
+        "produces": ["application/xml", "application/json"],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Event"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "api/users/organizers": {
+      "get": {
+        "tags": ["organizers"],
+        "summary": "Get a list of organizers",
+        "description": "Returns a list of organizers",
+        "operationId": "all all organizers",
+        "produces": ["application/xml", "application/json"],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Event"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
     }
   },
   "securityDefinitions": {

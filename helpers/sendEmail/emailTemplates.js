@@ -1,21 +1,26 @@
 import html from './template/template';
 
 const getRole = (role, urls) => {
-  const { verification, resetPassword } = emailTemplates;
+  const { verification, resetPassword, freeEventCancellation } = emailTemplates;
 
   resetPassword.html = html(
     'Reset password',
     'RESET PASSWORD',
-    'requested a password reset for your evently account',
+    'because you have requested a password reset for your evently account',
     role,
     urls
   );
   verification.html = html(
     'Email verification',
     'ACTIVATE YOUR ACCOUNT',
-    'to activate your evently account',
+    'because you have to activate your evently account',
     role,
     urls
+  );
+  freeEventCancellation.html = html(
+    'Event cancellation',
+    'CANCEL EVENT',
+    "the free event you've suscribed at has been canceled "
   );
 
   return role;
@@ -31,6 +36,46 @@ const emailTemplates = {
     from: '',
     to: '',
     subject: 'Email Verification'
+  },
+  freeEventCancellation: {
+    from: '',
+    to: '',
+    subject: 'Free Event cancellation',
+    html: html(
+      'Event cancellation',
+      'CANCEL EVENT',
+      "the free event you've suscribed at has been canceled"
+    )
+  },
+  freeEventPostponed: {
+    from: '',
+    to: '',
+    subject: 'Free Event postponed',
+    html: html(
+      'Event postponed',
+      'EVENT POSTPONED',
+      "the free event you've suscribed at has been postponed"
+    )
+  },
+  freeEventPaused: {
+    from: '',
+    to: '',
+    subject: 'Free Event paused',
+    html: html(
+      'Event paused',
+      'EVENT PAUSED',
+      "the free event you've suscribed at has been paused"
+    )
+  },
+  freeEventLive: {
+    from: '',
+    to: '',
+    subject: 'Free Event resumed',
+    html: html(
+      'Event resumed',
+      'EVENT RESUMED',
+      "the free event you've suscribed at has been resumed"
+    )
   }
 };
 

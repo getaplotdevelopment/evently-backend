@@ -120,6 +120,13 @@ const checkFeedbackOwner = async (req, res, next) => {
   }
   next();
 };
+const checkFollowUser = async (req, res, next) => {
+  const { userId } = req.params;
+  if (userId == req.user.id) {
+    throw new httpError(403, 'Un-authorized, you can not follow yourself');
+  }
+  next();
+};
 
 export {
   checkUser,
@@ -132,5 +139,6 @@ export {
   checkUserId,
   checkFeedbackId,
   checkFeedbackOwner,
-  checkOrganizerId
+  checkOrganizerId,
+  checkFollowUser
 };

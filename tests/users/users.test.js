@@ -326,12 +326,12 @@ describe('Change current user password', () => {
       .set('Content-Type', 'application/json')
       .send(loginUser);
     currentUserToken = res.body.token;
-
     const result = await chai
       .request(app)
       .post(`/api/users/${userToFollow}/follow`)
       .set({ Authorization: 'Bearer ' + currentUserToken });
     result.should.have.status(404);
+
     result.body.should.have.property('error').eql('User does not exist');
   });
   it('Should user only follow a user once', async () => {

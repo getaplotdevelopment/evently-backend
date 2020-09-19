@@ -14,7 +14,8 @@ import {
   checkExperienceOwner,
   checkExperienceOwnerOrAdmin,
   checkCommentOwner,
-  checkCommentOwnerOradmin
+  checkCommentOwnerOradmin,
+  checkReplayOwnerOradmin
 } from '../../middleware/experience/checkExperience';
 import {
   validateExperience,
@@ -175,6 +176,7 @@ router.put(
   asyncHandler(auth),
   asyncHandler(checkReplay),
   asyncHandler(checkExperienceComment),
+  asyncHandler(checkReplayOwnerOradmin),
   asyncHandler(experienceCommentReplay.deleteReplay)
 );
 router.post(

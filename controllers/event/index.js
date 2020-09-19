@@ -11,6 +11,8 @@ import {
 } from '../../helpers/googleMap/calculateEventDist';
 import models from '../../models';
 import getSingleEvent from '../../helpers/eventHelper/getSingleEvent';
+import 'dotenv/config';
+import sendEmail from '../../helpers/sendEmail/callMailer';
 
 const { Op } = require('sequelize');
 
@@ -18,17 +20,19 @@ const {
   Event,
   Likes,
   Ticket,
-  TicketCategory,
   commentEvent,
   replayComment,
   PaymentEvents,
-  User
+  User,
+  TicketCategory
 } = models;
+const { USER_LOCATION_URL } = process.env;
 
 const includeTicket = () => {
   return [
     {
-      model: Ticket
+      model: Ticket,
+      include: [{ model: TicketCategory, as: 'ticketCategory' }]
     },
     {
       model: commentEvent,
@@ -36,25 +40,27 @@ const includeTicket = () => {
     },
     {
       model: Likes,
-      include: [{ 
-        model: User,
-        as: 'likedBy',
-        attributes: {
-          exclude: [
-            'password',
-            'isActivated',
-            'deviceToken',
-            'role',
-            'createdAt',
-            'updatedAt'
-          ]
+      include: [
+        {
+          model: User,
+          as: 'likedBy',
+          attributes: {
+            exclude: [
+              'password',
+              'isActivated',
+              'deviceToken',
+              'role',
+              'createdAt',
+              'updatedAt'
+            ]
+          }
         }
-      }],
+      ]
     },
     {
       model: PaymentEvents,
       include: [{ model: Event, as: 'events' }]
-    },
+    }
   ];
 };
 export const createEventController = async (req, res) => {
@@ -121,7 +127,7 @@ export const createEventController = async (req, res) => {
 export const getOrganizerEvents = async (req, res) => {
   const { email } = req.organizer;
   const searchParams = req.query;
-  const filterBy = { 'organizer.email' : email };
+  const filterBy = { 'organizer.email': email };
   const { pages, count, data } = await getEvents(
     searchParams,
     filterBy,
@@ -144,11 +150,13 @@ export const getAllEvents = async (req, res) => {
 };
 
 export const updateEvents = async (req, res) => {
+  let temp;
   const { email } = req.organizer;
   const { slug } = req.params;
+  const condition = { paymentMethod: 'free' };
   const updateTo = JSON.parse(JSON.stringify(req.body));
   if (updateTo.currentMode) {
-    await eventStatuschecker(updateTo.currentMode.split(','));
+    temp = await eventStatuschecker(updateTo.currentMode.split(','));
   }
   const { dataValues } = await Event.findOne({
     where: { slug }
@@ -161,14 +169,19 @@ export const updateEvents = async (req, res) => {
       message: 'Unauthorized to perform this action'
     });
   }
-
-  const eventImage = req.file ? await uploadCloudinary(req.file.buffer) : null;
-  if (req.file) {
-    updateTo.eventImage = eventImage;
-  }
+  const paymentEvents = await PaymentEvents.findAll({
+    where: condition
+  });
   const [result, [data]] = await Event.update(updateTo, {
     where: { slug },
     returning: true
+  });
+
+  paymentEvents.map(paymentEvent => {
+    const {
+      dataValues: { customer }
+    } = paymentEvent;
+    sendEmail(customer.email, undefined, temp);
   });
 
   res.send({
@@ -199,21 +212,23 @@ export const likedEvent = async (req, res) => {
       },
       {
         model: Likes,
-        include: [{ 
-          model: User,
-          as: 'likedBy',
-          attributes: {
-            exclude: [
-              'password',
-              'isActivated',
-              'deviceToken',
-              'role',
-              'createdAt',
-              'updatedAt'
-            ]
-          },
-          where: {email}
-        }],
+        include: [
+          {
+            model: User,
+            as: 'likedBy',
+            attributes: {
+              exclude: [
+                'password',
+                'isActivated',
+                'deviceToken',
+                'role',
+                'createdAt',
+                'updatedAt'
+              ]
+            },
+            where: { email }
+          }
+        ]
       }
     ];
   };
@@ -292,7 +307,7 @@ export const getEventsNearCities = async (req, res) => {
 
 export const getUserLocationEvents = async (req, res) => {
   const results = await axios({
-    url: `http://ip-api.com/json/?fields=8581119`,
+    url: USER_LOCATION_URL,
     method: 'GET'
   });
   const { lat, lon } = results.data;

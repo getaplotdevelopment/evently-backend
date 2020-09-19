@@ -58,7 +58,17 @@ class ExperienceController {
       user
     };
     const newExperience = await Experience.create(experience);
-    const createdExperience = { ...newExperience.dataValues, user: req.user };
+    const createdExperience = {
+      ...newExperience.dataValues,
+      user: {
+        firstName: req.user.firstName,
+        lastName: req.user.lastName,
+        userName: req.user.userName,
+        email: req.user.email,
+        avatar: req.user.avatar,
+        phoneNumber: req.user.phoneNumber
+      }
+    };
     res.status(201).json({
       status: 201,
       createdExperience
@@ -124,11 +134,11 @@ class ExperienceController {
     const { experienceId: id } = req.params;
     const { text, img } = req.body;
     const where = { id, isDeleted: false };
-    const experience = {
+    const newExperience = {
       text,
       img
     };
-    const updateExperience = await Experience.update(experience, {
+    const updateExperience = await Experience.update(newExperience, {
       where
     });
     if (updateExperience[0] === 0) {
@@ -138,11 +148,23 @@ class ExperienceController {
       });
     }
 
+    const experience = {
+      ...newExperience,
+      user: {
+        firstName: req.user.firstName,
+        lastName: req.user.lastName,
+        userName: req.user.userName,
+        email: req.user.email,
+        avatar: req.user.avtar,
+        phoneNumber: req.user.phoneNumber
+      }
+    };
+
     if (updateExperience[0] === 1) {
       return res.status(200).json({
         status: 200,
         message: 'experience successfully updated',
-        text
+        experience
       });
     }
   }

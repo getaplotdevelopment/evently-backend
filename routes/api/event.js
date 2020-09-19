@@ -46,7 +46,6 @@ router.get('/events/all', asyncHandler(getAllEvents));
 router.get('/events/userlocation', asyncHandler(getUserLocationEvents));
 router.patch(
   '/events/:slug',
-  upload.single('eventImage'),
   asyncHandler(checkToken),
   asyncHandler(authUser),
   asyncHandler(updateEvents)
@@ -75,8 +74,6 @@ router.get(
   asyncHandler(checkEvent),
   asyncHandler(eventAttendees)
 );
-router.get(
-  '/events/:slug',
-  asyncHandler(singleEvent)
-);
+router.get('/events/:slug', asyncHandler(singleEvent));
+
 export default router;

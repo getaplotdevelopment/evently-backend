@@ -51,8 +51,17 @@ class CommentEventController {
       event: slug
     };
     const newComment = await commentEvent.create(comment);
-    const createdComment = { ...newComment.dataValues, user: req.user };
-    Event.increment({ popularityCount: 2 }, { where: { slug } });
+    const createdComment = {
+      ...newComment.dataValues,
+      user: {
+        firstName: req.user.firstName,
+        lastName: req.user.lastName,
+        userName: req.user.userName,
+        email: req.user.email,
+        avatar: req.user.avatar,
+        phoneNumber: req.user.phoneNumber
+      }
+    };
     res.status(201).json({
       status: 201,
       createdComment
@@ -94,12 +103,12 @@ class CommentEventController {
     const { commentId: id, slug } = req.params;
     const { text, img, isHidden } = req.body;
     const where = { id, isDeleted: false, event: slug };
-    const comment = {
+    const newComment = {
       text,
       img,
       isHidden
     };
-    const updateComment = await commentEvent.update(comment, {
+    const updateComment = await commentEvent.update(newComment, {
       where
     });
     if (updateComment[0] === 0) {
@@ -108,6 +117,17 @@ class CommentEventController {
         message: 'No comment found'
       });
     }
+    const comment = {
+      ...newComment,
+      user: {
+        firstName: req.user.firstName,
+        lastName: req.user.lastName,
+        userName: req.user.userName,
+        email: req.user.email,
+        avatar: req.user.avtar,
+        phoneNumber: req.user.phoneNumber
+      }
+    };
     if (updateComment[0] === 1) {
       res.status(200).json({
         status: 200,

@@ -1,3 +1,4 @@
+/* eslint-disable no-constant-condition */
 import dotenv from 'dotenv/config';
 
 const html = (title, action, body, role, urls) => {
@@ -11,6 +12,14 @@ const html = (title, action, body, role, urls) => {
     } else {
       url = `${urls.redirect}/redirect?url=${urls.appUrl}&token=$token`;
     }
+  } else if (
+    action === 'CANCEL EVENT' ||
+    'EVENT POSTPONED' ||
+    'EVENT PAUSED' ||
+    'EVENT RESUMED'
+  ) {
+    url = '';
+    action = 'learn more';
   } else {
     url = `${urls.redirect}/redirect?url=${urls.appUrl}&token=$token`;
   }
@@ -121,7 +130,7 @@ const html = (title, action, body, role, urls) => {
         </div>
         <div class="body">
             <p>
-                You are receiving this e-mail because you have ${body} .
+                You are receiving this e-mail because ${body} .
             </p>
             <p>Please click on the button below to ${secondAction}</p>
 
