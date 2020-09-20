@@ -105,9 +105,10 @@ const validateTicket = [
     .isEmpty()
 ];
 const validateFreePayment = [
-  check('ticket_id', 'Ticket id(Number) is required')
+  check('ticket_ids', 'Ticket id(array of numbers) is required')
     .not()
-    .isEmpty(),
+    .isEmpty()
+    .isArray(),
   check('username', 'Username is required')
     .not()
     .isEmpty(),
@@ -116,10 +117,10 @@ const validateFreePayment = [
     .isEmpty(),
   check('phone_number', 'Phone number is required')
     .not()
-    .isEmpty()
+    .isEmpty() 
 ]
 const validatePaidPayment = [
-  check('ticket_id', 'Ticket id(Number) is required')
+  check('ticket_ids', 'Ticket id(Number) is required')
     .not()
     .isEmpty(),
   check('fullname', 'Full Name is required')

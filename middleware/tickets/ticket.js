@@ -31,12 +31,14 @@ const checkTicket = async (req, res, next) => {
 
 const checkTicketEvent = async (req, res, next) => {
   const { slug } = req.params;
-  const { ticket_id } = req.body;
-  const ticket = await Ticket.findOne({
-    where: { ticketNumber: ticket_id, event: slug, status: 'available' }
-  });
-  if (!ticket) {
-    throw new httpError(404, 'Ticket not found');
+  const { ticket_ids } = req.body;
+  for (const ticketNumber of ticket_ids) {
+    const ticket = await Ticket.findOne({
+      where: { ticketNumber, event: slug, status: 'available' }
+    });
+    if (!ticket) {
+      throw new httpError(404, 'Ticket(s) not found');
+    }
   }
   next();
 };
