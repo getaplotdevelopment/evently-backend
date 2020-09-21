@@ -2631,9 +2631,9 @@
     },
     "PaymentFree": {
       "type": "object",
-      "required": ["ticket_id", "username", "email", "phone_number"],
+      "required": ["ticket_ids", "username", "email", "phone_number"],
       "properties": {
-        "ticket_id": {
+        "ticket_ids": {
           "type": "integer",
           "format": "int64"
         },
@@ -2656,9 +2656,9 @@
     },
     "PaymentPaid": {
       "type": "object",
-      "required": ["ticket_id", "amount", "currency", "phone_number"],
+      "required": ["ticket_ids", "amount", "currency", "phone_number"],
       "properties": {
-        "ticket_id": {
+        "ticket_ids": {
           "type": "integer",
           "format": "int64"
         },

@@ -25,7 +25,7 @@ const verifyPayment = async payload => {
   // );
 
   const organizer = ORGANIZER;
-  const ticketNo = TICKET_NO;
+  const ticketNumbers = TICKET_NO;
   const event = EVENT_SLUG;
 
   const results = await axios({
@@ -36,27 +36,28 @@ const verifyPayment = async payload => {
 
   const { data } = results.data;
   if (results.status === 200) {
-    const paidPayload = {
-      paymentID: uuidv4(),
-      ticketNo,
-      amount: data.amount,
-      organizer,
-      event,
-      transactionID: data.id,
-      attendanceStatus: true,
-      customer: data.customer,
-      paymentMethod: data.payment_type,
-      refID: data.tx_ref
-    };
-    const { dataValues } = await PaymentEvents.create(paidPayload);
-    Event.increment({ popularityCount: 2 }, { where: { slug: event } });
-    await Ticket.update(
-      { status: 'booked' },
-      {
-        ticketNumber: ticketNo,
-        event
-      }
-    );
+    for (const ticketNo of ticketNumbers) {
+      const paidPayload = {
+        paymentID: uuidv4(),
+        ticketNo,
+        amount: data.amount,
+        organizer,
+        event,
+        transactionID: data.id,
+        attendanceStatus: true,
+        customer: data.customer,
+        paymentMethod: data.payment_type,
+        refID: data.tx_ref
+      };
+      const { dataValues } = await PaymentEvents.create(paidPayload);
+      Event.increment({ popularityCount: 2 }, { where: { slug: event } });
+      await Ticket.update(
+        { status: 'booked' },
+        {
+          where: { ticketNumber: ticketNo, event }
+        }
+      );
+    }
   } else {
     throw new Error(results);
   }
@@ -91,7 +92,7 @@ export const standardPayment = async (req, res) => {
     where: { slug }
   });
 
-  ORGANIZER = dataValues.organizer;
+  ORGANIZER = dataValues.organizer.email;
   EVENT_SLUG = slug;
 
   const {
@@ -100,10 +101,10 @@ export const standardPayment = async (req, res) => {
     fullname,
     email,
     phone_number,
-    ticket_id
+    ticket_ids
   } = req.body;
 
-  TICKET_NO = ticket_id;
+  TICKET_NO = ticket_ids;
 
   const payload = {
     currency,
@@ -135,22 +136,12 @@ export const standardPayment = async (req, res) => {
 
 export const usersPaidForEvent = async (req, res) => {
   const { slug } = req.params;
-  const { email } = req.organizer;
 
   const { count, rows: data } = await PaymentEvents.findAndCountAll({
     where: {
       event: slug
     }
   });
-
-  const { organizer } = data[0];
-
-  if (email !== organizer) {
-    return res.status(403).send({
-      status: 403,
-      message: 'Unauthorized to perform this action'
-    });
-  }
 
   return res.send({
     message: 'success',
@@ -161,22 +152,12 @@ export const usersPaidForEvent = async (req, res) => {
 
 export const eventAttendees = async (req, res) => {
   const { slug } = req.params;
-  const { email } = req.organizer;
   const { count, rows: data } = await PaymentEvents.findAndCountAll({
     where: {
       event: slug,
       attendanceStatus: 'true'
     }
   });
-
-  const { organizer } = data[0];
-
-  if (email !== organizer) {
-    return res.status(403).send({
-      status: 403,
-      message: 'Unauthorized to perform this action'
-    });
-  }
 
   return res.send({
     message: 'success',
@@ -186,35 +167,39 @@ export const eventAttendees = async (req, res) => {
 };
 
 export const attendFree = async (req, res) => {
-  const { username, phone_number, email, ticket_id } = req.body;
+  const { username, phone_number, email, ticket_ids } = req.body;
   const { event, organizerEmail } = req;
+  const paymentsCreated = []
+  for (const ticket_id of ticket_ids) {
+    const freePayload = {
+      paymentID: uuidv4(),
+      amount: 0,
+      organizer: organizerEmail.email,
+      event,
+      transactionID: null,
+      attendanceStatus: true,
+      paymentMethod: 'free',
+      refID: 'free',
+      ticketNo: ticket_id,
+      customer: {
+        name: username,
+        phone_number,
+        email
+      }
+    };
+  
+    const { dataValues } = await PaymentEvents.create(freePayload);
+    paymentsCreated.push(dataValues)
+    Event.increment({ popularityCount: 2 }, { where: { slug: event } });
+    await Ticket.update(
+      { status: 'booked' },
+      {
+        where: { ticketNumber: ticket_id, event }
+      }
+    );
 
-  const freePayload = {
-    paymentID: uuidv4(),
-    amount: 0,
-    organizer: organizerEmail,
-    event,
-    transactionID: null,
-    attendanceStatus: true,
-    paymentMethod: 'free',
-    refID: 'free',
-    ticketNo: ticket_id,
-    customer: {
-      name: username,
-      phone_number,
-      email
-    }
-  };
-
-  const { dataValues } = await PaymentEvents.create(freePayload);
-  Event.increment({ popularityCount: 2 }, { where: { slug: event } });
-  await Ticket.update(
-    { status: 'booked' },
-    {
-      where: { ticketNumber: ticket_id, event }
-    }
-  );
-  res.send({ message: 'success', data: dataValues });
+  }
+  res.send({ message: 'success', data: paymentsCreated });
 };
 
 export const cancelFreeAttendance = async (req, res) => {
