@@ -2035,6 +2035,33 @@
         }
       }
     },
+    "api/ticket/category/{slug}": {
+      "get": {
+        "tags": ["ticket category"],
+        "summary": "get event ticket categories",
+        "description": "",
+        "operationId": "event ticket categories",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Add the token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "404": {
+            "description": "Item not found"
+          }
+        }
+      }
+    },
     "api/ticket/category/ticketId": {
       "get": {
         "tags": ["ticket category"],

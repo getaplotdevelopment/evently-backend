@@ -10,7 +10,8 @@ import {
   getSimilarEvents,
   getEventsNearCities,
   getUserLocationEvents,
-  singleEvent
+  singleEvent,
+  eventTicketCategory
 } from '../../controllers/event';
 import { checkEvent } from '../../middleware/event/checkEvent';
 import { usersPaidForEvent, eventAttendees } from '../../controllers/payments';
@@ -75,5 +76,10 @@ router.get(
   asyncHandler(eventAttendees)
 );
 router.get('/events/:slug', asyncHandler(singleEvent));
+router.get(
+  '/ticket/category/:slug',
+  asyncHandler(checkEvent),
+  asyncHandler(eventTicketCategory)
+);
 
 export default router;

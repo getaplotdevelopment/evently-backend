@@ -340,3 +340,20 @@ export const getUserLocationEvents = async (req, res) => {
     data: eventsInUsersLocation
   });
 };
+
+export const eventTicketCategory = async (req, res) => {
+  const { slug } = req.params;
+  const data = await Ticket.findAll({
+    include: [
+      {
+        model: TicketCategory,
+        as: 'ticketCategory',
+        attributes: { exclude: ['createdAt', 'updatedAt'] }
+      }
+    ],
+    attributes: ['category'],
+    group: ['category', 'ticketCategory.id'],
+    where: { event: slug }
+  });
+  res.send({message: 'success', "status": 200, data});
+};
