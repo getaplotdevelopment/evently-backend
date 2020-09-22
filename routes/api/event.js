@@ -77,7 +77,7 @@ router.get(
 );
 router.get('/events/:slug', asyncHandler(singleEvent));
 router.get(
-  '/ticket/category/:slug',
+  '/category/events/:slug',
   asyncHandler(checkEvent),
   asyncHandler(eventTicketCategory)
 );
