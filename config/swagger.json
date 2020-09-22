@@ -2035,7 +2035,7 @@
         }
       }
     },
-    "api/ticket/category/{slug}": {
+    "api/category/events/{slug}": {
       "get": {
         "tags": ["ticket category"],
         "summary": "get event ticket categories",
