@@ -117,8 +117,7 @@ export const standardPayment = async (req, res) => {
     },
     customizations: {
       title: 'Get A Plot',
-      description: 'awesome app',
-      logo: 'https://assets.piedpiper.com/logo.png'
+      description: 'awesome app'
     },
     tx_ref,
     redirect_url,
