@@ -73,6 +73,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'users',
       allowNull: false
     });
+    User.hasMany(models.Experience, {
+      foreignKey: 'user',
+      allowNull: false
+    });
     User.hasMany(models.CommentExperience, {
       foreignKey: 'user',
       allowNull: false

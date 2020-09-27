@@ -26,7 +26,7 @@ export default async (searchParams, filterBy, model, include) => {
   });
   const countAll = await model.count();
   const pages = Math.ceil(countAll / limit);
-  
+
   const count = data.length;
   return { pages, count, data };
 };

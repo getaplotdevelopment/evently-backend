@@ -5,13 +5,23 @@ module.exports = {
       id: {
         allowNull: false,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        autoIncrement: true
       },
       follower: {
         type: Sequelize.STRING
       },
       following: {
         type: Sequelize.STRING
+      },
+      followerObj: {
+        type: Sequelize.JSON
+      },
+      followingObj: {
+        type: Sequelize.JSON
+      },
+      isFollowing: {
+        type: Sequelize.BOOLEAN
       },
       createdAt: {
         allowNull: false,

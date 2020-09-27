@@ -3,9 +3,16 @@ module.exports = (sequelize, DataTypes) => {
   const Follow = sequelize.define(
     'Follow',
     {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+      },
       follower: DataTypes.STRING,
       following: DataTypes.STRING,
-      isFollowing: DataTypes.BOOLEAN
+      isFollowing: DataTypes.BOOLEAN,
+      followerObj: DataTypes.JSON,
+      followingObj: DataTypes.JSON
     },
     {}
   );
