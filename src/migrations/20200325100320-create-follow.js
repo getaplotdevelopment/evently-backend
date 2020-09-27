@@ -20,9 +20,6 @@ module.exports = {
       followingObj: {
         type: Sequelize.JSON
       },
-      isFollowing: {
-        type: Sequelize.BOOLEAN
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
