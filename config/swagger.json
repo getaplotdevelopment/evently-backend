@@ -1758,6 +1758,126 @@
         }
       }
     },
+    "api/ticket/upcoming": {
+      "get": {
+        "tags": ["ticket"],
+        "summary": "fetch all user's upcoming tickets",
+        "description": "",
+        "operationId": "upcoming tickets",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Add the token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "api/ticket/past": {
+      "get": {
+        "tags": ["ticket"],
+        "summary": "fetch all user's past tickets",
+        "description": "",
+        "operationId": "past tickets",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Add the token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "api/events/{slug}/tickets": {
+      "get": {
+        "tags": ["ticket"],
+        "summary": "All User tickets for an event",
+        "description": "",
+        "operationId": "user tickets for a specific ticket",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Add the token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "api/events/{slug}/tickets/{ticketNumber}": {
+      "get": {
+        "tags": ["ticket"],
+        "summary": "Fetch one ticket for an event for a logged in user",
+        "description": "",
+        "operationId": "single user ticket for an event",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Add the token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
     "api/feedback": {
       "post": {
         "tags": ["feedback"],

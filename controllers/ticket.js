@@ -1,6 +1,8 @@
 import models from '../models/index';
+const { Op } = require('sequelize');
 
 const { Ticket, TicketCategory, User, Event } = models;
+import queryPaymentEvents from '../helpers/queries/paymentEvent';
 
 /**
  * @ticket controller
@@ -308,7 +310,7 @@ class TicketController {
    * @param {*} res - Response from the db
    * @returns {Object} Response
    */
-  async updateTicketsByCategoty(req, res) {
+  async updateTicketsByCategory(req, res) {
     const { id } = req.organizer;
     const { slug } = req.params;
     const { price, status } = req.body;
@@ -375,6 +377,37 @@ class TicketController {
     res
       .status(200)
       .json({ status: 200, message: 'updated successfully', updatedSummary });
+  }
+
+  /**
+   * Fetches all future tickets for a loggedin user
+   * @param {Object} req - Requests from client
+   * @param {*} res - Response from the db
+   * @returns {Object} Response
+   */
+  async upcomingEventTickets(req, res) {
+    const { id: user } = req.user;
+    const condition = {
+      user,
+      expireBy: { [Op.gte]: new Date().toISOString() }
+    };
+    const tickets = await queryPaymentEvents(condition);
+    res.status(200).json({ message: 'success', status: 200, tickets });
+  }
+  /**
+   * Fetches all past tickets for a loggedin user
+   * @param {Object} req - Requests from client
+   * @param {*} res - Response from the db
+   * @returns {Object} Response
+   */
+  async pastEventTickets(req, res) {
+    const { id: user } = req.user;
+    const condition = {
+      user,
+      expireBy: { [Op.lte]: new Date().toISOString() }
+    };
+    const tickets = await queryPaymentEvents(condition);
+    res.status(200).json({ message: 'success', status: 200, tickets });
   }
 }
 

@@ -21,7 +21,9 @@ const {
   getAllTicketByEvent,
   getOneTicket,
   updateTicket,
-  updateTicketsByCategoty
+  updateTicketsByCategory,
+  upcomingEventTickets,
+  pastEventTickets
 } = new Ticket();
 
 const router = express.Router();
@@ -37,6 +39,8 @@ router.post(
   asyncHandler(createTicket)
 );
 router.get('/', asyncHandler(auth), asyncHandler(getAllTicket));
+router.get('/upcoming', asyncHandler(auth), asyncHandler(upcomingEventTickets));
+router.get('/past', asyncHandler(auth), asyncHandler(pastEventTickets));
 router.get(
   '/:slug',
   asyncHandler(checkEvent),
@@ -67,7 +71,6 @@ router.put(
   asyncHandler(authUser),
   asyncHandler(checkEvent),
   asyncHandler(checkAccessTicket),
-  asyncHandler(updateTicketsByCategoty)
+  asyncHandler(updateTicketsByCategory)
 );
-
 export default router;
