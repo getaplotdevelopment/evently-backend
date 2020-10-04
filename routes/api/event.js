@@ -11,7 +11,8 @@ import {
   getEventsNearCities,
   getUserLocationEvents,
   singleEvent,
-  eventTicketCategory
+  eventTicketCategory,
+  getUserEventTickets
 } from '../../controllers/event';
 import { checkEvent } from '../../middleware/event/checkEvent';
 import { usersPaidForEvent, eventAttendees } from '../../controllers/payments';
@@ -80,6 +81,13 @@ router.get(
   '/category/events/:slug',
   asyncHandler(checkEvent),
   asyncHandler(eventTicketCategory)
+);
+router.get(
+  '/:slug/tickets',
+  asyncHandler(checkToken),
+  asyncHandler(auth),
+  asyncHandler(checkEvent),
+  asyncHandler(getUserEventTickets)
 );
 
 export default router;

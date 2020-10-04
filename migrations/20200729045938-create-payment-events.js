@@ -18,7 +18,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       organizer: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       event: {
         type: Sequelize.STRING
@@ -37,6 +37,15 @@ module.exports = {
       },
       refID: {
         type: Sequelize.STRING
+      },
+      vCode: {
+        type: Sequelize.INTEGER
+      },
+      user: {
+        type: Sequelize.INTEGER
+      },
+      expireBy: {
+        type: Sequelize.DATE
       },
       createdAt: {
         allowNull: false,

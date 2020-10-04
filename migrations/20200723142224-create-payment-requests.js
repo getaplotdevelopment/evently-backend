@@ -20,9 +20,6 @@ module.exports = {
       amount: {
         type: Sequelize.INTEGER
       },
-      createdAt: {
-        type: Sequelize.STRING
-      },
       eventStatus: {
         type: Sequelize.STRING
       },
@@ -31,6 +28,21 @@ module.exports = {
       },
       paymentType: {
         type: Sequelize.STRING
+      },
+      user: {
+        type: Sequelize.INTEGER
+      },
+      organizer: {
+        type: Sequelize.INTEGER
+      },
+      ticketIds: {
+        type: Sequelize.ARRAY(Sequelize.INTEGER)
+      },
+      event: {
+        type: Sequelize.STRING
+      },
+      expireBy: {
+        type: Sequelize.DATE
       },
       createdAt: {
         allowNull: false,

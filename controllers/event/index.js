@@ -357,3 +357,70 @@ export const eventTicketCategory = async (req, res) => {
   });
   res.send({message: 'success', "status": 200, data});
 };
+
+/**
+ *
+ * @param {Object} req - Requests from client
+ * @param {*} res - Response from the db
+ * @returns {Object} Response
+ */
+export const getUserEventTickets = async(req, res) => {
+  const { slug } = req.params;
+  const ticket = await PaymentEvents.findAll({
+    where: {
+      event: slug
+    },
+    include: [
+      {
+        model: User,
+        as: 'user',
+        attributes: {
+          exclude: [
+            'password',
+            'isActivated',
+            'deviceToken',
+            'role',
+            'createdAt',
+            'updatedAt'
+          ]
+        }
+      },
+      {
+        model: Event,
+        as: 'events',
+        attributes: {
+          exclude: [
+            'category',
+            'numberDays',
+            'startTime',
+            'startDate',
+            'finishDate',
+            'eventType',
+            'favorited',
+            'favoritedCount',
+            'eventImage',
+            'currentMode',
+            'createdAt',
+            'updatedAt',
+            'isLiked',
+            'isDeleted'
+          ]
+        }
+      },
+      {
+        model: TicketCategory,
+        as: 'ticketCategory',
+        attributes: { exclude: ['createdAt', 'updatedAt'] }
+      }
+    ],
+    attributes: [
+      'id',
+      'price',
+      'ticketNumber',
+      'status',
+      'createdAt',
+      'updatedAt'
+    ]
+  });
+  res.status(200).json({ status: 200, ticket });
+}

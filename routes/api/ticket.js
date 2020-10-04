@@ -15,7 +15,14 @@ import {
   checkAccessTicket
 } from '../../middleware/tickets/ticket';
 
-const ticket = new Ticket();
+const {
+  createTicket,
+  getAllTicket,
+  getAllTicketByEvent,
+  getOneTicket,
+  updateTicket,
+  updateTicketsByCategoty
+} = new Ticket();
 
 const router = express.Router();
 
@@ -27,15 +34,15 @@ router.post(
   validateTicket,
   validations,
   asyncHandler(checkEvent),
-  asyncHandler(ticket.createTicket)
+  asyncHandler(createTicket)
 );
-router.get('/', asyncHandler(auth), asyncHandler(ticket.getAllTicket));
+router.get('/', asyncHandler(auth), asyncHandler(getAllTicket));
 router.get(
   '/:slug',
   asyncHandler(checkEvent),
   asyncHandler(checkToken),
   asyncHandler(auth),
-  asyncHandler(ticket.getAllTicketByEvent)
+  asyncHandler(getAllTicketByEvent)
 );
 router.get(
   '/:slug/:ticketId',
@@ -43,7 +50,7 @@ router.get(
   asyncHandler(auth),
   asyncHandler(checkEvent),
   asyncHandler(checkTicket),
-  asyncHandler(ticket.getOneTicket)
+  asyncHandler(getOneTicket)
 );
 router.put(
   '/:slug/:ticketId',
@@ -52,7 +59,7 @@ router.put(
   asyncHandler(checkEvent),
   asyncHandler(checkTicket),
   asyncHandler(checkAccessTicket),
-  asyncHandler(ticket.updateTicket)
+  asyncHandler(updateTicket)
 );
 router.put(
   '/:slug/',
@@ -60,7 +67,7 @@ router.put(
   asyncHandler(authUser),
   asyncHandler(checkEvent),
   asyncHandler(checkAccessTicket),
-  asyncHandler(ticket.updateTicketsByCategoty)
+  asyncHandler(updateTicketsByCategoty)
 );
 
 export default router;
