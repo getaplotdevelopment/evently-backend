@@ -13,6 +13,7 @@ import models from '../../models';
 import getSingleEvent from '../../helpers/eventHelper/getSingleEvent';
 import 'dotenv/config';
 import sendEmail from '../../helpers/sendEmail/callMailer';
+import queryPaymentEvents from '../../helpers/queries/paymentEvent';
 
 const { Op } = require('sequelize');
 
@@ -24,7 +25,8 @@ const {
   replayComment,
   PaymentEvents,
   User,
-  TicketCategory
+  TicketCategory,
+  PaymentRequests
 } = models;
 const { USER_LOCATION_URL } = process.env;
 
@@ -63,6 +65,7 @@ const includeTicket = () => {
     }
   ];
 };
+
 export const createEventController = async (req, res) => {
   const {
     title,
@@ -355,72 +358,40 @@ export const eventTicketCategory = async (req, res) => {
     group: ['category', 'ticketCategory.id'],
     where: { event: slug }
   });
-  res.send({message: 'success', "status": 200, data});
+  res.send({ message: 'success', status: 200, data });
 };
 
 /**
- *
+ * Fetch all event tickets for logged in user
  * @param {Object} req - Requests from client
  * @param {*} res - Response from the db
  * @returns {Object} Response
  */
-export const getUserEventTickets = async(req, res) => {
-  const { slug } = req.params;
-  const ticket = await PaymentEvents.findAll({
-    where: {
-      event: slug
-    },
-    include: [
-      {
-        model: User,
-        as: 'user',
-        attributes: {
-          exclude: [
-            'password',
-            'isActivated',
-            'deviceToken',
-            'role',
-            'createdAt',
-            'updatedAt'
-          ]
-        }
-      },
-      {
-        model: Event,
-        as: 'events',
-        attributes: {
-          exclude: [
-            'category',
-            'numberDays',
-            'startTime',
-            'startDate',
-            'finishDate',
-            'eventType',
-            'favorited',
-            'favoritedCount',
-            'eventImage',
-            'currentMode',
-            'createdAt',
-            'updatedAt',
-            'isLiked',
-            'isDeleted'
-          ]
-        }
-      },
-      {
-        model: TicketCategory,
-        as: 'ticketCategory',
-        attributes: { exclude: ['createdAt', 'updatedAt'] }
-      }
-    ],
-    attributes: [
-      'id',
-      'price',
-      'ticketNumber',
-      'status',
-      'createdAt',
-      'updatedAt'
-    ]
-  });
-  res.status(200).json({ status: 200, ticket });
-}
+export const getUserEventTickets = async (req, res) => {
+  const { slug: event } = req.params;
+  const { id: user } = req.user;
+  const condition = {
+    event,
+    user
+  };
+  const tickets = await queryPaymentEvents(condition);
+  res.status(200).json({ message: 'success', status: 200, tickets });
+};
+
+/**
+ * Fetch logged in user ticket (single)
+ * @param {Object} req - Requests from client
+ * @param {*} res - Response from the db
+ * @returns {Object} Response
+ */
+export const getSingleUserTicket = async (req, res) => {
+  const { event, ticketNumber: ticketNo } = req;
+  const { id: user } = req.user;
+  const condition = {
+    event,
+    user,
+    ticketNo
+  };
+  const ticket = await queryPaymentEvents(condition);
+  res.status(200).json({ message: 'success', status: 200, ticket });
+};

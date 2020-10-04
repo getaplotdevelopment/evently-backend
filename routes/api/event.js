@@ -12,7 +12,8 @@ import {
   getUserLocationEvents,
   singleEvent,
   eventTicketCategory,
-  getUserEventTickets
+  getUserEventTickets,
+  getSingleUserTicket
 } from '../../controllers/event';
 import { checkEvent } from '../../middleware/event/checkEvent';
 import { usersPaidForEvent, eventAttendees } from '../../controllers/payments';
@@ -24,6 +25,7 @@ import {
 import authUser from '../../middleware/users/authUser';
 import auth from '../../middleware/users/auth';
 import checkToken from '../../middleware/users/checkToken';
+import {  checkPaidEventTicket } from '../../middleware/tickets/ticket';
 
 const router = express.Router();
 const upload = multer();
@@ -83,11 +85,19 @@ router.get(
   asyncHandler(eventTicketCategory)
 );
 router.get(
-  '/:slug/tickets',
+  '/events/:slug/tickets',
   asyncHandler(checkToken),
   asyncHandler(auth),
   asyncHandler(checkEvent),
   asyncHandler(getUserEventTickets)
+);
+router.get(
+  '/events/:slug/tickets/:ticketId',
+  asyncHandler(checkToken),
+  asyncHandler(auth),
+  asyncHandler(checkEvent),
+  asyncHandler(checkPaidEventTicket),
+  asyncHandler(getSingleUserTicket)
 );
 
 export default router;

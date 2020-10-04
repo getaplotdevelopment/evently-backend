@@ -52,7 +52,8 @@ const checkPaidEventTicket = async (req, res, next) => {
     throw new httpError(404, 'Ticket not found');
   }
   const { dataValues } = ticket;
-  req.payment = dataValues
+  req.payment = dataValues;
+  req.ticketNumber = ticketId;
   next();
 };
 
