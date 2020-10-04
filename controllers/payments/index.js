@@ -3,6 +3,7 @@ import axios from 'axios';
 
 import { v4 as uuidv4 } from 'uuid';
 import models from '../../models';
+import generateVCode from '../../helpers/payment/vcode';
 
 const {
   Event,
@@ -13,20 +14,14 @@ const {
 } = models;
 const { PUBLIC_SECRET, enckey, FLUTTERWAVE_URL } = process.env;
 
-let TICKET_NO, EVENT_SLUG, ORGANIZER;
-
 const verifyPayment = async payload => {
   const { verificationId } = payload;
-  // console.log(
-  //   'TICKET_NO, EVENT_SLUG, ORGINIZER',
-  //   TICKET_NO,
-  //   EVENT_SLUG,
-  //   ORGANIZER
-  // );
 
-  const organizer = ORGANIZER;
-  const ticketNumbers = TICKET_NO;
-  const event = EVENT_SLUG;
+  const transactionResponse = await PaymentRequests.findOne({
+    where: { verificationId }
+  })
+
+  const { organizer, user, ticketIds: ticketNumbers, event, expireBy } = transactionResponse;
 
   const results = await axios({
     url: `${FLUTTERWAVE_URL}transactions/${verificationId}/verify`,
@@ -35,19 +30,23 @@ const verifyPayment = async payload => {
   });
 
   const { data } = results.data;
-  if (results.status === 200) {
+  if (results.status === 200) { 
     for (const ticketNo of ticketNumbers) {
+      const vCode = generateVCode();
       const paidPayload = {
         paymentID: uuidv4(),
         ticketNo,
         amount: data.amount,
         organizer,
         event,
+        user,
         transactionID: data.id,
         attendanceStatus: true,
         customer: data.customer,
         paymentMethod: data.payment_type,
-        refID: data.tx_ref
+        refID: data.tx_ref,
+        vCode,
+        expireBy
       };
       const { dataValues } = await PaymentEvents.create(paidPayload);
       Event.increment({ popularityCount: 2 }, { where: { slug: event } });
@@ -69,7 +68,6 @@ export const webhookPath = async (req, res) => {
 
   const newRequest = {
     verificationId: data.id,
-    refId: data.tx_ref,
     status: data.status,
     amount: data.charged_amount,
     createdAt: data.created_at,
@@ -78,7 +76,14 @@ export const webhookPath = async (req, res) => {
     paymentType: data.payment_type
   };
 
-  const { dataValues } = await PaymentRequests.create(newRequest);
+  const [rowCount, [updatedData]] = await PaymentRequests.update(
+    newRequest,
+    {
+      where: { refId },
+      returning: true
+    }
+  );
+  const { dataValues } = updatedData;
   await verifyPayment(dataValues);
 
   res.sendStatus(200);
@@ -86,14 +91,9 @@ export const webhookPath = async (req, res) => {
 
 export const standardPayment = async (req, res) => {
   const tx_ref = `GAT-${random(100000000, 200000000)}`;
-  const redirect_url = 'https://google.com';
-  const { slug } = req.params;
-  const { dataValues } = await Event.findOne({
-    where: { slug }
-  });
-
-  ORGANIZER = dataValues.organizer.email;
-  EVENT_SLUG = slug;
+  const { id: user } = req.user;
+  const { event, eventObj } = req;
+  const { finishDate, organizer } = eventObj;  
 
   const {
     currency,
@@ -101,10 +101,9 @@ export const standardPayment = async (req, res) => {
     fullname,
     email,
     phone_number,
-    ticket_ids
+    ticket_ids,
+    redirect_url
   } = req.body;
-
-  TICKET_NO = ticket_ids;
 
   const payload = {
     currency,
@@ -123,12 +122,21 @@ export const standardPayment = async (req, res) => {
     redirect_url,
     enckey
   };
+  const requestData = {
+    user,
+    ticketIds: ticket_ids,
+    organizer: organizer.id,
+    event,
+    refId: tx_ref,
+    expireBy: finishDate
+  }
   const hostedLink = await axios({
     url: `${FLUTTERWAVE_URL}payments`,
     method: 'post',
     data: payload,
     headers: { Authorization: `Bearer ${PUBLIC_SECRET}` }
   });
+  await PaymentRequests.create(requestData);
   const { data } = hostedLink;
   return res.status(200).send(data);
 };
@@ -167,19 +175,24 @@ export const eventAttendees = async (req, res) => {
 
 export const attendFree = async (req, res) => {
   const { username, phone_number, email, ticket_ids } = req.body;
-  const { event, organizerEmail } = req;
+  const { event, organizerEmail, eventObj } = req;
+  const { id: user } = req.user;
   const paymentsCreated = []
   for (const ticket_id of ticket_ids) {
+    const vCode = generateVCode();
     const freePayload = {
       paymentID: uuidv4(),
       amount: 0,
-      organizer: organizerEmail.email,
+      organizer: organizerEmail.id,
       event,
       transactionID: null,
       attendanceStatus: true,
       paymentMethod: 'free',
       refID: 'free',
       ticketNo: ticket_id,
+      user,
+      vCode,
+      expireBy: eventObj.finishDate,
       customer: {
         name: username,
         phone_number,

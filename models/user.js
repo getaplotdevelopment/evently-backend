@@ -80,6 +80,18 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'connectedUser',
       allowNull: false
     });
+    User.hasMany(models.PaymentRequests, {
+      foreignKey: 'organizer',
+      allowNull: false
+    });
+    User.hasMany(models.PaymentEvents, {
+      foreignKey: 'user',
+      allowNull: false
+    });
+    User.hasMany(models.PaymentEvents, {
+      foreignKey: 'organizer',
+      allowNull: false
+    });
   };
   return User;
 };

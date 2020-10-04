@@ -12,7 +12,10 @@ module.exports = (sequelize, DataTypes) => {
       references: { model: 'Ticket', key: 'id' }
     },
     amount: DataTypes.STRING,
-    organizer: DataTypes.STRING,
+    organizer: {
+      type: DataTypes.INTEGER,
+      references: { model: 'Users', key: 'id' }
+    },
     event: {
       type: DataTypes.STRING,
       references: { model: 'Event', key: 'slug' }
@@ -21,10 +24,16 @@ module.exports = (sequelize, DataTypes) => {
     attendanceStatus: DataTypes.STRING,
     customer: DataTypes.JSON,
     paymentMethod: DataTypes.STRING,
+    vCode: DataTypes.INTEGER,
+    expireBy: DataTypes.DATE,
     refID: {
       type: DataTypes.STRING,
       references: { model: 'PaymentRequests', key: 'refId' }
-    }
+    },
+    user: {
+      type: DataTypes.INTEGER,
+      references: { model: 'Users', key: 'id' }
+    },
   }, {});
   PaymentEvents.associate = function(models) {
     // associations can be defined here
@@ -41,6 +50,16 @@ module.exports = (sequelize, DataTypes) => {
     PaymentEvents.belongsTo(models.PaymentRequests, {
       as: 'paymentToRequests',
       foreignKey: 'refID',
+      onDelete: 'CASCADE'
+    });
+    PaymentEvents.belongsTo(models.User, {
+      as: 'eventUser',
+      foreignKey: 'user',
+      onDelete: 'CASCADE'
+    });
+    PaymentEvents.belongsTo(models.User, {
+      as: 'eventOrganizer',
+      foreignKey: 'organizer',
       onDelete: 'CASCADE'
     });
   };

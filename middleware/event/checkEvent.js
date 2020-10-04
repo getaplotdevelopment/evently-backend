@@ -14,6 +14,7 @@ const checkEvent = async (req, res, next) => {
     const { dataValues } = event;
     req.organizerEmail = dataValues.organizer;
     req.event = slug;
+    req.eventObj = dataValues;
   }
   next();
 };
