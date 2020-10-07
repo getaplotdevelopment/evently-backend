@@ -409,6 +409,7 @@ export const upcomingEventTickets = async (req, res) => {
     '$PaymentEvents.expireBy$': { [Op.gte]: new Date().toISOString() }
   };
   const events = await Event.findAll({
+    where: condition,
     include: [
       {
         model: PaymentEvents,
@@ -416,7 +417,7 @@ export const upcomingEventTickets = async (req, res) => {
           {
             model: Event,
             as: 'events',
-            where: condition
+            required: true
           }
         ]
       }
@@ -438,7 +439,7 @@ export const pastEventTickets = async (req, res) => {
     '$PaymentEvents.expireBy$': { [Op.lte]: new Date().toISOString() }
   };
   const events = await Event.findAll({
-    where: { finishDate: { [Op.lte]: new Date().toISOString() } },
+    where: condition,
     include: [
       {
         model: PaymentEvents,
@@ -446,7 +447,7 @@ export const pastEventTickets = async (req, res) => {
           {
             model: Event,
             as: 'events',
-            where: condition
+            required: true
           }
         ]
       }
