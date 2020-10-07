@@ -21,8 +21,7 @@ const verifyPayment = async payload => {
     where: { verificationId }
   })
 
-  const { organizer, user, ticketIds: ticketNumbers, event, expireBy } = transactionResponse;
-
+  const { organizer, user, ticketIds: ticketNumbers, event, expireBy } = transactionResponse;  
   const results = await axios({
     url: `${FLUTTERWAVE_URL}transactions/${verificationId}/verify`,
     method: 'GET',
@@ -48,7 +47,7 @@ const verifyPayment = async payload => {
         vCode,
         expireBy
       };
-      const { dataValues } = await PaymentEvents.create(paidPayload);
+      const { dataValues } = await PaymentEvents.create(paidPayload);      
       Event.increment({ popularityCount: 2 }, { where: { slug: event } });
       await Ticket.update(
         { status: 'booked' },
@@ -64,8 +63,7 @@ const verifyPayment = async payload => {
 
 export const webhookPath = async (req, res) => {
   const requestJson = req.body;
-  const { data } = requestJson;
-
+  const { data } = requestJson;  
   const newRequest = {
     verificationId: data.id,
     status: data.status,
@@ -74,16 +72,15 @@ export const webhookPath = async (req, res) => {
     eventStatus: requestJson.event,
     customer: data.customer,
     paymentType: data.payment_type
-  };
-
+  };  
   const [rowCount, [updatedData]] = await PaymentRequests.update(
     newRequest,
     {
-      where: { refId },
+      where: { refId: data.tx_ref },
       returning: true
     }
   );
-  const { dataValues } = updatedData;
+  const { dataValues } = updatedData;  
   await verifyPayment(dataValues);
 
   res.sendStatus(200);
