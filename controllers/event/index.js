@@ -395,3 +395,62 @@ export const getSingleUserTicket = async (req, res) => {
   const ticket = await queryPaymentEvents(condition);
   res.status(200).json({ message: 'success', status: 200, ticket });
 };
+
+/**
+ * Fetches all future tickets for a loggedin user
+ * @param {Object} req - Requests from client
+ * @param {*} res - Response from the db
+ * @returns {Object} Response
+ */
+export const upcomingEventTickets = async (req, res) => {
+  const { id: user } = req.user;
+  const condition = {
+    '$PaymentEvents.user$': user,
+    '$PaymentEvents.expireBy$': { [Op.gte]: new Date().toISOString() }
+  };
+  const events = await Event.findAll({
+    include: [
+      {
+        model: PaymentEvents,
+        include: [
+          {
+            model: Event,
+            as: 'events',
+            where: condition
+          }
+        ]
+      }
+    ]
+  });
+  res.status(200).json({ message: 'success', status: 200, events });
+};
+
+/**
+ * Fetches all past tickets for a loggedin user
+ * @param {Object} req - Requests from client
+ * @param {*} res - Response from the db
+ * @returns {Object} Response
+ */
+export const pastEventTickets = async (req, res) => {
+  const { id: user } = req.user;
+  const condition = {
+    '$PaymentEvents.user$': user,
+    '$PaymentEvents.expireBy$': { [Op.lte]: new Date().toISOString() }
+  };
+  const events = await Event.findAll({
+    where: { finishDate: { [Op.lte]: new Date().toISOString() } },
+    include: [
+      {
+        model: PaymentEvents,
+        include: [
+          {
+            model: Event,
+            as: 'events',
+            where: condition
+          }
+        ]
+      }
+    ]
+  });
+  res.status(200).json({ message: 'success', status: 200, events });
+};

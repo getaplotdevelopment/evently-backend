@@ -14,6 +14,10 @@ import {
   checkTicket,
   checkAccessTicket
 } from '../../middleware/tickets/ticket';
+import {
+  upcomingEventTickets,
+  pastEventTickets
+} from '../../controllers/event';
 
 const {
   createTicket,
@@ -22,8 +26,6 @@ const {
   getOneTicket,
   updateTicket,
   updateTicketsByCategory,
-  upcomingEventTickets,
-  pastEventTickets
 } = new Ticket();
 
 const router = express.Router();
