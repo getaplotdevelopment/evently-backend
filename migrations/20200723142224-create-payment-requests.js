@@ -41,6 +41,7 @@ module.exports = {
       event: {
         type: Sequelize.STRING
       },
+      isFeatured: { type: Sequelize.BOOLEAN, defaultValue: false },
       expireBy: {
         type: Sequelize.DATE
       },

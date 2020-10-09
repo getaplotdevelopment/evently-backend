@@ -7,13 +7,15 @@ import models from '../../models';
 import generateVCode from '../../helpers/payment/vcode';
 import generateQRCodeHelper from '../../helpers/payment/qrCode';
 import cloudinaryUploadPresetHelper from '../../helpers/fileUploadConfig/uploadPreset';
+import findOneHelper from '../../helpers/finOneHelper';
 
 const {
   Event,
   PaymentEvents,
   PaymentRequests,
   Ticket,
-  PaymentRefunds
+  PaymentRefunds,
+  FeaturedEvents
 } = models;
 const { PUBLIC_SECRET, enckey, FLUTTERWAVE_URL, QR_BASE_URL } = process.env;
 
@@ -102,6 +104,16 @@ export const webhookPath = async (req, res) => {
     where: { refId: data.tx_ref },
     returning: true
   });
+
+  const featuredEvent = await findOneHelper(FeaturedEvents, {
+    refId: data.tx_ref
+  });
+  if (featuredEvent) {
+    await FeaturedEvents.update(
+      { verificationId: newRequest.verificationId, featuredStatus: true },
+      { where: { refId: data.tx_ref }, returning: true }
+    );
+  }
   const { dataValues } = updatedData;
   await verifyPayment(dataValues);
 
@@ -135,8 +147,10 @@ export const standardPayment = async (req, res) => {
     },
     customizations: {
       title: 'Evently',
-      description: 'Evently is a real time social events listing mobile application',
-      logo: 'https://res.cloudinary.com/evently/image/upload/q_auto,f_auto/v1603227097/asserts/eventlyF1_1_gtwpes.png'
+      description:
+        'Evently is a real time social events listing mobile application',
+      logo:
+        'https://res.cloudinary.com/evently/image/upload/q_auto,f_auto/v1603227097/asserts/eventlyF1_1_gtwpes.png'
     },
     tx_ref,
     redirect_url,
@@ -154,7 +168,7 @@ export const standardPayment = async (req, res) => {
   if (!redirect_url) {
     return res.status(200).send({
       message: 'Request from mobile app',
-      status: "success"
+      status: 'success'
     });
   }
   const hostedLink = await axios({

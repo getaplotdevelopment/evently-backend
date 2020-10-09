@@ -8,7 +8,7 @@ const checkEvent = async (req, res, next) => {
   const event = await Event.findOne({
     where: { slug }
   });
-  if (!event) {
+  if (!event || event.isDeleted === true) {
     throw new httpError(404, 'Event not found');
   } else {
     const { dataValues } = event;

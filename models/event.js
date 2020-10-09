@@ -20,6 +20,10 @@ module.exports = (sequelize, DataTypes) => {
       eventType: DataTypes.BOOLEAN,
       favorited: DataTypes.BOOLEAN,
       favoritedCount: DataTypes.INTEGER,
+      isFeatured: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+      },
       eventImage: DataTypes.STRING,
       currentMode: DataTypes.STRING,
       organizer: DataTypes.JSON,
@@ -61,6 +65,9 @@ module.exports = (sequelize, DataTypes) => {
     Event.hasMany(models.PaymentRequests, {
       foreignKey: 'event',
       allowNull: false
+    });
+    Event.hasMany(models.FeaturedEvents, {
+      foreignKey: 'eventSlug'
     });
   };
   return Event;
