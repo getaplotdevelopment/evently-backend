@@ -1,9 +1,12 @@
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-restricted-syntax */
 import random from 'lodash.random';
 import axios from 'axios';
-
 import { v4 as uuidv4 } from 'uuid';
 import models from '../../models';
 import generateVCode from '../../helpers/payment/vcode';
+import generateQRCodeHelper from '../../helpers/payment/qrCode';
+import cloudinaryUploadPresetHelper from '../../helpers/fileUploadConfig/uploadPreset';
 
 const {
   Event,
@@ -12,16 +15,23 @@ const {
   Ticket,
   PaymentRefunds
 } = models;
-const { PUBLIC_SECRET, enckey, FLUTTERWAVE_URL } = process.env;
+const { PUBLIC_SECRET, enckey, FLUTTERWAVE_URL, QR_BASE_URL } = process.env;
 
 const verifyPayment = async payload => {
   const { verificationId } = payload;
 
   const transactionResponse = await PaymentRequests.findOne({
     where: { verificationId }
-  })
+  });
 
-  const { organizer, user, ticketIds: ticketNumbers, event, expireBy } = transactionResponse;  
+  const {
+    organizer,
+    user,
+    ticketIds: ticketNumbers,
+    event,
+    expireBy
+  } = transactionResponse;
+
   const results = await axios({
     url: `${FLUTTERWAVE_URL}transactions/${verificationId}/verify`,
     method: 'GET',
@@ -29,7 +39,7 @@ const verifyPayment = async payload => {
   });
 
   const { data } = results.data;
-  if (results.status === 200) { 
+  if (results.status === 200) {
     for (const ticketNo of ticketNumbers) {
       const vCode = generateVCode();
       const paidPayload = {
@@ -47,7 +57,21 @@ const verifyPayment = async payload => {
         vCode,
         expireBy
       };
-      const { dataValues } = await PaymentEvents.create(paidPayload);      
+
+      const qrCode = await generateQRCodeHelper([paidPayload]);
+
+      const uploadedResponse = await cloudinaryUploadPresetHelper(
+        qrCode,
+        'evently'
+      );
+
+      const paymentsCreated = [];
+
+      const { dataValues } = await PaymentEvents.create({
+        ...paidPayload,
+        qrCode: `${QR_BASE_URL}${uploadedResponse.version}/${uploadedResponse.public_id}.${uploadedResponse.format}`
+      });
+      paymentsCreated.push(dataValues);
       Event.increment({ popularityCount: 2 }, { where: { slug: event } });
       await Ticket.update(
         { status: 'booked' },
@@ -63,7 +87,7 @@ const verifyPayment = async payload => {
 
 export const webhookPath = async (req, res) => {
   const requestJson = req.body;
-  const { data } = requestJson;  
+  const { data } = requestJson;
   const newRequest = {
     verificationId: data.id,
     status: data.status,
@@ -72,15 +96,13 @@ export const webhookPath = async (req, res) => {
     eventStatus: requestJson.event,
     customer: data.customer,
     paymentType: data.payment_type
-  };  
-  const [rowCount, [updatedData]] = await PaymentRequests.update(
-    newRequest,
-    {
-      where: { refId: data.tx_ref },
-      returning: true
-    }
-  );
-  const { dataValues } = updatedData;  
+  };
+
+  const [rowCount, [updatedData]] = await PaymentRequests.update(newRequest, {
+    where: { refId: data.tx_ref },
+    returning: true
+  });
+  const { dataValues } = updatedData;
   await verifyPayment(dataValues);
 
   res.sendStatus(200);
@@ -90,7 +112,7 @@ export const standardPayment = async (req, res) => {
   const tx_ref = `GAT-${random(100000000, 200000000)}`;
   const { id: user } = req.user;
   const { event, eventObj } = req;
-  const { finishDate, organizer } = eventObj;  
+  const { finishDate, organizer } = eventObj;
 
   const {
     currency,
@@ -126,7 +148,7 @@ export const standardPayment = async (req, res) => {
     event,
     refId: tx_ref,
     expireBy: finishDate
-  }
+  };
   const hostedLink = await axios({
     url: `${FLUTTERWAVE_URL}payments`,
     method: 'post',
@@ -174,7 +196,7 @@ export const attendFree = async (req, res) => {
   const { username, phone_number, email, ticket_ids } = req.body;
   const { event, organizerEmail, eventObj } = req;
   const { id: user } = req.user;
-  const paymentsCreated = []
+  const paymentsCreated = [];
   for (const ticket_id of ticket_ids) {
     const vCode = generateVCode();
     const freePayload = {
@@ -196,9 +218,20 @@ export const attendFree = async (req, res) => {
         email
       }
     };
-  
-    const { dataValues } = await PaymentEvents.create(freePayload);
-    paymentsCreated.push(dataValues)
+
+    const qrCode = await generateQRCodeHelper([freePayload]);
+
+    const uploadedResponse = await cloudinaryUploadPresetHelper(
+      qrCode,
+      'evently'
+    );
+
+    const { dataValues } = await PaymentEvents.create({
+      ...freePayload,
+      qrCode: `${QR_BASE_URL}${uploadedResponse.version}/${uploadedResponse.public_id}.${uploadedResponse.format}`
+    });
+    paymentsCreated.push(dataValues);
+
     Event.increment({ popularityCount: 2 }, { where: { slug: event } });
     await Ticket.update(
       { status: 'booked' },
@@ -206,9 +239,11 @@ export const attendFree = async (req, res) => {
         where: { ticketNumber: ticket_id, event }
       }
     );
-
   }
-  res.send({ message: 'success', data: paymentsCreated });
+  res.send({
+    message: 'success',
+    data: paymentsCreated
+  });
 };
 
 export const cancelFreeAttendance = async (req, res) => {
