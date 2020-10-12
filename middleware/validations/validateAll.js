@@ -117,8 +117,8 @@ const validateFreePayment = [
     .isEmpty(),
   check('phone_number', 'Phone number is required')
     .not()
-    .isEmpty() 
-]
+    .isEmpty()
+];
 const validatePaidPayment = [
   check('ticket_ids', 'Ticket id(Number) is required')
     .not()
@@ -138,10 +138,13 @@ const validatePaidPayment = [
   check('amount', 'Amount is required')
     .not()
     .isEmpty(),
-  check('redirect_url', 'redirect_url is required(Link to be redirected to after successful payment)')
+  check(
+    'redirect_url',
+    'redirect_url is required(Link to be redirected to after successful payment)'
+  )
     .not()
     .isEmpty()
-]
+];
 const validations = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {

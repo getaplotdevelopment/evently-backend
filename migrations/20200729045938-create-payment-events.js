@@ -41,6 +41,9 @@ module.exports = {
       vCode: {
         type: Sequelize.INTEGER
       },
+      qrCode: {
+        type: Sequelize.STRING
+      },
       user: {
         type: Sequelize.INTEGER
       },
