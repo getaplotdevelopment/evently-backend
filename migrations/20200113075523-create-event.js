@@ -68,9 +68,6 @@ module.exports = {
         type: Sequelize.STRING,
         defaultValue: 'draft'
       },
-      availableTickets: {
-        type: Sequelize.ARRAY(Sequelize.JSON)
-      },
       popularityCount: {
         type: Sequelize.INTEGER,
         defaultValue: 0
