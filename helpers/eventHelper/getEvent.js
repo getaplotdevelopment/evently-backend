@@ -2,7 +2,7 @@ export default async (searchParams, filterBy, model, include) => {
   const limit = searchParams.limit || 25;
   const currentPage = searchParams.page || 1;
   const offset = limit * currentPage - limit;
-  const order = [];
+  const order = searchParams.sort ? []: [['createdAt', 'DESC']];
 
   if (searchParams.sort) {
     const sort = searchParams.sort.split(',');
