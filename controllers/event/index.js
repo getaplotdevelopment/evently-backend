@@ -78,8 +78,7 @@ export const createEventController = async (req, res) => {
     startTime,
     currentMode,
     eventType,
-    location,
-    availableTickets
+    location
   } = req.body;
   const eventImage = req.file
     ? await uploadCloudinary(req.file.buffer)
@@ -120,8 +119,7 @@ export const createEventController = async (req, res) => {
       email,
       avatar,
       isOrganizer
-    },
-    availableTickets
+    }
   };
   const data = await Event.create(newEvent);
   res.status(201).send({ status: 201, data });
