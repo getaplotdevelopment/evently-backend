@@ -27,6 +27,8 @@ module.exports = {
   },
   email: {
     user: process.env.SENDER_EMAIL,
-    pass: process.env.SENDER_PASS
+    pass: process.env.SENDER_PASS,
+    port: process.env.NODE_MAILER_PORT,
+    host: process.env.EMAIL_HOST
   }
 };

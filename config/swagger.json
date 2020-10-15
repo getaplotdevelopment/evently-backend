@@ -355,7 +355,7 @@
                     "isLiked": false,
                     "id": 7,
                     "slug": "title1-is-to-good-also-14860",
-                    "email": "bal900007@gmail.com",
+                    "email": "bal900007@test.com",
                     "updatedAt": "2020-07-14T18:59:33.778Z",
                     "createdAt": "2020-07-14T18:59:33.778Z"
                   }
@@ -936,7 +936,7 @@
                   "properties": {
                     "firstName": "techLead",
                     "lastName": "techLead",
-                    "email": "joe01@gmail.com",
+                    "email": "joe01@test.com",
                     "password": "emabush2015",
                     "avatar": "dffdfsdf",
                     "deviceToken": "dkfkfkskdf",
@@ -2790,7 +2790,7 @@
         },
         "email": {
           "type": "string",
-          "example": "google@gmail.com"
+          "example": "google@test.com"
         },
         "phone_number": {
           "type": "string",
@@ -2815,7 +2815,7 @@
         },
         "email": {
           "type": "string",
-          "example": "google@gmail.com"
+          "example": "google@test.com"
         },
         "phone_number": {
           "type": "string",

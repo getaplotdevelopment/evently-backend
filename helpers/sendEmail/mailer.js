@@ -17,6 +17,8 @@ class Mailer {
     this.userMail = _userEmail;
     this.senderEmail = email.user;
     this.senderPass = email.pass;
+    this.senderPort = email.port;
+    this.host = email.host;
   }
 
   /**
@@ -49,10 +51,15 @@ class Mailer {
   sendEmail(mailOptions) {
     return new Promise((resolve, reject) => {
       const transporter = nodemailer.createTransport({
-        service: 'gmail',
+        host: this.host,
+        port: this.senderPort,
+        secure: false,
         auth: {
           user: this.senderEmail,
           pass: this.senderPass
+        },
+        tls: {
+          rejectUnauthorized: false
         }
       });
       transporter.sendMail(mailOptions, (error, info) => {

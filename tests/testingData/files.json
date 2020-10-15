@@ -3,7 +3,7 @@
     "firstName": "Jaman",
     "lastName": "evently",
     "userName": "user",
-    "email": "getaplotdev@gmail.com",
+    "email": "getaplotdev@test.com",
     "password": "emabush2015",
     "location": "kansanga",
     "deviceToken": "dkfkfkskdf",
@@ -19,7 +19,7 @@
     "firstName": "Jaman",
     "lastName": "evently",
     "userName": "user",
-    "email": "jaman2020@gmail.com",
+    "email": "jaman2020@test.com",
     "password": "emabush2015",
     "location": "kansanga",
     "deviceToken": "dkfkfkskdf",
@@ -35,7 +35,7 @@
     "firstName": "Jaman",
     "lastName": "evently",
     "userName": "user",
-    "email": "geta@gmail.com",
+    "email": "geta@test.com",
     "password": "emabush2015",
     "location": "kansanga",
     "deviceToken": "dkfkfkskdf",
@@ -55,7 +55,7 @@
     "firstName": "Jaman",
     "lastName": "evently",
     "userName": "user",
-    "email": "geta01@gmail.com",
+    "email": "geta01@test.com",
     "password": "emabush2015",
     "location": "kansanga",
     "isActivated": true,
@@ -75,7 +75,7 @@
     "firstName": "Jaman",
     "lastName": "evently",
     "userName": "user",
-    "email": "geta02@gmail.com",
+    "email": "geta02@test.com",
     "password": "emabush2015",
     "location": "kansanga",
     "isActivated": true,
@@ -95,7 +95,7 @@
     "firstName": "Jaman",
     "lastName": "evently",
     "userName": "user",
-    "email": "superuser@gmail.com",
+    "email": "superuser@test.com",
     "password": "emabush2015",
     "location": "kansanga",
     "isActivated": true,
@@ -115,7 +115,7 @@
     "firstName": "Jaman",
     "lastName": "evently",
     "userName": "user",
-    "email": "notorganizer@gmail.com",
+    "email": "notorganizer@test.com",
     "password": "emabush2015",
     "location": "kansanga",
     "isActivated": true,
@@ -135,7 +135,7 @@
     "firstName": "Ja",
     "lastName": "eventlys",
     "userName": "username5",
-    "email": "organizer5@gmail.com",
+    "email": "organizer5@test.com",
     "password": "emabush2015",
     "location": "kansanga",
     "isActivated": true,
@@ -175,7 +175,7 @@
     "firstName": "Jaman",
     "lastName": "evently",
     "userName": "user",
-    "email": "getaplotdev@gmail.com",
+    "email": "getaplotdev@test.com",
     "password": "emabush2015",
     "isActivated": true,
     "deviceToken": "dkfkfkskdf",
@@ -191,7 +191,7 @@
     "firstName": "Jaman",
     "lastName": "evently",
     "userName": "user",
-    "email": "jaman@gmail.com",
+    "email": "jaman@test.com",
     "password": "emabush2015",
     "isActivated": true,
     "deviceToken": "dkfkfkskdf",
@@ -204,15 +204,15 @@
     }
   },
   "loginUser": {
-    "email": "getaplotdev@gmail.com",
+    "email": "getaplotdev@test.com",
     "password": "emabush2015"
   },
   "loginOrganizer": {
-    "email": "geta01@gmail.com",
+    "email": "geta01@test.com",
     "password": "emabush2015"
   },
   "activatedUser": {
-    "email": "geta@gmail.com",
+    "email": "geta@test.com",
     "password": "emabush2015"
   },
   "invalidLoginUser": {
@@ -220,7 +220,7 @@
     "password": "emabush2015"
   },
   "invalidLoginUserPassword": {
-    "email": "getaplotdev@gmail.com",
+    "email": "getaplotdev@test.com",
     "password": "emabus"
   },
   "socialMediaUser": {
@@ -229,10 +229,10 @@
     }
   },
   "emailToCheck": {
-    "email": "getaplotdev@gmail.com"
+    "email": "getaplotdev@test.com"
   },
   "wrongEmailToCheck": {
-    "email": "emabush@gmail.com"
+    "email": "emabush@test.com"
   },
   "createEvent": {
     "title": "title1 is good",

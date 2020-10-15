@@ -31,7 +31,7 @@ describe('Profile', () => {
     token = res.body.token;
     userId = res.body.user.id;
 
-    const user = await User.findOne({ where: { email: 'geta@gmail.com' } });
+    const user = await User.findOne({ where: { email: 'geta@test.com' } });
     const payload = {
       id: user.dataValues.id,
       email: user.dataValues.email,
