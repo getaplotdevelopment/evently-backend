@@ -135,10 +135,12 @@ class UserController {
         'email',
         'avatar',
         'isActivated',
-        'role'
+        'role',
+        'location',
+        'phoneNumber'
       ]
     });
-    const { id, firstName, lastName, userName, avatar, isActivated } = user;
+    const { id, firstName, lastName, userName, avatar, isActivated, location, phoneNumber } = user;
     const payload = {
       id,
       firstName,
@@ -146,7 +148,9 @@ class UserController {
       userName,
       avatar,
       email: user.email,
-      isActivated
+      isActivated,
+      location,
+      phoneNumber
     };
     await UserActivity.create({
       designation: 'login',
