@@ -88,7 +88,7 @@ const isDeactivated = async (req, res, next) => {
   if (user) {
     throw new httpError(
       401,
-      'Account deactivated, kindly contact the help center service via evently@gmail.com'
+      'Account deactivated, kindly contact the help center service via evently@test.com'
     );
   }
   next();

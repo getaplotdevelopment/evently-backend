@@ -177,7 +177,7 @@ describe('Check email', () => {
 describe('Reset Password', () => {
   it('Should reset the password', async () => {
     const payload = {
-      email: 'getaplotdev@gmail.com'
+      email: 'getaplotdev@test.com'
     };
     const tokenGenerate = generateToken(payload);
     const token = tokenGenerate.generate;
@@ -242,7 +242,7 @@ describe('Activate user account', () => {
     response.body.should.be.a('object');
     response.body.error.should.be.a('string');
     response.body.error.should.include(
-      'Account deactivated, kindly contact the help center service via evently@gmail.com'
+      'Account deactivated, kindly contact the help center service via evently@test.com'
     );
   });
 });
@@ -277,7 +277,7 @@ describe('Change current user password', () => {
     const newLocation = { location: 'mbarara' };
     const loginUser = {
       password: 'emabush2015',
-      email: 'geta@gmail.com'
+      email: 'geta@test.com'
     };
     const res = await chai
       .request(app)
@@ -297,7 +297,7 @@ describe('Change current user password', () => {
   it('Should user follow another user', async () => {
     const loginUser = {
       password: 'emabush2015',
-      email: 'geta@gmail.com'
+      email: 'geta@test.com'
     };
     const userToFollow = 1;
     const res = await chai
@@ -317,7 +317,7 @@ describe('Change current user password', () => {
   it('Should user only follow existing users', async () => {
     const loginUser = {
       password: 'emabush2015',
-      email: 'geta@gmail.com'
+      email: 'geta@test.com'
     };
     const userToFollow = 10007;
     const res = await chai
@@ -337,7 +337,7 @@ describe('Change current user password', () => {
   it('Should user only follow a user once', async () => {
     const loginUser = {
       password: 'emabush2015',
-      email: 'geta@gmail.com'
+      email: 'geta@test.com'
     };
     const userToFollow = 1;
     const res = await chai
@@ -356,7 +356,7 @@ describe('Change current user password', () => {
   it('Should user unfollow a followed user.', async () => {
     const loginUser = {
       password: 'emabush2015',
-      email: 'geta@gmail.com'
+      email: 'geta@test.com'
     };
     const userToFollow = 1;
     const res = await chai
@@ -375,7 +375,7 @@ describe('Change current user password', () => {
   it('Should user unfollow existing users.', async () => {
     const loginUser = {
       password: 'emabush2015',
-      email: 'geta@gmail.com'
+      email: 'geta@test.com'
     };
     const userToFollow = 10002;
     const userToFollow2 = 1;
