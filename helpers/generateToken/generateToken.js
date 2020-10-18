@@ -3,7 +3,7 @@ import 'dotenv/config';
 
 const token = payload => {
   const generate = jwt.sign(payload, process.env.jwtSecret, {
-    expiresIn: '1day'
+    expiresIn: '7d'
   });
   return {
     generate
