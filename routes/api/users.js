@@ -6,7 +6,8 @@ import {
   validations,
   validateUserLogin,
   validatePassword,
-  validateChangePassword
+  validateChangePassword,
+  ValidateRedirectUrl
 } from '../../middleware/validations/validateAll';
 import {
   checkUser,
@@ -31,9 +32,7 @@ const router = express.Router();
 
 router.post(
   '/',
-  validateUser,
-  asyncHandler(checkUser),
-  validations,
+  [validateUser, ValidateRedirectUrl, asyncHandler(checkUser), validations],
   asyncHandler(users.signup)
 );
 router.post(
@@ -46,21 +45,29 @@ router.post(
   asyncHandler(users.login)
 );
 router.put(
-  '/reset-password',
+  '/reset-password/:token',
   asyncHandler(checkToken),
   validatePassword,
   validations,
   asyncHandler(users.resetPassword)
 );
 router.put(
-  '/verify',
+  '/verify/:token',
   asyncHandler(checkToken),
   asyncHandler(users.activateAccount)
 );
 router.post('/check-user', validations, asyncHandler(users.checkUser));
 
-router.post('/send-email', asyncHandler(users.checkEmail));
-router.post('/resend-email', asyncHandler(users.resendVerificationEmail));
+router.post(
+  '/send-email',
+  [ValidateRedirectUrl, validations],
+  asyncHandler(users.checkEmail)
+);
+router.post(
+  '/resend-email',
+  [ValidateRedirectUrl, validations],
+  asyncHandler(users.resendVerificationEmail)
+);
 router.put(
   '/change-password',
   validateChangePassword,

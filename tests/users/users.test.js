@@ -183,7 +183,7 @@ describe('Reset Password', () => {
     const token = tokenGenerate.generate;
     const res = await chai
       .request(app)
-      .put('/api/users/reset-password')
+      .put(`/api/users/reset-password/${token}`)
       .set('Content-Type', 'application/json')
       .send({ token, password: 'newPassword2020' });
     res.should.have.status(200);
@@ -193,7 +193,7 @@ describe('Reset Password', () => {
     const token = 'dkdkbkslskd';
     const res = await chai
       .request(app)
-      .put('/api/users/reset-password')
+      .put(`/api/users/reset-password/${token}`)
       .set('Content-Type', 'application/json')
       .send({ token, password: 'newPassword2020' });
     res.should.have.status(403);
@@ -205,7 +205,7 @@ describe('Activate user account', () => {
     const token = 'wrongTokenString';
     const res = await chai
       .request(app)
-      .put(`/api/users/verify?token=${token}`)
+      .put(`/api/users/verify/${token}`)
       .set('Content-Type', 'application/json');
     res.should.have.status(403);
   });

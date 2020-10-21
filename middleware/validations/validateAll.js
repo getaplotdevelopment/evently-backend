@@ -172,6 +172,12 @@ const validateExperience = [
     .isEmpty()
 ];
 
+const ValidateRedirectUrl = [
+  check('redirectUrl', 'redirect url is required')
+    .not()
+    .isEmpty()
+];
+
 export {
   validateUser,
   validations,
@@ -187,5 +193,6 @@ export {
   validateFreePayment,
   validatePaidPayment,
   validateComment,
-  validateExperience
+  validateExperience,
+  ValidateRedirectUrl
 };
