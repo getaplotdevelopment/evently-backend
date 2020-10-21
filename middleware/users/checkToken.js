@@ -11,6 +11,8 @@ const checkToken = async (req, res, next) => {
     ? req.query.token
     : req.headers.authorization
     ? req.headers.authorization.split(' ')[1]
+    : req.params.token
+    ? req.params.token
     : null;
 
   if (!token) {

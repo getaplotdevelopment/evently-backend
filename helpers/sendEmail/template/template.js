@@ -1,17 +1,18 @@
 /* eslint-disable no-constant-condition */
-import dotenv from 'dotenv/config';
 
-const html = (title, action, body, role, urls) => {
+const html = (title, action, body, role, urls, token) => {
   let url;
   if (action === 'RESET PASSWORD') {
     if (role === 'SUPER USER') {
       url =
         process.env.NODE_ENV === 'production'
-          ? `${process.env.FRONTEND_PRODUCTION_URL}admin/auth/reset-password?token=$token`
-          : `${process.env.FRONTEND_APP_URL}admin/auth/reset-password?token=$token`;
+          ? `${process.env.FRONTEND_PRODUCTION_URL}admin/auth/reset-password/${token}`
+          : `${process.env.FRONTEND_APP_URL}admin/auth/reset-password/${token}`;
     } else {
-      url = `${urls.redirect}/redirect?url=${urls.appUrl}&token=$token`;
+      url = `${urls}/reset-password/${token}`;
     }
+  } else if (action === 'ACTIVATE YOUR ACCOUNT') {
+    url = `${urls}/verify/${token}`;
   } else if (
     action === 'CANCEL EVENT' ||
     'EVENT POSTPONED' ||

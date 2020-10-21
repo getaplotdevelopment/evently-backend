@@ -36,7 +36,7 @@ class UserController {
       deviceToken,
       phoneNumber,
       location,
-      urls
+      redirectUrl
     } = req.body;
     const email = req.body.email.toLowerCase();
     const gavatar = gravatar.url(email, {
@@ -108,8 +108,9 @@ class UserController {
       token,
       response: 'Email Sent'
     });
-    getRole(user.role, urls);
-    await sendEmail(user.email, token);
+    req.body.template = 'verification';
+    getRole(user.role, redirectUrl, token);
+    await sendEmail(user.email, token, 'verification');
     const formated_address = await geocode(newUser.location);
     userInstance.location = formated_address;
     await userInstance.save();
@@ -140,7 +141,16 @@ class UserController {
         'phoneNumber'
       ]
     });
-    const { id, firstName, lastName, userName, avatar, isActivated, location, phoneNumber } = user;
+    const {
+      id,
+      firstName,
+      lastName,
+      userName,
+      avatar,
+      isActivated,
+      location,
+      phoneNumber
+    } = user;
     const payload = {
       id,
       firstName,
@@ -256,8 +266,7 @@ class UserController {
    * @returns {object} response.
    */
   async checkEmail(req, res) {
-    const { email, urls } = req.body;
-
+    const { email, redirectUrl } = req.body;
     const user = await User.findOne({
       where: {
         email
@@ -274,14 +283,14 @@ class UserController {
 
     const tokenGenerated = generateToken(payload);
     const token = tokenGenerated.generate;
-    req.body.token = token;
     req.body.template = 'resetPassword';
-    getRole(foundUser.role, urls);
-    const response = await sendEmail(foundUser.email, token, 'resetPassword');
+    getRole(foundUser.role, redirectUrl, token);
+    await sendEmail(foundUser.email, token, 'resetPassword');
 
     res.status(200).send({
       status: 200,
-      response
+      message:
+        'Success, Link for resetting your password has been sent, please check your email'
     });
   }
 
@@ -292,7 +301,7 @@ class UserController {
    * @returns {object} response.
    */
   async resendVerificationEmail(req, res) {
-    const { email, urls } = req.body;
+    const { email, redirectUrl } = req.body;
 
     const user = await User.findOne({
       where: {
@@ -311,7 +320,7 @@ class UserController {
     const tokenGenerated = generateToken(payload);
     const token = tokenGenerated.generate;
     req.body.token = token;
-    getRole(foundUser.role, urls);
+    getRole(foundUser.role, redirectUrl, token);
     const response = await sendEmail(foundUser.email, token);
 
     res.status(200).send({
@@ -335,7 +344,7 @@ class UserController {
    */
   async resetPassword(req, res) {
     const password = bcrypt.hashSync(req.body.password, 10);
-    const { token } = req.body;
+    const { token } = req.params;
     await redisClient.LPUSH('token', token);
     const decoded = jwt.decode(token, secretKey);
     if (decoded) {
@@ -365,7 +374,7 @@ class UserController {
    * @returns {Object} Response
    */
   async activateAccount(req, res) {
-    const { token } = req.query;
+    const { token } = req.params;
     const user = jwt.decode(token, secretKey);
     await redisClient.LPUSH('token', token);
 

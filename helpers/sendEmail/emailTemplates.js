@@ -1,6 +1,6 @@
 import html from './template/template';
 
-const getRole = (role, urls) => {
+const getRole = (role, redirectUrl, token) => {
   const { verification, resetPassword, freeEventCancellation } = emailTemplates;
 
   resetPassword.html = html(
@@ -8,14 +8,16 @@ const getRole = (role, urls) => {
     'RESET PASSWORD',
     'because you have requested a password reset for your evently account',
     role,
-    urls
+    redirectUrl,
+    token
   );
   verification.html = html(
     'Email verification',
     'ACTIVATE YOUR ACCOUNT',
     'because you have to activate your evently account',
     role,
-    urls
+    redirectUrl,
+    token
   );
   freeEventCancellation.html = html(
     'Event cancellation',
