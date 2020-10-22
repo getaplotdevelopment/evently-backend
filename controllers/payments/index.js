@@ -134,8 +134,9 @@ export const standardPayment = async (req, res) => {
       name: fullname
     },
     customizations: {
-      title: 'Get A Plot',
-      description: 'awesome app'
+      title: 'Evently',
+      description: 'Evently is a real time social events listing mobile application',
+      logo: 'https://res.cloudinary.com/evently/image/upload/q_auto,f_auto/v1603227097/asserts/eventlyF1_1_gtwpes.png'
     },
     tx_ref,
     redirect_url,
@@ -149,13 +150,19 @@ export const standardPayment = async (req, res) => {
     refId: tx_ref,
     expireBy: finishDate
   };
+  await PaymentRequests.create(requestData);
+  if (!redirect_url) {
+    return res.status(200).send({
+      message: 'Request from mobile app',
+      status: "success"
+    });
+  }
   const hostedLink = await axios({
     url: `${FLUTTERWAVE_URL}payments`,
     method: 'post',
     data: payload,
     headers: { Authorization: `Bearer ${PUBLIC_SECRET}` }
   });
-  await PaymentRequests.create(requestData);
   const { data } = hostedLink;
   return res.status(200).send(data);
 };
