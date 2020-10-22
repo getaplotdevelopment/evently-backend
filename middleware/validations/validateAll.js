@@ -137,12 +137,6 @@ const validatePaidPayment = [
     .isEmpty(),
   check('amount', 'Amount is required')
     .not()
-    .isEmpty(),
-  check(
-    'redirect_url',
-    'redirect_url is required(Link to be redirected to after successful payment)'
-  )
-    .not()
     .isEmpty()
 ];
 const validations = (req, res, next) => {
