@@ -10,9 +10,11 @@ import roles from './api/roles';
 import ticketCategory from './api/ticketCategory';
 import ticket from './api/ticket';
 import feedback from './api/feedback';
+import featuredEvent from './api/featuredEvent';
 
 const app = express();
 
+app.use('/api', featuredEvent);
 app.use('/api', events);
 app.use('/api/payments', payments);
 app.use('/api/users', [users, socialAuth]);

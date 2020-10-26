@@ -1,0 +1,1 @@
+export const FEATURED_EVENT_AMOUNT_PER_DAY = 500;

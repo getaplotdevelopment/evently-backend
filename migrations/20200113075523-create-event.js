@@ -52,6 +52,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         defaultValue: 0
       },
+      isFeatured: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
       organizer: {
         type: Sequelize.JSON,
         model: 'Users',

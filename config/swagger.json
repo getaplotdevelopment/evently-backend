@@ -2520,6 +2520,104 @@
           }
         ]
       }
+    },
+    "api/featuredEvent/{slug}": {
+      "post": {
+        "tags": ["Featured Events"],
+        "summary": "feature an event",
+        "description": "Featuring events involves organizers paying for an event so that it can be featured for a specific period of time. They should pay for this offer using their preferred mode of payment and after the specified feature dates,the event should be unfeatured automatically.",
+        "operationId": "feature an event",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Provide the user token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "path",
+            "name": "slug",
+            "description": "Provide the event slug",
+            "type": "string",
+            "required": true,
+            "example": "slug-123456789"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Feature an event",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/FeaturedEvent"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "404": {
+            "description": "Item not found"
+          }
+        }
+      },
+      "get": {
+        "tags": ["Featured Events"],
+        "summary": "Get single featured event",
+        "description": "Returns a single featured event",
+        "operationId": "single featured event",
+        "produces": ["application/xml", "application/json"],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Event"
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Featured Event not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "api/featuredEvent/all": {
+      "get": {
+        "tags": ["Featured Events"],
+        "summary": "Get a list of successful featured events",
+        "description": "Returns a list of organizers",
+        "operationId": "all featured events",
+        "produces": ["application/xml", "application/json"],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Event"
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "No Featured Events found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
     }
   },
   "securityDefinitions": {
@@ -2650,6 +2748,9 @@
         },
         "location": {
           "type": "string"
+        },
+        "redirectUrl": {
+          "type": "string"
         }
       },
       "xml": {
@@ -2719,8 +2820,12 @@
     },
     "Send-email": {
       "type": "object",
+      "required": ["email", "redirectUrl"],
       "properties": {
         "email": {
+          "type": "string"
+        },
+        "redirectUrl": {
           "type": "string"
         }
       }
@@ -2853,6 +2958,27 @@
       },
       "xml": {
         "name": "UserActiviy"
+      }
+    },
+    "FeaturedEvent": {
+      "type": "object",
+      "required": ["startDate", "endDate", "currency"],
+      "properties": {
+        "startDate": {
+          "type": "date",
+          "example": "12-08-2020"
+        },
+        "finishDate": {
+          "type": "date",
+          "example": "12-08-2020"
+        },
+        "currency": {
+          "type": "string",
+          "example": "UGX"
+        }
+      },
+      "xml": {
+        "name": "featuredEvent"
       }
     }
   },

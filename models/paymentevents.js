@@ -67,6 +67,9 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'organizer',
       onDelete: 'CASCADE'
     });
+    PaymentEvents.hasMany(models.FeaturedEvents, {
+      foreignKey: 'amount'
+    });
   };
   return PaymentEvents;
 };
