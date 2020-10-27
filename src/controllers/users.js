@@ -377,7 +377,6 @@ class UserController {
   async activateAccount(req, res) {
     const { token } = req.params;
     const user = jwt.decode(token, secretKey);
-    // const userLink = findOneHelper(User, { email: user.email });
     const userLink = await User.findOne({
       where: {
         email: user.email

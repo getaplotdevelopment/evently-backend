@@ -12,7 +12,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       ticketNo: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       amount: {
         type: Sequelize.STRING
@@ -57,6 +57,10 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
+      },
+      isTicketVerified: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
       }
     });
   },

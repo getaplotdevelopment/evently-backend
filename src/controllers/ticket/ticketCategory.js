@@ -1,5 +1,5 @@
 import { Op } from 'sequelize';
-import models from '../models/index';
+import models from '../../models/index';
 
 const { TicketCategory, User } = models;
 

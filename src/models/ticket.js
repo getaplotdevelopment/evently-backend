@@ -16,6 +16,10 @@ module.exports = (sequelize, DataTypes) => {
       event: {
         type: DataTypes.STRING,
         references: { model: 'Event', key: 'slug' }
+      },
+      isTicketVerified: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
       }
     },
     {}

@@ -1,8 +1,8 @@
-import models from '../models/index';
+import models from '../../models/index';
 const { Op } = require('sequelize');
 
 const { Ticket, TicketCategory, User, Event } = models;
-import queryPaymentEvents from '../helpers/queries/paymentEvent';
+import queryPaymentEvents from '../../helpers/queries/paymentEvent';
 
 /**
  * @ticket controller

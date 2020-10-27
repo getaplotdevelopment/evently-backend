@@ -3,7 +3,7 @@ import asyncHandler from '../../helpers/errorsHandler/asyncHandler';
 import auth from '../../middleware/users/auth';
 import checkToken from '../../middleware/users/checkToken';
 import adminOrOrganizer from '../../middleware/users/adminAndOrganizer';
-import TicketCategory from '../../controllers/ticketCategory';
+import TicketCategory from '../../controllers/ticket/ticketCategory';
 import {
   validations,
   validateTicketCategory

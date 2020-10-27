@@ -12,9 +12,11 @@ import experience from './experience';
 import report from './report';
 import payments from './payments';
 import featuredEvent from './featuredEvent';
+import verifyTicket from './verifyTicket';
 
 const router = Router();
 
+router.use('/', verifyTicket);
 router.use('/', featuredEvent);
 router.use('/', events);
 router.use('/users', [users, socialAuth]);
