@@ -14,14 +14,14 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Compiling the Node.js code
+      - npm run build
   post_build:
     commands:
       - echo Build completed on `date`
 # Include only the files required for your application to run.
 artifacts:
   files:
+    - index-compiled.js
     - index.js
-    - app.js
-    - config/config.js
     - package.json
     - node_modules/**/*
