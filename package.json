@@ -40,6 +40,7 @@
   "homepage": "https://github.com/getaplotdev/evently-backend#readme",
   "dependencies": {
     "@googlemaps/google-maps-services-js": "^2.1.1",
+    "@babel/cli": "^7.12.1",
     "axios": "^0.19.2",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.7.0",
@@ -81,7 +82,6 @@
     "web-push": "^3.4.4"
   },
   "devDependencies": {
-    "@babel/cli": "^7.12.1",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
     "codecov": "^3.6.1",
