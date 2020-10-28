@@ -308,9 +308,11 @@ export const getEventsNearCities = async (req, res) => {
 
 export const getUserLocationEvents = async (req, res) => {
   const results = await axios({
-    url: USER_LOCATION_URL,
+    url: `http://ip-api.com/json/?fields=8581119`,
     method: 'GET'
   });
+  console.log(results);
+  
   const { lat, lon } = results.data;
 
   const searchParams = req.query;
