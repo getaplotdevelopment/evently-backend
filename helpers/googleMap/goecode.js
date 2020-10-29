@@ -30,7 +30,7 @@ export default async address => {
     return emptyLocation;
   }
   const locationArray = results[0].formatted_address.split(',');
-  const country = locationArray[locationArray.length - 1].trim();
+  const country = locationArray[locationArray.length - 1].trim();  
   const locationObj = {
     address: results[0].formatted_address,
     country,
