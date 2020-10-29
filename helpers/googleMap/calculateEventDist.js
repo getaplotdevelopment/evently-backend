@@ -38,6 +38,9 @@ export const userLocationEvents = async (origins, destinations) => {
   });
   const { status, rows } = locPayload.data;
   const { distance, duration } = rows[0].elements[0];
+  if (!distance) {
+    return { status: false };
+  }
   const { text } = distance;
   const eventDistance = text.split(' ')[0];
   const averageCityDistance = 15; // km
