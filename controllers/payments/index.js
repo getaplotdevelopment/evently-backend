@@ -104,17 +104,19 @@ export const webhookPath = async (req, res) => {
     where: { refId: data.tx_ref },
     returning: true
   });
-
   const featuredEvent = await findOneHelper(FeaturedEvents, {
     refId: data.tx_ref
   });
+  
   if (featuredEvent) {
     await FeaturedEvents.update(
       { verificationId: newRequest.verificationId, featuredStatus: true },
       { where: { refId: data.tx_ref }, returning: true }
     );
   }
+  
   const { dataValues } = updatedData;
+  
   await verifyPayment(dataValues);
 
   res.sendStatus(200);
@@ -163,12 +165,13 @@ export const standardPayment = async (req, res) => {
     event,
     refId: tx_ref,
     expireBy: finishDate
-  };
+  };  
   await PaymentRequests.create(requestData);
   if (!redirect_url) {
     return res.status(200).send({
       message: 'Request from mobile app',
-      status: 'success'
+      status: 'success',
+      refId: tx_ref
     });
   }
   const hostedLink = await axios({
