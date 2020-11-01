@@ -4,7 +4,7 @@ import passport from 'passport';
 import http from 'http';
 import cors from 'cors';
 import path from 'path';
-import swaggerDocument from './config/swagger.json';
+const swaggerDocument = require(path.resolve('config', 'swagger.json'))
 import sockets from './services/socket';
 import routes from './routes';
 import 'dotenv/config';
