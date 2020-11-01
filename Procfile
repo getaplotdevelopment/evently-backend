@@ -1,1 +1,1 @@
-web: node --require babel-register  index-compiled.js
+web: node --require babel-register index.js
