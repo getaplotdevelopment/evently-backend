@@ -49,3 +49,4 @@ node_modules
 
 #Server configurations
 .dump.rdb
+build
