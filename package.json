@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "NODE_ENV=test sequelize db:migrate:undo:all && npm run db:migrate:test && npm run db:migrate:seed:test && NODE_ENV=test nyc --reporter=html --reporter=text mocha --require babel-register tests/* --timeout 50000 --exit",
-    "start": "npm run db:migrate && npm run db:seed:undo && npm run db:seed && --require babel-register index.js",
+    "start": "npm run --require babel-register index.js",
     "dev": "NODE_ENV=development && nodemon --require babel-register index.js",
     "build": "babel index.js --out-file index-compiled.js",
     "start:prod": "npm run build && node --require  babel-register index-compiled.js",
@@ -39,8 +39,8 @@
   },
   "homepage": "https://github.com/getaplotdev/evently-backend#readme",
   "dependencies": {
-    "@googlemaps/google-maps-services-js": "^2.1.1",
     "@babel/cli": "^7.12.1",
+    "@googlemaps/google-maps-services-js": "^2.1.1",
     "axios": "^0.19.2",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.7.0",
@@ -79,7 +79,8 @@
     "socket.io": "^2.3.0",
     "swagger-ui-express": "^4.1.2",
     "uuid": "^7.0.3",
-    "web-push": "^3.4.4"
+    "web-push": "^3.4.4",
+    "yargs": "^16.1.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",
@@ -106,5 +107,8 @@
     "passport-mock-strategy": "^2.0.0",
     "prettier": "^1.19.1",
     "should": "^13.2.3"
+  },
+  "engines": {
+    "npm": "*"
   }
 }
