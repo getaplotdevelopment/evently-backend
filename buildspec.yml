@@ -24,3 +24,4 @@ artifacts:
     - build/**/*
     - config/
     - package.json
+    - node_modules/**/*
