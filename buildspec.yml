@@ -9,7 +9,7 @@ phases:
   pre_build:
     commands:
       - echo Installing source NPM dependencies...
-      - npm cache clear
+      - npm cache clear --force
       - npm install
   build:
     commands:
