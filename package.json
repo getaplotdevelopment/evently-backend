@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "NODE_ENV=test sequelize db:migrate:undo:all && npm run db:migrate:test && npm run db:migrate:seed:test && NODE_ENV=test nyc --reporter=html --reporter=text mocha --require babel-register tests/* --timeout 50000 --exit",
-    "start": "./node_modules/.bin/sequelize db:migrate && node --require babel-register build/index.js",
+    "start": "node --require babel-register build/index.js",
     "dev": "NODE_ENV=development && nodemon --require babel-register index.js",
     "build": "babel . -d build --ignore='node_modules','tests','seeders','coverage'",
     "start:prod": "npm run build && node --require  babel-register index-compiled.js",
