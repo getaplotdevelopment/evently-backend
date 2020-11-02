@@ -4,7 +4,7 @@ import passport from 'passport';
 import http from 'http';
 import cors from 'cors';
 import path from 'path';
-const swaggerDocument = require(path.resolve('config', 'swagger.json'))
+const swaggerDocument = require(path.resolve('./src/config', 'swagger.json'));
 import sockets from './services/socket';
 import routes from './routes';
 import 'dotenv/config';
@@ -22,7 +22,6 @@ app.use((req, _, next) => {
   next();
 });
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-// app.use(express.static(path.join(__dirname, 'public')));
 app.use(routes);
 app.use((req, res, next) => {
   return res.status(404).json({
