@@ -205,7 +205,7 @@ describe('Activate user account', () => {
     const token = 'wrongTokenString';
     const res = await chai
       .request(app)
-      .put(`/api/users/verify/${token}`)
+      .get(`/api/users/verify/${token}`)
       .set('Content-Type', 'application/json');
     res.should.have.status(403);
   });

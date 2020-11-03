@@ -13,7 +13,7 @@ import findOneHelper from '../helpers/rolesHelper/findOneHelper';
 
 dotenv.config();
 const { User, Roles, Follow, UserActivity } = models;
-const { secretKey } = process.env;
+const { secretKey, MAILER_URL } = process.env;
 /**
  * @user Controller
  * @exports
@@ -62,7 +62,8 @@ class UserController {
       deviceToken,
       phoneNumber,
       location,
-      role
+      role,
+      redirectUrl
     };
     const salt = await bcrypt.genSalt(10);
     newUser.password = await bcrypt.hash(password, salt);
@@ -109,7 +110,7 @@ class UserController {
       response: 'Email Sent'
     });
     req.body.template = 'verification';
-    getRole(user.role, redirectUrl, token);
+    getRole(user.role, MAILER_URL, token);
     await sendEmail(user.email, token, 'verification');
     const formated_address = await geocode(newUser.location);
     userInstance.location = formated_address;
@@ -376,6 +377,12 @@ class UserController {
   async activateAccount(req, res) {
     const { token } = req.params;
     const user = jwt.decode(token, secretKey);
+    // const userLink = findOneHelper(User, { email: user.email });
+    const userLink = await User.findOne({
+      where: {
+        email: user.email
+      }
+    });
     await redisClient.LPUSH('token', token);
 
     if (user) {
@@ -390,11 +397,7 @@ class UserController {
           returning: true
         }
       );
-      res.status(200).json({
-        status: 200,
-        accountsUpdated: rowsUpdated,
-        isActivated: updatedAccount.dataValues.isActivated
-      });
+      return res.status(200).redirect(`${userLink.dataValues.redirectUrl}`);
     } else {
       throw new Error('Token is expired or invalid Token');
     }

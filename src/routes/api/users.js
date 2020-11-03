@@ -51,7 +51,7 @@ router.put(
   validations,
   asyncHandler(users.resetPassword)
 );
-router.put(
+router.get(
   '/verify/:token',
   asyncHandler(checkToken),
   asyncHandler(users.activateAccount)

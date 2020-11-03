@@ -25,6 +25,7 @@ module.exports = {
       avatar: {
         type: Sequelize.STRING
       },
+      redirectUrl: Sequelize.STRING,
       isActivated: { type: Sequelize.BOOLEAN },
       deviceToken: { type: Sequelize.STRING },
       createdAt: {
