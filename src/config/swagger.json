@@ -1159,13 +1159,24 @@
       }
     },
 
-    "api/users/verify": {
+    "api/users/verify/{token}": {
       "post": {
         "tags": ["users"],
         "summary": "Verify user's account",
         "description": "",
         "operationId": "verify user's account",
         "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "token",
+            "description": "put the token provided in the path after clicking activation button got in the email",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/location"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "User exists",
