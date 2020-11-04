@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true
       },
       ticketNo: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         references: { model: 'Ticket', key: 'id' }
       },
       amount: DataTypes.STRING,
@@ -36,6 +36,10 @@ module.exports = (sequelize, DataTypes) => {
       user: {
         type: DataTypes.INTEGER,
         references: { model: 'Users', key: 'id' }
+      },
+      isTicketVerified: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
       }
     },
     {}

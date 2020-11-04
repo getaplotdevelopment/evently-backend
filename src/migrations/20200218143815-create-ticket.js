@@ -25,6 +25,10 @@ module.exports = {
       event: {
         type: Sequelize.STRING
       },
+      isTicketVerified: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

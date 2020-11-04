@@ -3,7 +3,7 @@ import asyncHandler from '../../helpers/errorsHandler/asyncHandler';
 import authUser from '../../middleware/users/authUser';
 import checkToken from '../../middleware/users/checkToken';
 import auth from '../../middleware/users/auth';
-import Ticket from '../../controllers/ticket';
+import Ticket from '../../controllers/ticket/ticket';
 import {
   validations,
   validateTicket
@@ -25,7 +25,7 @@ const {
   getAllTicketByEvent,
   getOneTicket,
   updateTicket,
-  updateTicketsByCategory,
+  updateTicketsByCategory
 } = new Ticket();
 
 const router = express.Router();
