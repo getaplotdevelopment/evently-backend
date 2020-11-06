@@ -23,7 +23,8 @@ module.exports = {
     database: process.env.DB_PRODUCTION,
     host: process.env.DB_HOSTNAME,
     dialect: 'postgres',
-    logging: false
+    logging: false,
+    ssl: true
   },
   email: {
     user: process.env.SENDER_EMAIL,
