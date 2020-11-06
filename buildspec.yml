@@ -25,4 +25,3 @@ artifacts:
   files:
     - build/**/*
     - package.json
-    - '**/*'
