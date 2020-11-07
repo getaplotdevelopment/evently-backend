@@ -15,7 +15,7 @@ Help people to be happy, gathered happy people
 - Signup/login with docker hub
 
 ### Build the container
-- In the root directory,
+- In the root directory
 - run `docker-compose build`
 
 ### start the container/app
