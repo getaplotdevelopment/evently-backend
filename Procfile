@@ -1,1 +1,1 @@
-web: npm run start
+web: node --require @babel/register ./build/index.js
