@@ -1,1 +1,1 @@
-web: node --require @babel/register ./build/index.js
+web: node ./build/index.js
