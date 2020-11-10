@@ -16,7 +16,6 @@ phases:
       - echo Compiling the Node.js code
       - npm run build
       - NODE_ENV=production npm run db:migrate
-      - NODE_ENV=production npm run db:seed
   post_build:
     commands:
       - echo Build completed on `date`

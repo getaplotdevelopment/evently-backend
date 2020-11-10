@@ -50,3 +50,8 @@ node_modules/
 #Server configurations
 .dump.rdb
 build
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
