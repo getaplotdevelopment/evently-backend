@@ -27,7 +27,25 @@ export default async slug => {
       {
         model: commentEvent,
         include: [
-          { model: replayComment },
+          {
+            model: replayComment,
+            include: [
+              {
+                model: User,
+                as: 'owner',
+                attributes: {
+                  exclude: [
+                    'password',
+                    'isActivated',
+                    'deviceToken',
+                    'role',
+                    'createdAt',
+                    'updatedAt'
+                  ]
+                }
+              }
+            ]
+          },
           {
             model: User,
             as: 'owner',
