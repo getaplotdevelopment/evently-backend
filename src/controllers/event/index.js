@@ -39,7 +39,25 @@ const includeTicket = () => {
     {
       model: commentEvent,
       include: [
-        { model: replayComment },
+        {
+          model: replayComment,
+          include: [
+            {
+              model: User,
+              as: 'owner',
+              attributes: {
+                exclude: [
+                  'password',
+                  'isActivated',
+                  'deviceToken',
+                  'role',
+                  'createdAt',
+                  'updatedAt'
+                ]
+              }
+            }
+          ]
+        },
         {
           model: User,
           as: 'owner',
@@ -226,7 +244,25 @@ export const likedEvent = async (req, res) => {
       {
         model: commentEvent,
         include: [
-          { model: replayComment },
+          {
+            model: replayComment,
+            include: [
+              {
+                model: User,
+                as: 'owner',
+                attributes: {
+                  exclude: [
+                    'password',
+                    'isActivated',
+                    'deviceToken',
+                    'role',
+                    'createdAt',
+                    'updatedAt'
+                  ]
+                }
+              }
+            ]
+          },
           {
             model: User,
             as: 'owner',
