@@ -382,6 +382,7 @@ export const getUserLocationEvents = async (req, res) => {
   const { lat, lon } = results.data;
 
   const searchParams = req.query;
+  searchParams.finishDate = { [Op.gte]: new Date().toISOString() };
   const { pages, count, data } = await getEvents(
     searchParams,
     searchParams,
