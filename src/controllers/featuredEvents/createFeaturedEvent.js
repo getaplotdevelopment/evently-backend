@@ -123,6 +123,7 @@ const createFeaturedEvent = async (req, res) => {
   };
 
   const newFeauturedEvent = await FeaturedEvents.create(featuredEvent);
+  Event.increment({ popularityCount: 2 }, { where: { slug } });
   return res.status(200).send({
     message: 'Featured event is created successfully',
     data,

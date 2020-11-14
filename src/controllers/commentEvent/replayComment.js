@@ -62,6 +62,7 @@ class ReplayCommentController {
     const replay = {
       ...newReplay.dataValues,
       user: {
+        id: req.user.id,
         firstName: req.user.firstName,
         lastName: req.user.lastName,
         userName: req.user.userName,
@@ -129,6 +130,7 @@ class ReplayCommentController {
       ...newReplay,
       user: {
         user: {
+          id: req.user.id,
           firstName: req.user.firstName,
           lastName: req.user.lastName,
           userName: req.user.userName,
