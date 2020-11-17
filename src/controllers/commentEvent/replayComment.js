@@ -157,6 +157,15 @@ class ReplayCommentController {
    */
   async deleteReplay(req, res) {
     const { replayId: id, commentId } = req.params;
+    const { reply } = req;
+    if (reply.isDeleted) {
+      return res.status(200).json({
+        status: 200,
+        message: "reply already deleted",
+        reply
+      });
+    }
+
     const where = { id, commentEvent: commentId };
     const repaly = {
       isDeleted: true
@@ -165,9 +174,6 @@ class ReplayCommentController {
       where,
       returning: true
     });
-    const {
-      dataValues: { isDeleted }
-    } = updatedReplay;
     if (updatedRow === 0) {
       res.status(200).json({
         status: 200,
@@ -177,9 +183,8 @@ class ReplayCommentController {
     if (updatedRow === 1) {
       res.status(200).json({
         status: 200,
-        message: isDeleted
-          ? 'Replay already deleted'
-          : 'Replay successfully deleted'
+        message: "reply successfully deleted",
+        comment: updatedReplay
       });
     }
   }

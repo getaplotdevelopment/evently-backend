@@ -8,12 +8,14 @@ import { checkEvent } from '../../middleware/event/checkEvent';
 import {
   checkComment,
   checkCommentOwner,
-  checkCommentOwnerOrAdmin
+  checkCommentOwnerOrAdmin,
+  checkCommentOnEvent
 } from '../../middleware/commentEvent/checkComment';
 import {
   checkReplay,
   checkReplayOwner,
-  checkReplayOwnerOrAdmin
+  checkReplayOwnerOrAdmin,
+  checkReplayOnComment
 } from '../../middleware/commentEvent/checkReplay';
 import {
   validateComment,
@@ -41,7 +43,7 @@ router.get(
   asyncHandler(checkToken),
   asyncHandler(auth),
   asyncHandler(checkEvent),
-  asyncHandler(checkComment),
+  asyncHandler(checkCommentOnEvent),
   asyncHandler(comment.getOneComment)
 );
 router.put(
@@ -49,7 +51,7 @@ router.put(
   asyncHandler(checkToken),
   asyncHandler(auth),
   asyncHandler(checkEvent),
-  asyncHandler(checkComment),
+  asyncHandler(checkCommentOnEvent),
   asyncHandler(checkCommentOwner),
   asyncHandler(comment.updateComment)
 );
@@ -58,7 +60,7 @@ router.put(
   asyncHandler(checkToken),
   asyncHandler(auth),
   asyncHandler(checkEvent),
-  asyncHandler(checkComment),
+  asyncHandler(checkCommentOnEvent),
   asyncHandler(checkCommentOwnerOrAdmin),
   asyncHandler(comment.deleteComment)
 );
@@ -96,7 +98,7 @@ router.get(
   asyncHandler(checkToken),
   asyncHandler(auth),
   asyncHandler(checkComment),
-  asyncHandler(checkReplay),
+  asyncHandler(checkReplayOnComment),
   asyncHandler(replayComment.getOneReplay)
 );
 router.put(
@@ -104,7 +106,7 @@ router.put(
   asyncHandler(checkToken),
   asyncHandler(auth),
   asyncHandler(checkComment),
-  asyncHandler(checkReplay),
+  asyncHandler(checkReplayOnComment),
   asyncHandler(checkReplayOwner),
   asyncHandler(replayComment.updateReplay)
 );
@@ -113,7 +115,7 @@ router.put(
   asyncHandler(checkToken),
   asyncHandler(auth),
   asyncHandler(checkComment),
-  asyncHandler(checkReplay),
+  asyncHandler(checkReplayOnComment),
   asyncHandler(checkReplayOwnerOrAdmin),
   asyncHandler(replayComment.deleteReplay)
 );

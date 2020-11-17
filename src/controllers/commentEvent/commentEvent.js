@@ -148,18 +148,22 @@ class CommentEventController {
    */
   async deleteComment(req, res) {
     const { commentId: id, slug } = req.params;
-    const where = { id };
-    const comment = {
+    const { comment } = req;
+    if (comment.isDeleted) {
+      return res.status(200).json({
+        status: 200,
+        message: "Comment already deleted",
+        comment
+      });
+    }
+    const updateObj = {
       isDeleted: true,
       event: slug
     };
-    const [updatedRow, [updatedComment]] = await commentEvent.update(comment, {
-      where,
+    const [updatedRow, [updatedComment]] = await commentEvent.update(updateObj, {
+      where: { id },
       returning: true
     });
-    const {
-      dataValues: { isDeleted }
-    } = updatedComment;
     if (updatedRow === 0) {
       return res.status(404).json({
         status: 404,
@@ -170,9 +174,8 @@ class CommentEventController {
       Event.decrement({ popularityCount: 1 }, { where: { slug } });
       res.status(200).json({
         status: 200,
-        message: isDeleted
-          ? 'Comment already deleted'
-          : 'Comment successfully deleted'
+        message: "Comment successfully deleted",
+        comment: updatedComment
       });
     }
   }
