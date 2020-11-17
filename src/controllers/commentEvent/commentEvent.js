@@ -54,6 +54,7 @@ class CommentEventController {
     const createdComment = {
       ...newComment.dataValues,
       user: {
+        id: req.user.id,
         firstName: req.user.firstName,
         lastName: req.user.lastName,
         userName: req.user.userName,
@@ -62,6 +63,7 @@ class CommentEventController {
         phoneNumber: req.user.phoneNumber
       }
     };
+    Event.increment({ popularityCount: 2 }, { where: { slug } });
     res.status(201).json({
       status: 201,
       createdComment
@@ -120,6 +122,7 @@ class CommentEventController {
     const comment = {
       ...newComment,
       user: {
+        id: req.user.id,
         firstName: req.user.firstName,
         lastName: req.user.lastName,
         userName: req.user.userName,
@@ -164,6 +167,7 @@ class CommentEventController {
       });
     }
     if (updatedRow === 1) {
+      Event.decrement({ popularityCount: 1 }, { where: { slug } });
       res.status(200).json({
         status: 200,
         message: isDeleted
