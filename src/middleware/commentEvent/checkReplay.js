@@ -17,6 +17,20 @@ const checkReplay = async (req, res, next) => {
   }
   next();
 };
+const checkReplayOnComment = async (req, res, next) => {
+  const { replayId: id, commentId: commentEvent } = req.params;
+  if (isNaN(id)) {
+    throw new httpError(400, 'reply ID must be a number');
+  }
+  const reply = await replayComment.findOne({
+    where: { id, commentEvent }
+  });
+  if (!reply) {
+    throw new httpError(404, 'Reply not found');
+  }
+  req.reply = reply
+  next();
+};
 const checkReplayOwner = async (req, res, next) => {
   const { replayId: id } = req.params;
   const { user } = req;
@@ -42,4 +56,4 @@ const checkReplayOwnerOrAdmin = async (req, res, next) => {
   next();
 };
 
-export { checkReplay, checkReplayOwner, checkReplayOwnerOrAdmin };
+export { checkReplay, checkReplayOwner, checkReplayOwnerOrAdmin, checkReplayOnComment };

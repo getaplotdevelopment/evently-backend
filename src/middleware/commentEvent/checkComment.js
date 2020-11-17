@@ -10,13 +10,29 @@ const checkComment = async (req, res, next) => {
     throw new httpError(400, 'comment ID must be a number');
   }
   const event = await commentEvent.findOne({
-    where: { id }
+    where: { id, isDeleted: false }
   });
   if (!event) {
     throw new httpError(404, 'Comment not found');
   }
   next();
 };
+
+const checkCommentOnEvent = async (req, res, next) => {
+  const { commentId: id, slug: event } = req.params;
+  if (isNaN(id)) {
+    throw new httpError(400, 'comment ID must be a number');
+  }
+  const comment = await commentEvent.findOne({
+    where: { id, event, isDeleted: false }
+  });
+  if (!comment) {
+    throw new httpError(404, 'Comment not found');
+  }
+  req.comment = comment;
+  next();
+};
+
 const checkCommentOwner = async (req, res, next) => {
   const { commentId: id } = req.params;
   const { user } = req;
@@ -42,4 +58,4 @@ const checkCommentOwnerOrAdmin = async (req, res, next) => {
   next();
 };
 
-export { checkComment, checkCommentOwner, checkCommentOwnerOrAdmin };
+export { checkComment, checkCommentOwner, checkCommentOwnerOrAdmin, checkCommentOnEvent };
