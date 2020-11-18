@@ -631,8 +631,8 @@
         ]
       }
     },
-    "api/event/{slug}/event-comment/1": {
-      "delete": {
+    "api/event/{slug}/delete-comment/1": {
+      "put": {
         "tags": ["Event comment"],
         "summary": "delete a single event comment.",
         "description": "delete a single comment",
@@ -872,7 +872,7 @@
       }
     },
     "api/event/comment/:commentId/replay/1": {
-      "delete": {
+      "put": {
         "tags": ["Replay"],
         "summary": "delete one Replay comments",
         "description": "delete Replay to event comment ",
