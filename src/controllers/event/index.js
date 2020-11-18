@@ -421,8 +421,8 @@ export const eventTicketCategory = async (req, res) => {
         attributes: { exclude: ['createdAt', 'updatedAt'] }
       }
     ],
-    attributes: ['category'],
-    group: ['category', 'ticketCategory.id'],
+    attributes: ['category', 'price'],
+    group: ['category', 'ticketCategory.id', 'Ticket.price'],
     where: { event: slug }
   });
   res.send({ message: 'success', status: 200, data });
