@@ -185,7 +185,15 @@
     "eventStatus": "draft",
     "startDate": "2020-01-01",
     "finishDate": "2020-01-03",
-    "location": "gasabo"
+    "location": {
+        "address": "Entebbe, Uganda",
+        "country": "Uganda",
+        "place_id": "ChIJswrCU7eGfRcRFCzMdcNQpaQ",
+        "locations": {
+          "lat": 0.0511839,
+          "lng": 32.463708
+        }
+    }
   },
   "similarEvent": {
     "title": "similar title",
@@ -197,7 +205,15 @@
     "eventStatus": "draft",
     "startDate": "2020-01-01",
     "finishDate": "2021-12-12",
-    "location": "gasabo"
+    "location": {
+      "address": "Kidepo River",
+      "country": "Uganda",
+      "place_id": "ChIJUZ0RcJQXdRcRQ8oxH3gyuCI",
+      "locations": {
+        "lat": 3.9370631,
+        "lng": 33.7894392
+      }
+    }
   },
   "nearByCity": {
     "title": "Near by city",
@@ -209,7 +225,15 @@
     "eventStatus": "draft",
     "startDate": "2020-01-01",
     "finishDate": "2021-12-12",
-    "location": "nyabugogo"
+    "location": {
+      "address": "Kawempe",
+      "country": "Uganda",
+      "place_id": "ChIJUZ0RcJQXdRcRQ8oxH3gyuCI",
+      "locations": {
+        "lat": 0.3801717,
+        "lng": 32.5570534
+      }
+    }
   },
   "invalidLoc": {
     "title": "title1 is good",
@@ -222,7 +246,15 @@
     "eventStatus": "draft",
     "startDate": "2020-01-01",
     "finishDate": "2020-01-03",
-    "location": "t6600000066-0no"
+    "location": {
+      "address": null,
+        "country": null,
+        "place_id": null,
+        "locations": {
+          "lat": 0,
+          "lng": 0
+        }
+    }
   },
   "crateProfile": {
     "accountName": "BomayE",

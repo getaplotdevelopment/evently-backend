@@ -1,4 +1,4 @@
-import { check, validationResult } from 'express-validator';
+import { check, validationResult, body } from 'express-validator';
 
 const validateUser = [
   check('firstName', 'firstName is required')
@@ -78,7 +78,11 @@ const validateEvent = [
     .isEmpty(),
   check('finishDate', 'finishDate is required')
     .not()
-    .isEmpty()
+    .isEmpty(),
+  check('location', 'location must be a JSON object')
+  .not()
+  .isEmpty()
+  .isJSON()
 ];
 const validateRole = [
   check('designation', 'Designation is required')

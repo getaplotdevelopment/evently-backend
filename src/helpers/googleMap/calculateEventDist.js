@@ -24,6 +24,9 @@ export const nearByCity = async (origins, destinations) => {
   });
   const { status, rows } = locPayload.data;
   const distanceInKm = rows[0].elements[0];
+  if (distanceInKm.status == 'ZERO_RESULTS') {
+    return { status: false };
+  }  
   return isInCityRange(distanceInKm);
 };
 

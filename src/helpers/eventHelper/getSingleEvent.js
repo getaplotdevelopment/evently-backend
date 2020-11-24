@@ -9,6 +9,7 @@ const {
   commentEvent,
   replayComment,
   Likes,
+  likeComment,
   User
 } = models;
 
@@ -40,7 +41,10 @@ export default async slug => {
                     'deviceToken',
                     'role',
                     'createdAt',
-                    'updatedAt'
+                    'updatedAt',
+                    'redirectUrl',
+                    'isDeactivated',
+                    'isApproved'
                   ]
                 }
               }
@@ -56,9 +60,34 @@ export default async slug => {
                 'deviceToken',
                 'role',
                 'createdAt',
-                'updatedAt'
+                'updatedAt',
+                'redirectUrl',
+                'isDeactivated',
+                'isApproved'
               ]
             }
+          },
+          {
+            model: likeComment,
+            include: [
+              {
+                model: User,
+                as: 'owner',
+                attributes: {
+                  exclude: [
+                    'password',
+                    'isActivated',
+                    'deviceToken',
+                    'role',
+                    'createdAt',
+                    'updatedAt',
+                    'redirectUrl',
+                    'isDeactivated',
+                    'isApproved'
+                  ]
+                }
+              }
+            ]
           }
         ]
       },
@@ -75,7 +104,10 @@ export default async slug => {
                 'deviceToken',
                 'role',
                 'createdAt',
-                'updatedAt'
+                'updatedAt',
+                'redirectUrl',
+                'isDeactivated',
+                'isApproved'
               ]
             }
           }

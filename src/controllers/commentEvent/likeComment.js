@@ -25,7 +25,8 @@ class LikeCommentController {
       await likeComment.create({
         commentEvent,
         user,
-        hasLiked: true
+        hasLiked: true,
+        hasDisliked: false
       });
       return res.status(201).json({
         status: 201,
@@ -36,7 +37,8 @@ class LikeCommentController {
       {
         commentEvent,
         user,
-        hasLiked: !findLikedComment.hasLiked
+        hasLiked: !findLikedComment.hasLiked,
+        hasDisliked: false
       },
       {
         where
@@ -67,7 +69,8 @@ class LikeCommentController {
       await likeComment.create({
         commentEvent,
         user,
-        hasDisliked: true
+        hasDisliked: true,
+        hasLiked: false,
       });
       return res.status(201).json({
         status: 201,
@@ -78,7 +81,8 @@ class LikeCommentController {
       {
         commentEvent,
         user,
-        hasDisliked: !finDislikedComment.hasDisliked
+        hasDisliked: !finDislikedComment.hasDisliked,
+        hasLiked: false,
       },
       {
         where
