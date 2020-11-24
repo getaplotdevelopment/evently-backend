@@ -3,7 +3,6 @@ import eventStatuschecker from '../../helpers/eventHelper/eventStatuschecker';
 import getEvents from '../../helpers/eventHelper/getEvent';
 import handleLikeUnlike from '../../helpers/eventHelper/handleLikeUnlike';
 import uploadCloudinary from '../../helpers/eventHelper/uploadCloudinary';
-import geocode from '../../helpers/googleMap/goecode';
 import slugGenerator from '../../helpers/slugGenerator';
 import {
   nearByCity,
@@ -26,7 +25,7 @@ const {
   PaymentEvents,
   User,
   TicketCategory,
-  PaymentRequests
+  likeComment
 } = models;
 const { USER_LOCATION_URL } = process.env;
 
@@ -52,9 +51,12 @@ const includeTicket = () => {
                   'deviceToken',
                   'role',
                   'createdAt',
-                  'updatedAt'
+                  'updatedAt',
+                  'redirectUrl',
+                  'isDeactivated',
+                  'isApproved'
                 ]
-              }
+              },
             }
           ]
         },
@@ -68,9 +70,34 @@ const includeTicket = () => {
               'deviceToken',
               'role',
               'createdAt',
-              'updatedAt'
+              'updatedAt',
+              'redirectUrl',
+              'isDeactivated',
+              'isApproved'
             ]
           }
+        },
+        {
+          model: likeComment,
+          include: [
+            { 
+              model: User,
+              as: 'owner',
+              attributes: {
+                exclude: [
+                  'password',
+                  'isActivated',
+                  'deviceToken',
+                  'role',
+                  'createdAt',
+                  'updatedAt',
+                  'redirectUrl',
+                  'isDeactivated',
+                  'isApproved'
+                ]
+              }
+             }
+          ]
         }
       ]
     },
@@ -87,7 +114,10 @@ const includeTicket = () => {
               'deviceToken',
               'role',
               'createdAt',
-              'updatedAt'
+              'updatedAt',
+              'redirectUrl',
+              'isDeactivated',
+              'isApproved'
             ]
           }
         }
@@ -130,7 +160,7 @@ export const createEventController = async (req, res) => {
     isOrganizer
   } = req.organizer;
   const slug = slugGenerator(title);
-  const formatted_address = await geocode(location);
+  // const formatted_address = await geocode(location);
   const newEvent = {
     slug,
     title,
@@ -144,7 +174,7 @@ export const createEventController = async (req, res) => {
     startTime,
     currentMode,
     eventType,
-    location: formatted_address,
+    location: JSON.parse(location),
     organizer: {
       id,
       firstName,
@@ -257,7 +287,10 @@ export const likedEvent = async (req, res) => {
                     'deviceToken',
                     'role',
                     'createdAt',
-                    'updatedAt'
+                    'updatedAt',
+                    'redirectUrl',
+                    'isDeactivated',
+                    'isApproved'
                   ]
                 }
               }
@@ -273,7 +306,10 @@ export const likedEvent = async (req, res) => {
                 'deviceToken',
                 'role',
                 'createdAt',
-                'updatedAt'
+                'updatedAt',
+                'redirectUrl',
+                'isDeactivated',
+                'isApproved'
               ]
             }
           }
@@ -292,7 +328,10 @@ export const likedEvent = async (req, res) => {
                 'deviceToken',
                 'role',
                 'createdAt',
-                'updatedAt'
+                'updatedAt',
+                'redirectUrl',
+                'isDeactivated',
+                'isApproved'
               ]
             },
             where: { email }
@@ -339,19 +378,10 @@ export const getSimilarEvents = async (req, res) => {
 };
 
 export const getEventsNearCities = async (req, res) => {
-  const { slug } = req.params;
-  const event = await getSingleEvent(slug);
-  const { location } = event;
-  const origins = [location.locations];
-  if (origins[0].lat == 0 && origins[0].lng == 0) {
-    return res.send({
-      status: 200,
-      data: []
-    });
-  }
+  const { latitude: lat, longitude: lng } = req.body
+  const origins = [ { lat, lng } ];
   const queryParams = {};
   const filterBy = {
-    'location.country': location.country,
     finishDate: { [Op.gte]: new Date().toISOString() }
   };
   const { pages, count, data } = await getEvents(
@@ -364,6 +394,7 @@ export const getEventsNearCities = async (req, res) => {
   // TODO: Improve the performance. O(n) -> 0(logn)
   for (const event of data) {
     const destinations = [event.location.locations];
+    
     const response = await nearByCity(origins, destinations);
     if (response.status) {
       event.dataValues.distance = response.distance;
@@ -375,11 +406,7 @@ export const getEventsNearCities = async (req, res) => {
 };
 
 export const getUserLocationEvents = async (req, res) => {
-  const results = await axios({
-    url: USER_LOCATION_URL,
-    method: 'GET'
-  });
-  const { lat, lon } = results.data;
+  const { latitude: lat, longitude: lng } = req.body
 
   const searchParams = req.query;
   searchParams.finishDate = { [Op.gte]: new Date().toISOString() };
@@ -390,7 +417,7 @@ export const getUserLocationEvents = async (req, res) => {
     includeTicket()
   );
   const eventsInUsersLocation = [];
-  const origins = [{ lat, lng: lon }];
+  const origins = [{ lat, lng }];
   // TODO: Improve the performance. O(n) -> 0(logn)
   for (const event of data) {
     const destinations = [event.location.locations];

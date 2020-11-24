@@ -459,7 +459,7 @@
         ]
       }
     },
-    "api/events/{slug}/nearbyevent": {
+    "api/events/nearbyevent": {
       "get": {
         "tags": ["Events"],
         "summary": "Retrieve events from near by cities.",

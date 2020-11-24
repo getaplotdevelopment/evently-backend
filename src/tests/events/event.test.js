@@ -30,6 +30,10 @@ const loginOrganizer = async () => {
     .set('Content-Type', 'application/json')
     .send(signupUser2);
 };
+createEvent.location = JSON.stringify(createEvent.location)
+nearByCity.location = JSON.stringify(nearByCity.location)
+invalidLoc.location = JSON.stringify(invalidLoc.location)
+similarEvent.location = JSON.stringify(similarEvent.location)
 
 const createEvents = async (userObj, event = createEvent) => {
   const { token } = userObj.body;
@@ -74,18 +78,30 @@ describe('Event', () => {
   });
   it("currentMode should only be among ['draft', 'published', 'cancelled', 'unpublished']", async () => {
     const response = await loginOrganizer();
+    const currentModeEvent = {
+      title: 'title1 is good',
+      description: 'desc',
+      currentMode: 'Bad status',
+      startDate: '2020-01-01',
+      finishDate: '2020-01-03',
+      location: {
+        "address": "Kawempe",
+        "country": "Uganda",
+        "place_id": "ChIJUZ0RcJQXdRcRQ8oxH3gyuCI",
+        "locations": {
+          "lat": 0.3801717,
+          "lng": 32.5570534
+        }
+      }
+    }
+    currentModeEvent.location = JSON.stringify(currentModeEvent.location)
 
     const res = await chai
       .request(app)
       .post('/api/events')
       .set({ Authorization: 'Bearer ' + response.body.token })
-      .send({
-        title: 'title1 is good',
-        description: 'desc',
-        currentMode: 'Bad status',
-        startDate: '2020-01-01',
-        finishDate: '2020-01-03'
-      });
+      .send(currentModeEvent);
+    
     res.should.have.status(422);
     res.text.should.include('Invalid eventType, try any from this array');
   }).timeout(10000);
@@ -271,27 +287,19 @@ describe('Event', () => {
     const { slug } = eventResp.body.data;
     const result = await chai
       .request(app)
-      .get(`/api/events/${slug}/nearbycity`);
+      .get(`/api/events/nearbycity`)
+      .send({ "latitude": 0.3801717, "longitude": 32.5570534});
     result.should.have.status(200);
     // result.body.data[0].should.have.property('distance');
     // result.body.data[0].should.have.property('duration');
   });
 
-  it('should return 404 if slug is invalid', async () => {
-    const slug = 'invalid-slug-1234';
-    const result = await chai
-      .request(app)
-      .get(`/api/events/${slug}/nearbycity`);
-    result.should.have.status(404);
-    result.body.should.have.property('error').eql('Event not found');
-  });
   it('should return [] if no available events near by', async () => {
     const response = await loginOrganizer();
-    const res = await createEvents(response, invalidLoc);
-    const { slug } = res.body.data;
     const result = await chai
       .request(app)
-      .get(`/api/events/${slug}/nearbycity`);
+      .get(`/api/events/nearbycity`)
+      .send({ "latitude": 0.3801717, "longitude": 32.5570534});
     result.should.have.status(200);
     result.body.should.have.property('data').eql([]);
   });
