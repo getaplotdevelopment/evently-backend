@@ -96,7 +96,26 @@ class ProfileController {
   async getUserProfile(req, res) {
     const { organizerId } = req.params;
     const organizerProfile = await OrganizerProfile.findOne({
-      where: { organizer: organizerId }
+      where: { organizer: organizerId },
+      include: [
+        {
+          model: User,
+          as: 'userfkey',
+          attributes: {
+            exclude: [
+              'password',
+              'isActivated',
+              'deviceToken',
+              'role',
+              'createdAt',
+              'updatedAt',
+              'redirectUrl',
+              'isDeactivated',
+              'isApproved'
+            ]
+          }
+        }
+      ]
     });
     res.status(200).json({ status: 200, organizerProfile });
   }
@@ -110,7 +129,26 @@ class ProfileController {
   async getCurrentUserProfile(req, res) {
     const { id } = req.user;
     const organizerProfile = await OrganizerProfile.findOne({
-      where: { organizer: id }
+      where: { organizer: id },
+      include: [
+        {
+          model: User,
+          as: 'userfkey',
+          attributes: {
+            exclude: [
+              'password',
+              'isActivated',
+              'deviceToken',
+              'role',
+              'createdAt',
+              'updatedAt',
+              'redirectUrl',
+              'isDeactivated',
+              'isApproved'
+            ]
+          }
+        }
+      ]
     });
     if (!organizerProfile) {
       throw new httError(404, 'You have not add anything on your profile');

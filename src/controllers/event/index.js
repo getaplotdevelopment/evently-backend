@@ -366,6 +366,7 @@ export const getSimilarEvents = async (req, res) => {
   const filterBy = {
     category,
     'location.country': location.country,
+    currentMode: "published",
     finishDate: { [Op.gte]: new Date().toISOString() }
   };
   const { pages, count, data } = await getEvents(
@@ -378,12 +379,16 @@ export const getSimilarEvents = async (req, res) => {
 };
 
 export const getEventsNearCities = async (req, res) => {
-  const { latitude: lat, longitude: lng } = req.body
-  const origins = [ { lat, lng } ];
-  const queryParams = {};
+  const queryParams = req.query;
+  queryParams.sort = 'updatedAt:desc';
+  const { latitude: lat, longitude: lng } = queryParams;
   const filterBy = {
-    finishDate: { [Op.gte]: new Date().toISOString() }
+    finishDate: { [Op.gte]: new Date().toISOString() },
+    currentMode: "published"
   };
+  const origins = [ { lat, lng } ];
+  delete queryParams.latitude;
+  delete queryParams.longitude;
   const { pages, count, data } = await getEvents(
     queryParams,
     filterBy,
@@ -406,13 +411,17 @@ export const getEventsNearCities = async (req, res) => {
 };
 
 export const getUserLocationEvents = async (req, res) => {
-  const { latitude: lat, longitude: lng } = req.body
-
   const searchParams = req.query;
-  searchParams.finishDate = { [Op.gte]: new Date().toISOString() };
+  const { latitude: lat, longitude: lng } = searchParams;
+  const filterBy = {
+    finishDate: { [Op.gte]: new Date().toISOString() },
+    currentMode: "published"
+  };
+  delete searchParams.latitude;
+  delete searchParams.longitude;
   const { pages, count, data } = await getEvents(
     searchParams,
-    searchParams,
+    filterBy,
     Event,
     includeTicket()
   );
