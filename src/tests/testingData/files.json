@@ -183,8 +183,9 @@
     "numberDays": "1 day",
     "eventImage": "http",
     "eventStatus": "draft",
-    "startDate": "2020-01-01",
-    "finishDate": "2020-01-03",
+    "currentMode": "published",
+    "startDate": "2020-10-10",
+    "finishDate": "2024-01-03",
     "location": {
         "address": "Entebbe, Uganda",
         "country": "Uganda",
@@ -203,8 +204,9 @@
     "numberDays": "1 day",
     "eventImage": "http",
     "eventStatus": "draft",
-    "startDate": "2020-01-01",
-    "finishDate": "2021-12-12",
+    "startDate": "2020-10-10",
+    "finishDate": "2023-12-12",
+    "currentMode": "published",
     "location": {
       "address": "Kidepo River",
       "country": "Uganda",

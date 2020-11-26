@@ -287,19 +287,17 @@ describe('Event', () => {
     const { slug } = eventResp.body.data;
     const result = await chai
       .request(app)
-      .get(`/api/events/nearbycity`)
-      .send({ "latitude": 0.3801717, "longitude": 32.5570534});
+      .get(`/api/events/nearbycity?latitude=0.3801717&longitude=32.5570534`);
     result.should.have.status(200);
-    // result.body.data[0].should.have.property('distance');
-    // result.body.data[0].should.have.property('duration');
+    result.body.data[0].should.have.property('distance');
+    result.body.data[0].should.have.property('duration');
   });
 
   it('should return [] if no available events near by', async () => {
     const response = await loginOrganizer();
     const result = await chai
       .request(app)
-      .get(`/api/events/nearbycity`)
-      .send({ "latitude": 0.3801717, "longitude": 32.5570534});
+      .get(`/api/events/nearbycity?latitude=3.9370631&longitude=33.7894392`);
     result.should.have.status(200);
     result.body.should.have.property('data').eql([]);
   });

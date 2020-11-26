@@ -161,7 +161,7 @@
         ]
       }
     },
-    "api/events/userLocation": {
+    "api/events/userLocation?latitude=-0.6071596&longitude=30.6545022": {
       "get": {
         "tags": ["Events"],
         "summary": "Get a list of all events within the users current location (16km)",
@@ -459,7 +459,7 @@
         ]
       }
     },
-    "api/events/nearbyevent": {
+    "api/events/nearbycity?latitude=0.3801717&longitude=32.5570534": {
       "get": {
         "tags": ["Events"],
         "summary": "Retrieve events from near by cities.",
