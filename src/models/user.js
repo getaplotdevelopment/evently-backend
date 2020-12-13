@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
   );
   User.associate = function(models) {
     User.hasMany(models.OrganizerProfile, {
-      foreignKey: 'organizer',
+      foreignKey: 'user',
       allowNull: false
     });
     User.hasMany(models.Event, {

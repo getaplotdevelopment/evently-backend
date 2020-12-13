@@ -37,7 +37,7 @@ module.exports = {
       social: {
         type: Sequelize.JSON
       },
-      organizer: {
+      user: {
         type: Sequelize.INTEGER
       },
       createdAt: {

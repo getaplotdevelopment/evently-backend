@@ -1399,7 +1399,7 @@
             }
           },
           "400": {
-            "description": "Invalid username supplied"
+            "description": "something went wrong"
           },
           "404": {
             "description": "User not found"
@@ -1433,7 +1433,7 @@
         ],
         "responses": {
           "400": {
-            "description": "Invalid user supplied"
+            "description": "something went wrong"
           },
           "404": {
             "description": "User not found"
@@ -3040,11 +3040,18 @@
           "type": "string"
         },
         "preferences": {
+          "type": "array"
+        },
+        "phoneNumber": {
           "type": "string"
         },
-        "social": {
+        "instagram": {
+          "type": "string"
+        },
+        "facebook": {
           "type": "string"
         }
+        
       },
       "xml": {
         "name": "Profile"
