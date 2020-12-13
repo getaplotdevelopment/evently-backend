@@ -17,18 +17,29 @@ const checkUser = async (req, res, next) => {
 };
 
 const checkUserProfile = async (req, res, next) => {
-  const { organizerId } = req.params;
-  const organizer = await OrganizerProfile.findOne({
-    where: { organizer: organizerId }
+  const { userId } = req.params;
+  const userProfile = await OrganizerProfile.findOne({
+    where: { user: userId }
   });
-  if (!organizer) {
+  if (!userProfile) {
     throw new httpError(404, 'The user does not have any profile yet');
   }
   next();
 };
+const checkCurrentProfile = async (req, res, next) => {
+  const { id } = req.user;
+  const userProfile = await OrganizerProfile.findOne({
+    where: { user: id }
+  });
+  if (!userProfile) {
+    throw new httpError(404, 'The user does not have any profile yet');
+  }
+  req.userProfile = userProfile
+  next();
+};
 const checkProfile = async (req, res, next) => {
   const { id } = req.user;
-  const profile = await OrganizerProfile.findOne({ where: { organizer: id } });
+  const profile = await OrganizerProfile.findOne({ where: { user: id } });
   if (profile) {
     throw new httpError(409, 'You have already a profile');
   }
@@ -140,5 +151,6 @@ export {
   checkFeedbackId,
   checkFeedbackOwner,
   checkOrganizerId,
-  checkFollowUser
+  checkFollowUser,
+  checkCurrentProfile
 };

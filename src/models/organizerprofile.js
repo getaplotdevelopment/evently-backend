@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       lastLogin: DataTypes.DATE,
       accountType: DataTypes.STRING,
       social: { type: DataTypes.JSON, allowNull: true },
-      organizer: {
+      user: {
         type: DataTypes.INTEGER,
         references: { model: 'User', key: 'id' }
       }
@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
   OrganizerProfile.associate = function(models) {
     OrganizerProfile.belongsTo(models.User, {
       as: 'userfkey',
-      foreignKey: 'organizer',
+      foreignKey: 'user',
       onDelete: 'CASCADE'
     });
   };

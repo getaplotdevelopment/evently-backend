@@ -10,7 +10,8 @@ import {
 import upload from '../../helpers/fileUploadConfig/multer';
 import {
   checkUserProfile,
-  checkProfile
+  checkProfile,
+  checkCurrentProfile
 } from '../../middleware/users/checkUser';
 
 const profile = new Profile();
@@ -34,10 +35,10 @@ router.get(
   asyncHandler(profile.getCurrentUserProfile)
 );
 router.get(
-  '/:organizerId',
+  '/:userId',
   asyncHandler(checkToken),
-  asyncHandler(checkUserProfile),
   asyncHandler(auth),
+  asyncHandler(checkUserProfile),
   asyncHandler(profile.getUserProfile)
 );
 router.put(
@@ -45,6 +46,7 @@ router.put(
   upload.array('profilePhotos', 2),
   asyncHandler(checkToken),
   asyncHandler(auth),
+  asyncHandler(checkCurrentProfile),
   asyncHandler(profile.updateYourProfile)
 );
 

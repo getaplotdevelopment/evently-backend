@@ -16,18 +16,6 @@ const validateUser = [
   })
 ];
 const validateProfile = [
-  check('accountName', 'accountName is required')
-    .not()
-    .isEmpty(),
-  check('location', 'location is required')
-    .not()
-    .isEmpty(),
-  check('preferences', 'preferences is required')
-    .not()
-    .isEmpty(),
-  check('accountType', 'accountType is required')
-    .not()
-    .isEmpty()
 ];
 const validateUserLogin = [
   check('email', 'Please include a valid email').isEmail(),

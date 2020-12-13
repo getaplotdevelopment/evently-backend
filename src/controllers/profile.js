@@ -8,7 +8,7 @@ import geocode from '../helpers/googleMap/goecode';
 import findOneHelper from '../helpers/rolesHelper/findOneHelper';
 
 dotenv.config();
-const { OrganizerProfile, User, UserActivity, Roles } = models;
+const { OrganizerProfile, User, UserActivity } = models;
 
 /**
  * @profile Controller
@@ -37,7 +37,7 @@ class ProfileController {
       youtube: req.body.youtube,
       facebook: req.body.facebook,
       linkedin: req.body.linkedin,
-      instagram: req.body.instqgram
+      instagram: req.body.instagram
     };
 
     const uploader = async path => await cloudinary.uploads(path, 'Images');
@@ -64,25 +64,11 @@ class ProfileController {
       lastLogin,
       accountType,
       social,
-      organizer: id
+      user: id
     };
-    const { dataValues } = await findOneHelper(Roles, {
-      designation: 'ORGANIZER'
-    });
-    const role = dataValues.designation;
     await UserActivity.create({ designation: 'Creating profile', userId: id });
     const { dataValues: createdProfile } = await OrganizerProfile.create(
       newProfile
-    );
-    await User.update(
-      {
-        role
-      },
-      {
-        where: {
-          id
-        }
-      }
     );
     res.status(201).json({ status: 201, createdProfile });
   }
@@ -94,9 +80,9 @@ class ProfileController {
    * @returns {Object} Response
    */
   async getUserProfile(req, res) {
-    const { organizerId } = req.params;
-    const organizerProfile = await OrganizerProfile.findOne({
-      where: { organizer: organizerId },
+    const { userId } = req.params;
+    const profile = await OrganizerProfile.findOne({
+      where: { user: userId },
       include: [
         {
           model: User,
@@ -117,7 +103,7 @@ class ProfileController {
         }
       ]
     });
-    res.status(200).json({ status: 200, organizerProfile });
+    res.status(200).json({ status: 200, userProfile: profile });
   }
 
   /**
@@ -129,7 +115,7 @@ class ProfileController {
   async getCurrentUserProfile(req, res) {
     const { id } = req.user;
     const organizerProfile = await OrganizerProfile.findOne({
-      where: { organizer: id },
+      where: { user: id },
       include: [
         {
           model: User,
@@ -164,6 +150,7 @@ class ProfileController {
    */
   async updateYourProfile(req, res) {
     const { id } = req.user;
+    const { youtube, facebook, linkedin, instagram } = req.userProfile.social;
     const {
       accountName,
       description,
@@ -172,9 +159,14 @@ class ProfileController {
       preferences,
       lastLogin,
       accountType,
-      social
+      phoneNumber
     } = req.body;
-
+    const social = {
+      youtube: req.body.youtube ? req.body.youtube : youtube,
+      facebook: req.body.facebook ? req.body.facebook : facebook,
+      linkedin: req.body.linkedin ? req.body.linkedin : linkedin,
+      instagram: req.body.instagram ? req.body.instagram : instagram
+    };
     const uploader = async path => await cloudinary.uploads(path, 'Images');
     const urls = [];
     const files = req.files ? req.files : [];
@@ -199,11 +191,19 @@ class ProfileController {
       lastLogin,
       accountType,
       social,
-      organizer: id
+      user: id
     };
-
+    if (phoneNumber) {
+      await User.update(
+        { phoneNumber },
+        {
+          where: { id }
+        }
+      );
+      updatedProfile.phoneNumber = phoneNumber;
+    }
     const { dataValues } = await OrganizerProfile.update(updatedProfile, {
-      where: { organizer: id }
+      where: { user: id }
     });
     res.status(200).json({ status: 200, updatedProfile });
   }
