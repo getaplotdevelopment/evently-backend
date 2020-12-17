@@ -3036,7 +3036,10 @@
         "location": {
           "type": "string"
         },
-        "profilePhotos": {
+        "profilePhoto": {
+          "type": "string"
+        },
+        "coverPhoto": {
           "type": "string"
         },
         "preferences": {
@@ -3051,7 +3054,6 @@
         "facebook": {
           "type": "string"
         }
-        
       },
       "xml": {
         "name": "Profile"
