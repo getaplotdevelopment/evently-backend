@@ -41,7 +41,7 @@
   "dependencies": {
     "@babel/plugin-proposal-object-rest-spread": "^7.12.1",
     "@googlemaps/google-maps-services-js": "^2.1.1",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "babel-preset-env": "^1.7.0",
     "base64-img": "^1.0.4",
     "bcryptjs": "^2.4.3",
