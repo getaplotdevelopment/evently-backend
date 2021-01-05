@@ -12,7 +12,7 @@
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     }
   },
-  "host": "evently-backend.herokuapp.com/",
+  "host": "localhost:5000/",
   "basePath": "/",
   "tags": [
     {
@@ -583,9 +583,7 @@
             "api_key": []
           }
         ]
-      }
-    },
-    "api/event/{slug}/event-comment/1": {
+      },
       "put": {
         "tags": ["Event comment"],
         "summary": "Update a single event comment.",
@@ -687,7 +685,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "comment id",
+            "name": "commentId",
             "description": "Provide the comment id",
             "type": "string",
             "required": true,
@@ -725,7 +723,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "comment id",
+            "name": "commentId",
             "description": "Provide the comment id",
             "type": "string",
             "required": true,
@@ -831,9 +829,7 @@
             "api_key": []
           }
         ]
-      }
-    },
-    "api/event/comment/:commentId/replay/1": {
+      },
       "put": {
         "tags": ["Replay"],
         "summary": "update one Replay comments",
@@ -871,7 +867,7 @@
         ]
       }
     },
-    "api/event/comment/:commentId/replay/1": {
+    "api/event/comment/:commentId/delete-replay/1": {
       "put": {
         "tags": ["Replay"],
         "summary": "delete one Replay comments",
@@ -2488,6 +2484,715 @@
         }
       }
     },
+    "api/experience/post-experience": {
+      "post": {
+        "tags": ["Experience"],
+        "summary": "Post an experience",
+        "description": "Post an experience",
+        "produces": ["application/xml", "application/json"],
+        "required": "text",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Provide the user token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Experience",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/Experience"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful posted an experience",
+            "schema": {
+              "$ref": "#/definitions/Experience"
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "api/experience": {
+      "get": {
+        "tags": ["Experience"],
+        "summary": "get all experiences",
+        "description": "get all experiences of an event",
+        "produces": ["application/xml", "application/json"],
+        "required": "text",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Provide the user token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Experience"
+            }
+          }
+        }
+      }
+    },
+    "api/experience/{experienceId}": {
+      "get": {
+        "tags": ["Experience"],
+        "summary": "get one experience",
+        "description": "get one experiences of an event",
+        "produces": ["application/xml", "application/json"],
+        "required": "text",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Provide the user token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "path",
+            "name": "experienceId",
+            "description": "experience id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Experience"
+            }
+          }
+        }
+      }
+    },
+    "api/experience/{experienceId}/update-experience": {
+      "put": {
+        "tags": ["Experience"],
+        "summary": "update an experience",
+        "description": "update an experiences of an event",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Provide the user token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "path",
+            "name": "experienceId",
+            "description": "experience id",
+            "required": true,
+            "example": 1
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Experience",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/Experience"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Experience"
+            }
+          }
+        }
+      }
+    },
+    "api/experience/{experienceId}/like": {
+      "put": {
+        "tags": ["Experience"],
+        "summary": "like an experience",
+        "description": "like an experiences of an event",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Provide the user token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "path",
+            "name": "experienceId",
+            "description": "experience id",
+            "required": true,
+            "example": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "api/experience/{experienceId}/dislike": {
+      "put": {
+        "tags": ["Experience"],
+        "summary": "dislike an experience",
+        "description": "dislike an experiences of an event",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Provide the user token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "path",
+            "name": "experienceId",
+            "description": "experience id",
+            "required": true,
+            "example": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "api/experience/{experienceId}/delete-experience": {
+      "put": {
+        "tags": ["Experience"],
+        "summary": "delete an experience",
+        "description": "delete an experience of an event",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Provide the user token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "path",
+            "name": "experienceId",
+            "description": "experience id",
+            "required": true,
+            "example": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "api/experience/report-experience/{experienceId}": {
+      "post": {
+        "tags": ["Experience"],
+        "summary": "report an experience",
+        "description": "report an experience of an event",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Provide the user token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "path",
+            "name": "experienceId",
+            "description": "experience id",
+            "required": true,
+            "example": 1
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "comment on an experience",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/report-experience"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "api/experience/{experienceId}/comment": {
+      "post": {
+        "tags": ["Experience"],
+        "summary": "comment on an experience",
+        "description": "comment on an experience of an event",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Provide the user token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "path",
+            "name": "experienceId",
+            "description": "experience id",
+            "required": true,
+            "example": 1
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "comment on an experience",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/comment-experience"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/comment-experience"
+            }
+          }
+        }
+      }
+    },
+    "api/experience/{experienceId}/comment/{commentId}": {
+      "get": {
+        "tags": ["Experience"],
+        "summary": "get a comment on an experience",
+        "description": "get a comment on an experience of an event",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Provide the user token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "path",
+            "name": "experienceId",
+            "description": "experience id",
+            "required": true,
+            "example": 1
+          },
+          {
+            "in": "path",
+            "name": "commentId",
+            "description": "comment id",
+            "required": true,
+            "example": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/comment-experience"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Experience"],
+        "summary": "update a comment on an experience",
+        "description": "update a comment on an experience of an event",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Provide the user token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "path",
+            "name": "experienceId",
+            "description": "experience id",
+            "required": true,
+            "example": 1
+          },
+          {
+            "in": "path",
+            "name": "commentId",
+            "description": "comment id",
+            "required": true,
+            "example": 1
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "update comment on an experience",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/comment-experience"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/comment-experience"
+            }
+          }
+        }
+      }
+    },
+    "api/experience/{experienceId}/comment/{commentId}/delete-comment": {
+      "put": {
+        "tags": ["Experience"],
+        "summary": "like a comment on an experience",
+        "description": "like a comment on an experience of an event",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Provide the user token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "path",
+            "name": "experienceId",
+            "description": "experience id",
+            "required": true,
+            "example": 1
+          },
+          {
+            "in": "path",
+            "name": "commentId",
+            "description": "comment id",
+            "required": true,
+            "example": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "api/experience/{experienceId}/comment/{commentId}/like": {
+      "put": {
+        "tags": ["Experience"],
+        "summary": "like a comment on an experience",
+        "description": "like a comment on an experience of an event",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Provide the user token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "path",
+            "name": "experienceId",
+            "description": "experience id",
+            "required": true,
+            "example": 1
+          },
+          {
+            "in": "path",
+            "name": "commentId",
+            "description": "comment id",
+            "required": true,
+            "example": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "api/experience/{experienceId}/comment/{commentId}/dislike": {
+      "put": {
+        "tags": ["Experience"],
+        "summary": "dislike a comment on an experience",
+        "description": "dislike a comment on an experience of an event",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Provide the user token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "path",
+            "name": "experienceId",
+            "description": "experience id",
+            "required": true,
+            "example": 1
+          },
+          {
+            "in": "path",
+            "name": "commentId",
+            "description": "comment id",
+            "required": true,
+            "example": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "api/experience/report-comment-experience/{commentId}": {
+      "post": {
+        "tags": ["Experience"],
+        "summary": "report a comment on an experience",
+        "description": "report a comment on an experience of an event",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Provide the user token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "path",
+            "name": "commentId",
+            "description": "comment id",
+            "required": true,
+            "example": 1
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "comment on an experience",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/report-experience"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "api/experience/comment/{commentId}/replay": {
+      "post": {
+        "tags": ["Experience"],
+        "summary": "reply on a comment",
+        "description": "reply on a comment of an experience",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Provide the user token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "path",
+            "name": "commentId",
+            "description": "experience id",
+            "required": true,
+            "example": 1
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "comment on an experience",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/replay-experience"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "api/experience/comment/{commentId}/replay/{replayId}": {
+      "get": {
+        "tags": ["Experience"],
+        "summary": "get a replay on a comment",
+        "description": "get a replay on a comment of an experience",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Provide the user token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "path",
+            "name": "commentId",
+            "description": "comment id",
+            "required": true,
+            "example": "1"
+          },
+          {
+            "in": "path",
+            "name": "replayId",
+            "description": "replay id",
+            "required": true,
+            "type": "integer",
+            "example": "1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      },
+      "put": {
+        "tags": ["Experience"],
+        "summary": "update a replay on a comment",
+        "description": "update a replay on a comment of an experience",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Provide the user token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "path",
+            "name": "commentId",
+            "description": "comment id",
+            "required": true,
+            "example": "1"
+          },
+          {
+            "in": "path",
+            "name": "replayId",
+            "description": "replay id of a replay on a comment",
+            "type": "integer",
+            "required": true,
+            "example": 1
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "comment on an experience",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/replay-experience"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "api/experience/comment/{commentId}/replay/{replayId}/delete-replay": {
+      "put": {
+        "tags": ["Experience"],
+        "summary": "delete a replay on a comment",
+        "description": "delete a replay on a comment of an experience",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Provide the user token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "path",
+            "name": "commentId",
+            "description": "comment id",
+            "required": true,
+            "example": "1"
+          },
+          {
+            "in": "path",
+            "name": "replayId",
+            "description": "replay id of a replay on a comment",
+            "type": "integer",
+            "required": true,
+            "example": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
     "api/users/admins": {
       "get": {
         "tags": ["Admins"],
@@ -2508,6 +3213,45 @@
             "api_key": []
           }
         ]
+      }
+    },
+    "api/experience/report-replay-comment-experience/{replayId}": {
+      "post": {
+        "tags": ["Experience"],
+        "summary": "report a replay on a comment on an experience",
+        "description": "report a replay on a comment on an experience of an event",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Provide the user token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          },
+          {
+            "in": "path",
+            "name": "replayId",
+            "description": "replay id",
+            "required": true,
+            "example": 1
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "report a comment of a replay",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/report-experience"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
       }
     },
     "api/users/organizers": {
@@ -3268,6 +4012,72 @@
       },
       "xml": {
         "name": "featuredEvent"
+      }
+    },
+    "Experience": {
+      "type": "object",
+      "required": "text",
+      "properties": {
+        "text": {
+          "type": "string",
+          "example": "This my experience"
+        },
+        "img": {
+          "type": "string",
+          "example": ["www.my.picture.com", "www.my.picture.com"]
+        }
+      },
+      "xml": {
+        "name": "Experience"
+      }
+    },
+    "comment-experience": {
+      "type": "object",
+      "required": "text",
+      "properties": {
+        "text": {
+          "type": "string",
+          "example": "This my experience"
+        },
+        "img": {
+          "type": "string",
+          "example": "www.my.picture.com"
+        },
+        "isHidden": {
+          "type": "string",
+          "example": false
+        }
+      },
+      "xml": {
+        "name": "Experience"
+      }
+    },
+    "replay-experience": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "example": "this is a replay"
+        },
+        "img": {
+          "type": "string",
+          "example": "www.my.picture.com"
+        }
+      },
+      "xml": {
+        "name": "Experience"
+      }
+    },
+    "report-experience": {
+      "type": "object",
+      "properties": {
+        "designation": {
+          "type": "string",
+          "example": "Kampala"
+        }
+      },
+      "xml": {
+        "name": "Experience"
       }
     }
   },
