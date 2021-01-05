@@ -99,7 +99,7 @@ const checkReplayOwner = async (req, res, next) => {
 const checkReplayOwnerOradmin = async (req, res, next) => {
   const { replayId: id } = req.params;
   const { user } = req;
-  const replay = await Experience.findOne({
+  const replay = await ReplayExperienceComment.findOne({
     where: { id }
   });
   const { dataValues } = replay;

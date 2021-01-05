@@ -1,6 +1,7 @@
 /* eslint-disable no-dupe-keys */
 import models from '../../models';
 import { REPLAY_EXPERIENCE_COMMENT } from '../../constants/reports';
+import findOneHelper from '../../helpers/finOneHelper';
 
 const {
   User,
@@ -160,6 +161,10 @@ class ReplayCommentExperienceController {
     const repaly = {
       isDeleted: true
     };
+
+    const oneReplay = await findOneHelper(ReplayExperienceComment, {
+      id
+    });
     const [updatedRow, [updatedReplay]] = await ReplayExperienceComment.update(
       repaly,
       {
@@ -167,15 +172,14 @@ class ReplayCommentExperienceController {
         returning: true
       }
     );
-    const {
-      dataValues: { isDeleted }
-    } = updatedReplay;
+
     if (updatedRow === 1) {
       res.status(200).json({
         status: 200,
-        message: isDeleted
-          ? 'Replay already deleted'
-          : 'Replay successfully deleted'
+        message:
+          oneReplay.isDeleted === true
+            ? 'Replay already deleted'
+            : 'Replay successfully deleted'
       });
     }
   }
