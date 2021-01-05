@@ -36,7 +36,8 @@ class ProfileController {
       youtube: req.body.youtube,
       facebook: req.body.facebook,
       linkedin: req.body.linkedin,
-      instagram: req.body.instagram
+      instagram: req.body.instagram,
+      twitter: req.body.twitter
     };
 
     const { id } = req.user;
@@ -138,7 +139,13 @@ class ProfileController {
    */
   async updateYourProfile(req, res) {
     const { id } = req.user;
-    const { youtube, facebook, linkedin, instagram } = req.userProfile.social;
+    const {
+      youtube,
+      facebook,
+      linkedin,
+      instagram,
+      twitter
+    } = req.userProfile.social;
     const {
       accountName,
       description,
@@ -155,7 +162,8 @@ class ProfileController {
       youtube: req.body.youtube ? req.body.youtube : youtube,
       facebook: req.body.facebook ? req.body.facebook : facebook,
       linkedin: req.body.linkedin ? req.body.linkedin : linkedin,
-      instagram: req.body.instagram ? req.body.instagram : instagram
+      instagram: req.body.instagram ? req.body.instagram : instagram,
+      twitter: req.body.twitter ? req.body.twitter : twitter
     };
 
     await UserActivity.create({ designation: 'Updating profile', userId: id });
