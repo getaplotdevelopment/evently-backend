@@ -1,4 +1,4 @@
-export default async (searchParams, model, attributes, include) => {
+export default async (searchParams, model, attributes, include, where) => {
   const limit = 10;
   const currentPage = (searchParams && searchParams.page) || 1;
   const offset = limit * currentPage - limit;
@@ -7,7 +7,8 @@ export default async (searchParams, model, attributes, include) => {
     attributes,
     include,
     limit,
-    offset
+    offset,
+    where
   });
 
   const pages = Math.ceil(countAll / limit);
