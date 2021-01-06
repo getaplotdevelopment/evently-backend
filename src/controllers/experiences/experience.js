@@ -1,5 +1,6 @@
 import models from '../../models';
 import { EXPERIENCE } from '../../constants/reports';
+import pagination from '../../helpers/paginationHelper';
 
 const {
   User,
@@ -108,17 +109,37 @@ class ExperienceController {
    */
   async getAllExperience(req, res) {
     const where = { isDeleted: false };
-    const experience = await Experience.findAll({
-      where,
-      include: includeUser()
-    });
-    if (!experience) {
-      return res.status(404).json({
-        status: 404,
-        message: 'No experience found'
-      });
-    }
-    res.status(200).json({
+    const searchParams = req.query;
+    const include = [
+      {
+        model: User,
+        as: 'owner',
+        attributes: {
+          exclude: [
+            'password',
+            'isActivated',
+            'deviceToken',
+            'role',
+            'redirectUrl',
+            'isDeactivated',
+            'isApproved',
+            'createdAt',
+            'updatedAt'
+          ]
+        }
+      }
+    ];
+    const attributes = {
+      exclude: ['user']
+    };
+    const experience = await pagination(
+      searchParams,
+      Experience,
+      attributes,
+      include,
+      where
+    );
+    return res.status(200).json({
       status: 200,
       experience
     });
