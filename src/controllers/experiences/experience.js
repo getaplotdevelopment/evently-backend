@@ -23,13 +23,33 @@ const includeUser = () => {
           'deviceToken',
           'role',
           'createdAt',
-          'updatedAt'
+          'updatedAt',
+          'redirectUrl',
+          'isDeactivated',
+          'isApproved'
         ]
       }
     },
     {
       model: CommentExperience,
-      include: [{ model: ReplayExperienceComment }]
+      include: [
+        {
+          model: User,
+          as: 'owner',
+          attributes: {
+            exclude: [
+              'password',
+              'isActivated',
+              'deviceToken',
+              'role',
+              'redirectUrl',
+              'isDeactivated',
+              'isApproved'
+            ]
+          }
+        },
+        { model: ReplayExperienceComment }
+      ]
     },
     {
       model: LikeExperience,
