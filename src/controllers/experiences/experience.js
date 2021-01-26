@@ -130,25 +130,6 @@ class ExperienceController {
   async getAllExperience(req, res) {
     const where = { isDeleted: false };
     const searchParams = req.query;
-    const include = [
-      {
-        model: User,
-        as: 'owner',
-        attributes: {
-          exclude: [
-            'password',
-            'isActivated',
-            'deviceToken',
-            'role',
-            'redirectUrl',
-            'isDeactivated',
-            'isApproved',
-            'createdAt',
-            'updatedAt'
-          ]
-        }
-      }
-    ];
     const attributes = {
       exclude: ['user']
     };
@@ -156,7 +137,7 @@ class ExperienceController {
       searchParams,
       Experience,
       attributes,
-      include,
+      includeUser(),
       where
     );
     return res.status(200).json({
