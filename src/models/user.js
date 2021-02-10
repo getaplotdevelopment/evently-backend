@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         references: { model: 'Roles', key: 'designation' }
       },
-      redirectUrl: DataTypes.STRING,
+      redirectUrl: DataTypes.TEXT,
       isDeactivated: { type: DataTypes.BOOLEAN, defaultValue: false },
       isApproved: { type: DataTypes.BOOLEAN, defaultValue: false }
     },
