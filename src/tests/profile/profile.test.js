@@ -6,6 +6,7 @@ import models from '../../models/index';
 import generateToken from '../../helpers/generateToken/generateToken';
 
 import { signupUser4 } from '../testingData/files.json';
+import { createProfile, updatedProfile } from '../testingData/files.json';
 
 chai.use(chaitHttp);
 chai.should();
@@ -16,10 +17,8 @@ const organizerId = 6;
 let userId;
 const { OrganizerProfile, User } = models;
 const profile = new OrganizerProfile();
-
-// before(async () => {
-//   await profile.destroy({ where: {}, truncate: true });
-// });
+createProfile.location = JSON.stringify(createProfile.location);
+updatedProfile.location = JSON.stringify(updatedProfile.location);
 
 describe('Profile', () => {
   it('should create the profile', async () => {
@@ -41,17 +40,6 @@ describe('Profile', () => {
       role: user.dataValues.role
     };
     withoutProfileToken = generateToken(payload);
-
-    const createProfile = {
-      accountName: 'BomayE',
-      description: 'Bomaye Music',
-      domain: 'music',
-      location: 'Paris',
-      preferences: ['music', 'preferences', 'dance'],
-      accountType: 'Brand',
-      social: ['youtube', 'facebook', 'linkedin'],
-      organizer: userId
-    };
     const response = await chai
       .request(app)
       .post('/api/profile')
@@ -61,16 +49,6 @@ describe('Profile', () => {
     response.body.should.be.a('object');
   }).timeout(10000);
   it('should update a profile', async () => {
-    const updatedProfile = {
-      accountName: 'BomayE',
-      description: 'Bomaye Music',
-      domain: 'music',
-      location: 'Paris',
-      preferences: ['music', 'preferences', 'dance'],
-      accountType: 'Brand',
-      social: ['youtube', 'facebook', 'linkedin'],
-      organizer: userId
-    };
     const res = await chai
       .request(app)
       .put('/api/profile')

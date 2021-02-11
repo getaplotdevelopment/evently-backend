@@ -187,13 +187,13 @@
     "startDate": "2020-10-10",
     "finishDate": "2024-01-03",
     "location": {
-        "address": "Entebbe, Uganda",
-        "country": "Uganda",
-        "place_id": "ChIJswrCU7eGfRcRFCzMdcNQpaQ",
-        "locations": {
-          "lat": 0.0511839,
-          "lng": 32.463708
-        }
+      "address": "Entebbe, Uganda",
+      "country": "Uganda",
+      "place_id": "ChIJswrCU7eGfRcRFCzMdcNQpaQ",
+      "locations": {
+        "lat": 0.0511839,
+        "lng": 32.463708
+      }
     }
   },
   "similarEvent": {
@@ -250,19 +250,27 @@
     "finishDate": "2020-01-03",
     "location": {
       "address": null,
-        "country": null,
-        "place_id": null,
-        "locations": {
-          "lat": 0,
-          "lng": 0
-        }
+      "country": null,
+      "place_id": null,
+      "locations": {
+        "lat": 0,
+        "lng": 0
+      }
     }
   },
-  "crateProfile": {
+  "createProfile": {
     "accountName": "BomayE",
     "description": "Bomaye Music",
     "domain": "music",
-    "location": "Paris",
+    "location": {
+      "address": "Entebbe, Uganda",
+      "country": "Uganda",
+      "place_id": "ChIJswrCU7eGfRcRFCzMdcNQpaQ",
+      "locations": {
+        "lat": 0.0511839,
+        "lng": 32.463708
+      }
+    },
     "preferences": ["music", "preferences", "dance"],
     "accountType": "Brand",
     "social": ["youtube", "facebook", "linkedin"]
@@ -271,7 +279,15 @@
     "accountName": "BomayE Music",
     "description": "Bomaye Music",
     "domain": "music",
-    "location": "Paris",
+    "location": {
+      "address": "Entebbe, Uganda",
+      "country": "Uganda",
+      "place_id": "ChIJswrCU7eGfRcRFCzMdcNQpaQ",
+      "locations": {
+        "lat": 0.0511839,
+        "lng": 32.463708
+      }
+    },
     "preferences": ["music", "preferences", "dance"],
     "accountType": "Brand",
     "social": ["youtube", "facebook", "linkedin"]
