@@ -41,12 +41,12 @@ class ProfileController {
     };
 
     const { id } = req.user;
-    const formatted_address = await geocode(location);
+    // const formatted_address = await geocode(location);
     const newProfile = {
       accountName,
       description,
       domain,
-      location: formatted_address,
+      location: JSON.parse(location),
       profilePhoto,
       coverPhoto,
       preferences,
@@ -167,12 +167,12 @@ class ProfileController {
     };
 
     await UserActivity.create({ designation: 'Updating profile', userId: id });
-    const formatted_address = await geocode(location);
+    // const formatted_address = await geocode(location);
     const updatedProfile = {
       accountName,
       description,
       domain,
-      location: formatted_address,
+      location: JSON.parse(location),
       profilePhoto,
       coverPhoto,
       preferences,
