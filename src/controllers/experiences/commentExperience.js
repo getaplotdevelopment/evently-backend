@@ -1,5 +1,6 @@
 import models from '../../models';
 import { EXPERIENCE_COMMENT } from '../../constants/reports';
+import findOneHelper from '../../helpers/finOneHelper';
 
 const {
   User,
@@ -157,6 +158,9 @@ class CommentExperienceController {
     const comment = {
       isDeleted: true
     };
+    const isCommentDeleted = await findOneHelper(CommentExperience, {
+      id
+    });
     const [updatedRow, [updatedComment]] = await CommentExperience.update(
       comment,
       {
@@ -167,7 +171,7 @@ class CommentExperienceController {
 
     const {
       dataValues: { isDeleted }
-    } = updatedComment;
+    } = isCommentDeleted;
 
     if (updatedRow === 1) {
       res.status(200).json({
