@@ -1,5 +1,6 @@
 import models from '../../models/index';
 import httpError from '../../helpers/errorsHandler/httpError';
+import findOneHelper from '../../helpers/finOneHelper';
 
 const { Experience, CommentExperience, ReplayExperienceComment } = models;
 
@@ -63,8 +64,8 @@ const checkExperienceOwnerOrAdmin = async (req, res, next) => {
 const checkCommentOwner = async (req, res, next) => {
   const { commentId: id } = req.params;
   const { user } = req;
-  const comment = await Experience.findOne({
-    where: { id }
+  const comment = await findOneHelper(CommentExperience, {
+    id
   });
   const { dataValues } = comment;
   if (dataValues.user !== user.id) {
@@ -75,8 +76,8 @@ const checkCommentOwner = async (req, res, next) => {
 const checkCommentOwnerOradmin = async (req, res, next) => {
   const { commentId: id } = req.params;
   const { user } = req;
-  const comment = await Experience.findOne({
-    where: { id }
+  const comment = await findOneHelper(CommentExperience, {
+    id
   });
   const { dataValues } = comment;
   if (dataValues.user !== user.id && user.role !== 'SUPER USER') {
