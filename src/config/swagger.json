@@ -1324,6 +1324,56 @@
         }
       }
     },
+    "api/users/followers": {
+      "get": {
+        "tags": ["users"],
+        "summary": "get my followers",
+        "description": "",
+        "operationId": "",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Add the token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Followers"
+          }
+        }
+      }
+    },
+    "api/users/followings": {
+      "get": {
+        "tags": ["users"],
+        "summary": "get my followings",
+        "description": "",
+        "operationId": "",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Add the token",
+            "type": "string",
+            "required": true,
+            "example": "Bearer token"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "followings"
+          }
+        }
+      }
+    },
     "api/users/user-activiy/{userId}": {
       "get": {
         "tags": ["users"],
