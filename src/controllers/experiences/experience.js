@@ -48,7 +48,26 @@ const includeUser = () => {
             ]
           }
         },
-        { model: ReplayExperienceComment }
+        {
+          model: ReplayExperienceComment,
+          include: [
+            {
+              model: User,
+              as: 'owner',
+              attributes: {
+                exclude: [
+                  'password',
+                  'isActivated',
+                  'deviceToken',
+                  'role',
+                  'redirectUrl',
+                  'isDeactivated',
+                  'isApproved'
+                ]
+              }
+            }
+          ]
+        }
       ]
     },
     {

@@ -15,7 +15,9 @@ const verifyTicketHelper = async (req, res, next, value, message) => {
   if (paidEvent) {
     const dateToday = moment().unix();
     const eventFinishDate = unixDateConverter(event.finishDate);
-    const ticket = await findOneHelper(Ticket, { id: paidEvent.ticketNo });
+    const ticket = await findOneHelper(Ticket, {
+      ticketNumber: paidEvent.ticketNo
+    });
 
     if (event) {
       if (dateToday > eventFinishDate) {
