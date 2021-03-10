@@ -24,7 +24,10 @@ module.exports = {
     host: process.env.DB_HOSTNAME,
     dialect: 'postgres',
     logging: false,
-    ssl: true
+    ssl: {
+      rejectUnauthorized: false
+      
+    }
   },
   email: {
     user: process.env.SENDER_EMAIL,
