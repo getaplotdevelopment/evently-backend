@@ -16,10 +16,10 @@ class VerifyTicketController {
   static async verifyTicket(req, res) {
     const { vCode } = req.body;
     const paidEvent = await findOneHelper(PaymentEvents, { vCode });
-    const ticket = await finOneHelper(Ticket, { id: paidEvent.ticketNo });
+    const ticket = await finOneHelper(Ticket, { ticketNumber: paidEvent.ticketNo });
     await ticket.update(
       { isTicketVerified: true },
-      { where: { id: paidEvent.ticketNo }, returning: true, plain: true }
+      { where: { ticketNumber: paidEvent.ticketNo }, returning: true, plain: true }
     );
     const newPaidEvent = await paidEvent.update(
       { isTicketVerified: true },
@@ -41,11 +41,11 @@ class VerifyTicketController {
   static async unverifyTicket(req, res) {
     const { vCode } = req.body;
     const verifiedTicket = await findOneHelper(PaymentEvents, { vCode });
-    const ticket = await finOneHelper(Ticket, { id: verifiedTicket.ticketNo });
+    const ticket = await finOneHelper(Ticket, { ticketNumber: verifiedTicket.ticketNo });
 
     await ticket.update(
       { isTicketVerified: false },
-      { where: { id: verifiedTicket.ticketNo }, returning: true, plain: true }
+      { where: { ticketNumber: verifiedTicket.ticketNo }, returning: true, plain: true }
     );
     const unverifiedTicket = await verifiedTicket.update(
       { isTicketVerified: false },
