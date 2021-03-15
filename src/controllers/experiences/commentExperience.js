@@ -27,7 +27,8 @@ const includeUser = () => {
       }
     },
     {
-      model: ReplayExperienceComment
+      model: ReplayExperienceComment,
+      include: [{ model: User, as: 'owner' }]
     },
     {
       model: LikeCommentExperience,

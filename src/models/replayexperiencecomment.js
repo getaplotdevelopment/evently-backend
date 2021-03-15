@@ -16,6 +16,11 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'experienceComment',
       onDelete: 'CASCADE'
     });
+    ReplayExperienceComment.belongsTo(models.User, {
+      as: 'owner',
+      foreignKey: 'user',
+      onDelete: 'CASCADE'
+    });
   };
   return ReplayExperienceComment;
 };
