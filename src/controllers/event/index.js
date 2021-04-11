@@ -214,6 +214,21 @@ export const getAllEvents = async (req, res) => {
   res.send({ status: 200, pages, count, data });
 };
 
+export const getFutureEvents = async (req, res) => {
+  const searchParams = req.query;
+  const filterBy = {
+    finishDate: { [Op.gte]: new Date().toISOString() },
+    currentMode: "published"
+  };
+  const { pages, count, data } = await getEvents(
+    searchParams,
+    filterBy,
+    Event,
+    includeTicket()
+  );
+  res.send({ status: 200, pages, count, data });
+};
+
 export const updateEvents = async (req, res) => {
   let temp;
   const { email } = req.organizer;
