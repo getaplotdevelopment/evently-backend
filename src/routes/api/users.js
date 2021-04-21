@@ -1,6 +1,7 @@
 import express from 'express';
 import Users from '../../controllers/users';
 import UserActivity from '../../controllers/userActivity';
+import FriendController from '../../controllers/friendRequest';
 import {
   validateUser,
   validations,
@@ -28,6 +29,7 @@ import deactivateUser from '../../middleware/users/canDeactivateUser';
 
 const users = new Users();
 const userActivity = new UserActivity();
+const friend = new FriendController();
 
 const router = express.Router();
 
@@ -141,6 +143,39 @@ router.get(
   '/followings',
   asyncHandler(userOrOganizer),
   asyncHandler(users.myFollowings)
+);
+
+router.post(
+  '/friendRequest',
+  asyncHandler(auth),
+  asyncHandler(friend.sendFriendRequest)
+);
+
+router.put(
+  '/friendRequest/cancel',
+  asyncHandler(auth),
+  asyncHandler(friend.cancelFriendRequest)
+);
+
+router.put(
+  '/friendRequest/action',
+  asyncHandler(auth),
+  asyncHandler(friend.acceptingFriendRequest)
+);
+
+router.put('/unfriend', asyncHandler(auth), asyncHandler(friend.unfriendUser));
+
+router.get('/friends', asyncHandler(auth), asyncHandler(friend.getAllFriends));
+router.get(
+  '/friendRequest/sent',
+  asyncHandler(auth),
+  asyncHandler(friend.getSentFriendRequests)
+);
+
+router.get(
+  '/friendRequest/received',
+  asyncHandler(auth),
+  asyncHandler(friend.getReceivedFriendRequests)
 );
 
 export default router;
