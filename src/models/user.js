@@ -97,6 +97,14 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'organizer',
       allowNull: false
     });
+    User.hasMany(models.Friend, {
+      foreignKey: 'from',
+      allowNull: false
+    });
+    User.hasMany(models.Friend, {
+      foreignKey: 'sentTo',
+      allowNull: false
+    });
   };
   return User;
 };
