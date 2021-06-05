@@ -13,6 +13,8 @@ import getSingleEvent from '../../helpers/eventHelper/getSingleEvent';
 import 'dotenv/config';
 import sendEmail from '../../helpers/sendEmail/callMailer';
 import queryPaymentEvents from '../../helpers/queries/paymentEvent';
+import emitter from '../../services/socket/eventEmmiter';
+import sendNotification from '../../services/socket/sendNotification';
 
 const { Op } = require('sequelize');
 
@@ -25,7 +27,8 @@ const {
   PaymentEvents,
   User,
   TicketCategory,
-  likeComment
+  likeComment,
+  Follow
 } = models;
 const { USER_LOCATION_URL } = process.env;
 
@@ -186,6 +189,25 @@ export const createEventController = async (req, res) => {
     }
   };
   const data = await Event.create(newEvent);
+
+  const followers = await Follow.findAll({
+    where: {
+      following: req.organizer.email
+    }
+  });
+
+  if (followers) {
+    followers.forEach(follower => {
+      (async () => {
+        await sendNotification(
+          follower.dataValues.followerObj.id,
+          `New event created: ${title}`
+        );
+        emitter.emit('new notification', '');
+      })();
+    });
+  }
+
   res.status(201).send({ status: 201, data });
 };
 
@@ -284,8 +306,22 @@ export const updateEvents = async (req, res) => {
 
 export const likeUnlikeEvent = async (req, res) => {
   const { id: user } = req.user;
+  const { userName } = req.user;
   const { slug } = req.params;
-  const { data, isLiked, likedBy } = await handleLikeUnlike(user, slug);
+  const { data, isLiked, likedBy } = await handleLikeUnlike(
+    user,
+    slug,
+    userName
+  );
+  const { dataValues } = await Event.findOne({ where: { slug } });
+
+  if (isLiked) {
+    await sendNotification(
+      dataValues.organizer.id,
+      `${userName} liked your event: ${dataValues.title}`
+    );
+    emitter.emit('new notification');
+  }
   res.send({ status: 200, isLiked, data, likedBy });
 };
 

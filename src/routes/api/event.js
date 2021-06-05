@@ -26,7 +26,7 @@ import {
 import authUser from '../../middleware/users/authUser';
 import auth from '../../middleware/users/auth';
 import checkToken from '../../middleware/users/checkToken';
-import {  checkPaidEventTicket } from '../../middleware/tickets/ticket';
+import { checkPaidEventTicket } from '../../middleware/tickets/ticket';
 
 const router = express.Router();
 const upload = multer();

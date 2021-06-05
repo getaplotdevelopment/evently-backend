@@ -1,6 +1,8 @@
 /* eslint-disable no-dupe-keys */
 import models from '../../models';
 import { REPLAY_EVENT_COMMENT } from '../../constants/reports';
+import sendNotification from '../../services/socket/sendNotification';
+import emitter from '../../services/socket/eventEmmiter';
 
 const { User, commentEvent, replayComment, ReportContent } = models;
 
@@ -71,6 +73,16 @@ class ReplayCommentController {
         phoneNumber: req.user.phoneNumber
       }
     };
+
+    const comment = await commentEvent.findOne({
+      where: { id: req.params.commentId }
+    });
+    await sendNotification(
+      comment.dataValues.user,
+      `${req.user.userName} Replied on your comment on event`
+    );
+    emitter.emit('new notification', '');
+
     res.status(201).json({
       status: 201,
       replay
@@ -161,7 +173,7 @@ class ReplayCommentController {
     if (reply.isDeleted) {
       return res.status(200).json({
         status: 200,
-        message: "reply already deleted",
+        message: 'reply already deleted',
         reply
       });
     }
@@ -183,7 +195,7 @@ class ReplayCommentController {
     if (updatedRow === 1) {
       res.status(200).json({
         status: 200,
-        message: "reply successfully deleted",
+        message: 'reply successfully deleted',
         comment: updatedReplay
       });
     }

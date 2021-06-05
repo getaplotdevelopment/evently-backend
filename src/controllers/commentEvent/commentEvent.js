@@ -1,5 +1,7 @@
 import models from '../../models';
 import { EVENT_COMMENT } from '../../constants/reports';
+import sendNotification from '../../services/socket/sendNotification';
+import emitter from '../../services/socket/eventEmmiter';
 
 const { User, commentEvent, Event, ReportContent, likeComment } = models;
 
@@ -43,6 +45,8 @@ class CommentEventController {
     const { text, img, isHidden } = req.body;
     const { id: user } = req.user;
 
+    const dataValues = await Event.findOne({ where: { slug } });
+
     const comment = {
       text,
       img,
@@ -51,6 +55,7 @@ class CommentEventController {
       event: slug
     };
     const newComment = await commentEvent.create(comment);
+
     const createdComment = {
       ...newComment.dataValues,
       user: {
@@ -64,6 +69,13 @@ class CommentEventController {
       }
     };
     Event.increment({ popularityCount: 2 }, { where: { slug } });
+    if (dataValues) {
+      await sendNotification(
+        dataValues.organizer.id,
+        `${req.user.userName} commented on your event ${dataValues.title}`
+      );
+      emitter.emit('new notification');
+    }
     res.status(201).json({
       status: 201,
       createdComment
@@ -152,7 +164,7 @@ class CommentEventController {
     if (comment.isDeleted) {
       return res.status(200).json({
         status: 200,
-        message: "Comment already deleted",
+        message: 'Comment already deleted',
         comment
       });
     }
@@ -160,10 +172,13 @@ class CommentEventController {
       isDeleted: true,
       event: slug
     };
-    const [updatedRow, [updatedComment]] = await commentEvent.update(updateObj, {
-      where: { id },
-      returning: true
-    });
+    const [updatedRow, [updatedComment]] = await commentEvent.update(
+      updateObj,
+      {
+        where: { id },
+        returning: true
+      }
+    );
     if (updatedRow === 0) {
       return res.status(404).json({
         status: 404,
@@ -174,7 +189,7 @@ class CommentEventController {
       Event.decrement({ popularityCount: 1 }, { where: { slug } });
       res.status(200).json({
         status: 200,
-        message: "Comment successfully deleted",
+        message: 'Comment successfully deleted',
         comment: updatedComment
       });
     }

@@ -1,5 +1,7 @@
 import models from '../../models/index';
 import findOneHelper from '../../helpers/finOneHelper';
+import sendNotification from '../../services/socket/sendNotification';
+import emitter from '../../services/socket/eventEmmiter';
 
 const { User, Friend } = models;
 
@@ -19,7 +21,6 @@ class FriendController {
     const { sendTo } = req.body;
 
     const { id: from } = req.user;
-
     const user = await findOneHelper(User, { id: sendTo });
 
     if (!user) {
@@ -95,9 +96,16 @@ class FriendController {
       from,
       sentStatus: 'sent'
     });
+    if (newFriendRequest) {
+      await sendNotification(
+        sendTo,
+        `${req.user.userName} sent you friend request`
+      );
+      emitter.emit('new notification');
+    }
 
     return res.status(200).json({
-      message: 'success',
+      message: 'success2',
       data: newFriendRequest
     });
   }
@@ -248,6 +256,12 @@ class FriendController {
     );
 
     const { sender, receiver } = findFriendRequest.dataValues;
+
+    await sendNotification(
+      findFriendRequest.dataValues.sender.dataValues.id,
+      `${receiver.dataValues.userName} accepted your friend request`
+    );
+    emitter.emit('new notification');
 
     return res.status(200).json({
       message: `You are now friends with ${findFriendRequest.dataValues.sender.dataValues.userName}`,

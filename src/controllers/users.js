@@ -22,6 +22,7 @@ const includeUser = () => {
     }
   ];
 };
+
 /**
  * @user Controller
  * @exports
@@ -75,6 +76,7 @@ class UserController {
     };
     const salt = await bcrypt.genSalt(10);
     newUser.password = await bcrypt.hash(password, salt);
+
     const userInstance = await User.create(newUser);
     const createdUser = userInstance.dataValues;
     const assignedRole = await findOneHelper(Roles, {
@@ -215,8 +217,8 @@ class UserController {
     ) {
       return res.status(201).json({
         status: 201,
-        result,
-        generate
+        result: result[0],
+        token: generate
       });
     }
     return result;

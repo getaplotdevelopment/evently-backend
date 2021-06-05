@@ -2,6 +2,8 @@
 import models from '../../models';
 import { REPLAY_EXPERIENCE_COMMENT } from '../../constants/reports';
 import findOneHelper from '../../helpers/finOneHelper';
+import sendNotification from '../../services/socket/sendNotification';
+import emitter from '../../services/socket/eventEmmiter';
 
 const {
   User,
@@ -75,6 +77,16 @@ class ReplayCommentExperienceController {
         phoneNumber: req.user.phoneNumber
       }
     };
+    const comment = await CommentExperience.findOne({
+      where: { id: req.params.commentId }
+    });
+
+    await sendNotification(
+      comment.dataValues.user,
+      `${req.user.userName} Replied on your comment on experince`
+    );
+    emitter.emit('new notification', '');
+
     res.status(201).json({
       status: 201,
       createdReplay

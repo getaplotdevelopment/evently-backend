@@ -1,13 +1,16 @@
 import models from '../../models';
 import { EXPERIENCE_COMMENT } from '../../constants/reports';
 import findOneHelper from '../../helpers/finOneHelper';
+import sendNotification from '../../services/socket/sendNotification';
+import emitter from '../../services/socket/eventEmmiter';
 
 const {
   User,
   CommentExperience,
   ReportContent,
   ReplayExperienceComment,
-  LikeCommentExperience
+  LikeCommentExperience,
+  Experience
 } = models;
 
 const includeUser = () => {
@@ -72,6 +75,19 @@ class CommentExperienceController {
         phoneNumber: req.user.phoneNumber
       }
     };
+    const experience = await Experience.findOne({
+      where: {
+        id
+      }
+    });
+    if (experience) {
+      sendNotification(
+        experience.dataValues.user,
+        `${req.user.userName} commented on your experience ${experience.dataValues.text}`
+      );
+      emitter.emit('new notification');
+    }
+
     res.status(201).json({
       status: 201,
       createdComment
