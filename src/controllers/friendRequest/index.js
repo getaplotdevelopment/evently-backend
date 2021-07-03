@@ -39,33 +39,20 @@ class FriendController {
       from: sendTo
     });
 
-    if (alreadySentFriendRequest) {
-      if (alreadySentFriendRequest.dataValues.isFriend === true) {
-        return res.status(400).json({
-          error: 'You are already friends with this person'
-        });
-      }
-      if (alreadySentFriendRequest.dataValues.sentStatus === 'sent') {
-        return res.status(400).json({
-          error: 'Friend request has been already sent to you'
-        });
-      }
-
-      const friendRequest = await Friend.update(
-        {
-          requestStatus: 'pending',
-          sentStatus: 'sent'
-        },
-        {
-          where: { sentTo: from, from: sendTo },
-          returning: true,
-          plain: true
-        }
-      );
-
-      return res.status(200).json({
-        message: 'success',
-        data: friendRequest[1]
+    if (
+      alreadySentFriendRequest &&
+      alreadySentFriendRequest.dataValues.isFriend === true
+    ) {
+      return res.status(400).json({
+        error: 'You are already friends with this person'
+      });
+    }
+    if (
+      alreadySentFriendRequest &&
+      alreadySentFriendRequest.dataValues.sentStatus === 'sent'
+    ) {
+      return res.status(400).json({
+        error: 'Friend request has been already sent to you'
       });
     }
 
@@ -328,29 +315,6 @@ class FriendController {
       ]
     );
 
-    if (findReceiver) {
-      const unFriendReceiver = await Friend.update(
-        {
-          isFriend: false,
-          receivedStatus: false,
-          sentStatus: 'pending',
-          requestStatus: 'pending'
-        },
-        {
-          where: { sentTo: friend, from: user, isFriend: true },
-          returning: true,
-          plain: true
-        }
-      );
-
-      return res.status(200).json({
-        message: `You are no longer friends with ${findReceiver.dataValues.receiver.dataValues.userName}`,
-        data: unFriendReceiver[1],
-        from: findReceiver.dataValues.sender,
-        sentTo: findReceiver.dataValues.receiver
-      });
-    }
-
     const findSender = await findOneHelper(
       Friend,
       { from: friend, sentTo: user, isFriend: true },
@@ -392,20 +356,27 @@ class FriendController {
       ]
     );
 
+    if (findReceiver) {
+      const unFriendReceiver = await Friend.destroy({
+        where: { sentTo: friend, from: user, isFriend: true },
+        returning: true,
+        plain: true
+      });
+
+      return res.status(200).json({
+        message: `You are no longer friends with ${findReceiver.dataValues.receiver.dataValues.userName}`,
+        data: unFriendReceiver[1],
+        from: findReceiver.dataValues.sender,
+        sentTo: findReceiver.dataValues.receiver
+      });
+    }
+
     if (findSender) {
-      const unFriendSender = await Friend.update(
-        {
-          isFriend: false,
-          receivedStatus: false,
-          sentStatus: 'pending',
-          requestStatus: 'pending'
-        },
-        {
-          where: { from: friend, sentTo: user, isFriend: true },
-          returning: true,
-          plain: true
-        }
-      );
+      const unFriendSender = await Friend.destroy({
+        where: { from: friend, sentTo: user, isFriend: true },
+        returning: true,
+        plain: true
+      });
 
       return res.status(200).json({
         message: `You are no longer friends with ${findSender.dataValues.sender.dataValues.userName}`,
@@ -548,6 +519,9 @@ class FriendController {
    * @returns {Object} Response
    */
   async getReceivedFriendRequests(req, res) {
+    const findFriends = await Friend.findAll({
+      where: { isFriend: true }
+    });
     const findFriendRequests = await Friend.findAll({
       where: { sentTo: req.user.id, sentStatus: 'sent' },
       include: [
@@ -588,10 +562,31 @@ class FriendController {
       ]
     });
 
+    const friends = [];
+    const totalSenderFriends = [];
+
+    findFriendRequests.forEach(request => {
+      findFriends.forEach(findFriend => {
+        if (
+          findFriend.dataValues.from ===
+            request.dataValues.sender.dataValues.id ||
+          findFriend.dataValues.sentTo ===
+            request.dataValues.sender.dataValues.id
+        ) {
+          totalSenderFriends.push(findFriend.dataValues);
+        }
+      });
+
+      friends.push({
+        totalSenderFriends: totalSenderFriends.length,
+        ...request.dataValues
+      });
+    });
+
     return res.status(200).json({
       message: 'success',
       count: findFriendRequests.length,
-      data: findFriendRequests
+      data: friends
     });
   }
 }
