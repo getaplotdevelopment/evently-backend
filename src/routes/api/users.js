@@ -203,9 +203,15 @@ router.get(
 router.use('/stories', storiesRouter);
 
 router.post(
-  '/notify-all',
+  '/notifyAll',
   asyncHandler(isAdminAuth),
   asyncHandler(notifications.notifyAll)
+);
+
+router.post(
+  '/notifyUsersOrOrganizers',
+  asyncHandler(isAdminAuth),
+  asyncHandler(notifications.notifyUsersOrOrganizers)
 );
 
 export default router;
