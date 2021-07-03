@@ -297,6 +297,25 @@ export const updateEvents = async (req, res) => {
     sendEmail(customer.email, undefined, temp);
   });
 
+  const followers = await Follow.findAll({
+    where: {
+      following: req.organizer.email
+    }
+  });
+
+  if (followers) {
+    followers.forEach(follower => {
+      (async () => {
+        await sendNotification(
+          follower.dataValues.followerObj.id,
+          'Event  updated',
+          `Event ${dataValues.title} updated`
+        );
+        emitter.emit('new notification', '');
+      })();
+    });
+  }
+
   res.send({
     status: 200,
     message: 'Successfully Updated',
