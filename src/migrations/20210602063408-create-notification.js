@@ -10,7 +10,13 @@ module.exports = {
       is_read: {
         type: Sequelize.BOOLEAN
       },
-      content: {
+      title: {
+        type: Sequelize.STRING
+      },
+      body: {
+        type: Sequelize.STRING
+      },
+      to: {
         type: Sequelize.STRING
       },
       receiverId: {

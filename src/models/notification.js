@@ -3,7 +3,9 @@ module.exports = (sequelize, DataTypes) => {
     'Notification',
     {
       is_read: DataTypes.BOOLEAN,
-      content: DataTypes.STRING,
+      title: DataTypes.STRING,
+      body: DataTypes.STRING,
+      to: DataTypes.STRING,
       receiverId: DataTypes.INTEGER
     },
     {

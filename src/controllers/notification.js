@@ -1,6 +1,9 @@
+import { Op } from 'sequelize';
 import models from '../models/index';
+import sendNotification from '../services/socket/sendNotification';
+import emitter from '../services/socket/eventEmmiter';
 
-const { Notification } = models;
+const { Notification, User } = models;
 
 /**
  * @notification controller
@@ -58,6 +61,35 @@ class NotificationsController {
       where: { id: notificationId, receiverId: req.user.id }
     });
     res.status(200).json({ status: 200, readNotification });
+  }
+
+  /**
+   *
+   * @param {Object} req - Requests from client
+   * @param {*} res - Response from the db
+   * @returns {Object} Response
+   */
+
+  async notifyAll(req, res) {
+    const { title, body } = req.body;
+    if (!title || !body) {
+      return res.status(400).json({ message: 'Please enter title and body' });
+    }
+    const users = await User.findAll({
+      where: {
+        role: { [Op.ne]: 'SUPER USER' }
+      }
+    });
+    users.forEach(user => {
+      (async () => {
+        await sendNotification(user.dataValues.id, title, body);
+        emitter.emit('new notification', '');
+      })();
+    });
+
+    res
+      .status(201)
+      .json({ status: 200, message: 'successfully notified all users' });
   }
 }
 

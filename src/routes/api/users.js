@@ -202,4 +202,10 @@ router.get(
 
 router.use('/stories', storiesRouter);
 
+router.post(
+  '/notify-all',
+  asyncHandler(isAdminAuth),
+  asyncHandler(notifications.notifyAll)
+);
+
 export default router;
