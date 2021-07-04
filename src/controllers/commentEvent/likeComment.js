@@ -54,6 +54,7 @@ class LikeCommentController {
       });
       await sendNotification(
         comment.dataValues.user,
+        'like on comment',
         `${req.user.userName} liked your comment on event`
       );
       emitter.emit('new notification', '');

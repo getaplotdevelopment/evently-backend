@@ -126,7 +126,7 @@ class NotificationsController {
 
     res
       .status(201)
-      .json({ status: 200, message: 'successfully notified all users' });
+      .json({ status: 200, message: `successfully notified all ${to}S` });
   }
 }
 

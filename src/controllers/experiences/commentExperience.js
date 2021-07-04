@@ -83,6 +83,7 @@ class CommentExperienceController {
     if (experience) {
       sendNotification(
         experience.dataValues.user,
+        'Comment on experience',
         `${req.user.userName} commented on your experience ${experience.dataValues.text}`
       );
       emitter.emit('new notification');

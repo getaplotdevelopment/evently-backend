@@ -83,6 +83,7 @@ class ReplayCommentExperienceController {
 
     await sendNotification(
       comment.dataValues.user,
+      'Reply on experienxe',
       `${req.user.userName} Replied on your comment on experince`
     );
     emitter.emit('new notification', '');

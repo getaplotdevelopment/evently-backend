@@ -99,6 +99,7 @@ class FriendController {
     if (newFriendRequest) {
       await sendNotification(
         sendTo,
+        'New friend request',
         `${req.user.userName} sent you friend request`
       );
       emitter.emit('new notification');
@@ -259,6 +260,7 @@ class FriendController {
 
     await sendNotification(
       findFriendRequest.dataValues.sender.dataValues.id,
+      'Friend request accepted',
       `${receiver.dataValues.userName} accepted your friend request`
     );
     emitter.emit('new notification');

@@ -201,6 +201,7 @@ export const createEventController = async (req, res) => {
       (async () => {
         await sendNotification(
           follower.dataValues.followerObj.id,
+          'New event created',
           `New event created: ${title}`
         );
         emitter.emit('new notification', '');
@@ -337,6 +338,7 @@ export const likeUnlikeEvent = async (req, res) => {
   if (isLiked) {
     await sendNotification(
       dataValues.organizer.id,
+      'Like on event',
       `${userName} liked your event: ${dataValues.title}`
     );
     emitter.emit('new notification');

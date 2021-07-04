@@ -72,6 +72,7 @@ class CommentEventController {
     if (dataValues) {
       await sendNotification(
         dataValues.organizer.id,
+        'Comment on event',
         `${req.user.userName} commented on your event ${dataValues.title}`
       );
       emitter.emit('new notification');

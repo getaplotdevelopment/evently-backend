@@ -50,6 +50,7 @@ class LikeExperienceCommentController {
     if (!findLikedComment.hasLiked) {
       await sendNotification(
         comment.dataValues.user,
+        'Comment on experience liked',
         `${req.user.userName} liked your new comment on experience`
       );
       emitter.emit('new notification', '');
