@@ -38,6 +38,9 @@ router.post(
   [validateUser, ValidateRedirectUrl, asyncHandler(checkUser), validations],
   asyncHandler(users.signup)
 );
+
+router.get('/allUsers', asyncHandler(auth), asyncHandler(users.fetchUsers));
+
 router.post(
   '/login',
   validateUserLogin,
@@ -176,6 +179,12 @@ router.get(
   '/friendRequest/received',
   asyncHandler(auth),
   asyncHandler(friend.getReceivedFriendRequests)
+);
+
+router.post(
+  '/searchUsers',
+  asyncHandler(auth),
+  asyncHandler(users.searchUsers)
 );
 
 export default router;

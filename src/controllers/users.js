@@ -814,6 +814,77 @@ class UserController {
       organizers
     });
   }
+  /**
+   * @param {Object} req - Request from user
+   * @param {Object} res - Response to the user
+   * @returns {Object} Response
+   */
+
+  async fetchUsers(req, res) {
+    const users = await User.findAll({
+      where: { role: 'USER' }
+    });
+
+    if (!users.length) {
+      return res.status(404).json({
+        status: 404,
+        message: 'No users registered yet'
+      });
+    }
+    return res.status(200).json({
+      status: 200,
+      users
+    });
+  }
+
+  /**
+   * @param {Object} req - Request from user
+   * @param {Object} res - Response to the user
+   * @returns {Object} Response
+   */
+
+  async searchUsers(req, res) {
+    const { keywords } = req.query;
+    if (!keywords) {
+      return res.status(200).json({
+        status: 404,
+        message: 'Please enter something in the search'
+      });
+    }
+    const users = await User.findAll({
+      where: {
+        [Op.or]: [
+          {
+            userName: {
+              [Op.like]: `%${keywords.toLowerCase()}%`
+            }
+          },
+          {
+            firstName: {
+              [Op.like]: `%${keywords.toLowerCase()}%`
+            }
+          },
+          {
+            lastName: {
+              [Op.like]: `%${keywords.toLowerCase()}%`
+            }
+          }
+        ],
+        role: 'USER'
+      }
+    });
+
+    if (!users.length) {
+      return res.status(404).json({
+        status: 404,
+        message: 'No search results found'
+      });
+    }
+    return res.status(200).json({
+      status: 200,
+      users
+    });
+  }
 }
 
 export default UserController;
