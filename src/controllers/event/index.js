@@ -206,11 +206,16 @@ export const getOrganizerEvents = async (req, res) => {
 export const getAllEvents = async (req, res) => {
   const searchParams = req.query;
 
-  const filterBy = {
-    title: {
-      [Op.like]: `%${searchParams.keywords.toLowerCase()}%`
-    }
-  };
+  let filterBy;
+
+  if (searchParams && searchParams.keywords) {
+    filterBy = {
+      title: {
+        [Op.like]: `%${searchParams.keywords.toLowerCase()}%`
+      }
+    };
+  }
+
   const { pages, count, data } = await getEvents(
     searchParams,
     filterBy,
