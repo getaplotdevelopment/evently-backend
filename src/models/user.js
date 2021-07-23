@@ -105,6 +105,18 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'sentTo',
       allowNull: false
     });
+    User.hasMany(models.Notification, {
+      as: 'notifications',
+      foreignKey: 'receiverId',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE'
+    });
+    User.hasMany(models.Story, {
+      as: 'stories',
+      foreignKey: 'ownerId',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE'
+    });
   };
   return User;
 };

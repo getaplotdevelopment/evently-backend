@@ -1,8 +1,10 @@
 import models from '../../models';
+import sendNotification from '../../services/socket/sendNotification';
+import emitter from '../../services/socket/eventEmmiter';
 
 const { Event, Likes } = models;
 
-export default async (user, slug) => {
+export default async (user, slug, userName) => {
   let data;
 
   const likeObj = {
@@ -25,8 +27,8 @@ export default async (user, slug) => {
     );
     data = row[1][0];
   } else {
-    data = await Likes.create(likeObj);
     Event.increment({ popularityCount: 2 }, { where: { slug } });
+    data = await Likes.create(likeObj);
   }
   const likedBy = await Likes.findAll({
     where: {

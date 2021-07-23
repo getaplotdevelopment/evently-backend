@@ -2,6 +2,8 @@ import express from 'express';
 import Users from '../../controllers/users';
 import UserActivity from '../../controllers/userActivity';
 import FriendController from '../../controllers/friendRequest';
+import NotificationsController from '../../controllers/notification';
+import storiesRouter from './stories';
 import {
   validateUser,
   validations,
@@ -30,6 +32,7 @@ import deactivateUser from '../../middleware/users/canDeactivateUser';
 const users = new Users();
 const userActivity = new UserActivity();
 const friend = new FriendController();
+const notifications = new NotificationsController();
 
 const router = express.Router();
 
@@ -185,6 +188,30 @@ router.post(
   '/searchUsers',
   asyncHandler(auth),
   asyncHandler(users.searchUsers)
+);
+router.get(
+  '/notifications',
+  asyncHandler(auth),
+  asyncHandler(notifications.getAllNotifications)
+);
+router.get(
+  '/notifications/:notificationId',
+  asyncHandler(auth),
+  asyncHandler(notifications.readNotifcation)
+);
+
+router.use('/stories', storiesRouter);
+
+router.post(
+  '/notifyAll',
+  asyncHandler(isAdminAuth),
+  asyncHandler(notifications.notifyAll)
+);
+
+router.post(
+  '/notifyUsersOrOrganizers',
+  asyncHandler(isAdminAuth),
+  asyncHandler(notifications.notifyUsersOrOrganizers)
 );
 
 export default router;

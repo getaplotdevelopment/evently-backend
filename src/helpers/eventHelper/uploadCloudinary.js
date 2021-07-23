@@ -7,6 +7,7 @@ const {
   CLOUD_API_KEY: api_key,
   CLOUD_API_SECRET: api_secret
 } = process.env;
+
 export default async file => {
   const buffer = await sharp(file)
     .png()

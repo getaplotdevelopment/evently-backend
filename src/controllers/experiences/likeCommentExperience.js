@@ -1,6 +1,8 @@
 import models from '../../models';
+import sendNotification from '../../services/socket/sendNotification';
+import emitter from '../../services/socket/eventEmmiter';
 
-const { LikeCommentExperience } = models;
+const { LikeCommentExperience, CommentExperience } = models;
 
 /**
  * @CommentExperienceController Controller
@@ -26,6 +28,7 @@ class LikeExperienceCommentController {
         user,
         hasLiked: true
       });
+
       return res.status(201).json({
         status: 201,
         message: 'Experience comment liked successfully'
@@ -41,6 +44,18 @@ class LikeExperienceCommentController {
         where
       }
     );
+    const comment = await CommentExperience.findOne({
+      where: { id: req.params.commentId }
+    });
+    if (!findLikedComment.hasLiked) {
+      await sendNotification(
+        comment.dataValues.user,
+        'Comment on experience liked',
+        `${req.user.userName} liked your new comment on experience`
+      );
+      emitter.emit('new notification', '');
+    }
+
     return res.status(200).json({
       status: 200,
       message: findLikedComment.hasLiked

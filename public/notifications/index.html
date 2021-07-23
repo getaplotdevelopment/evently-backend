@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"
+      integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ=="
+      crossorigin="anonymous"
+    ></script>
+    <title>Test Sockets</title>
+  </head>
+  <body>
+    <h1 class="not">Your notifications</h1>
+    <input type="text" class="token" placeholder="Enter your token" />
+    <button type="button" class="btn">connect</button>
+  </body>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    document.querySelector('.btn').addEventListener('click', e => {
+      e.preventDefault();
+      const token = document.querySelector('.token').value;
+      const socket = io({
+        query: {
+          token
+        }
+      });
+      socket.on('newNotification', data => {
+        console.log(data);
+      });
+    });
+  </script>
+</html>

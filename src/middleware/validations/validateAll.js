@@ -15,8 +15,7 @@ const validateUser = [
     min: 6
   })
 ];
-const validateProfile = [
-];
+const validateProfile = [];
 const validateUserLogin = [
   check('email', 'Please include a valid email').isEmail(),
   check('password', 'Password is required')
@@ -68,9 +67,9 @@ const validateEvent = [
     .not()
     .isEmpty(),
   check('location', 'location must be a JSON object')
-  .not()
-  .isEmpty()
-  .isJSON()
+    .not()
+    .isEmpty()
+    .isJSON()
 ];
 const validateRole = [
   check('designation', 'Designation is required')

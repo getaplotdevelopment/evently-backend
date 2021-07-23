@@ -3114,8 +3114,8 @@
     "api/experience/comment/{commentId}/replay": {
       "post": {
         "tags": ["Experience"],
-        "summary": "reply on a comment",
-        "description": "reply on a comment of an experience",
+        "summary": "new notification",
+        "description": "new notification of an experience",
         "produces": ["application/xml", "application/json"],
         "parameters": [
           {

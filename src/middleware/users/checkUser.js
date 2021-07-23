@@ -34,7 +34,7 @@ const checkCurrentProfile = async (req, res, next) => {
   if (!userProfile) {
     throw new httpError(404, 'The user does not have any profile yet');
   }
-  req.userProfile = userProfile
+  req.userProfile = userProfile;
   next();
 };
 const checkProfile = async (req, res, next) => {

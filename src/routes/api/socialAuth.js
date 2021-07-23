@@ -10,7 +10,6 @@ const user = new User();
 const router = express.Router();
 
 router.get('/login/facebook', passport.authenticate('facebook'));
-// router.get('/facebook/redirect', passport.authenticate('facebook', user.loginViaSocialMedia));
 
 router.get(
   '/login/facebook/redirect',
@@ -23,12 +22,15 @@ router.get(
 
 router.get(
   '/login/google',
-  passport.authenticate('google', { scope: ['profile'] })
+  passport.authenticate('google', { scope: ['profile', 'email'] })
 );
 
 router.get(
   '/login/google/redirect',
-  passport.authenticate('google', { session: false }),
+  passport.authenticate('google', {
+    session: false,
+    failureRedirect: '/login'
+  }),
   asyncHandler(user.loginViaSocialMedia)
 );
 router.post('/auth/google', user.socialAuthentication);

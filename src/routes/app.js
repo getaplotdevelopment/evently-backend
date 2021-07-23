@@ -23,6 +23,7 @@ app.use('/api/roles', roles);
 app.use('/api/ticket/category', ticketCategory);
 app.use('/api/ticket', ticket);
 app.use('/api/feedback', feedback);
+app.use('/api/stories', feedback);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.get('/redirect', (req, res) => {
   res.sendfile('views/index.html');
