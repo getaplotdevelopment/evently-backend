@@ -22,7 +22,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/getaplotdev/evently-backend.git"
+    "url": "git+https://github.com/EventlyApps/evently-backend.git"
   },
   "husky": {
     "hooks": {
@@ -37,9 +37,9 @@
   "author": "getaplotdev",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/getaplotdev/evently-backend/issues"
+    "url": "https://github.com/EventlyApps/evently-backend/issues"
   },
-  "homepage": "https://github.com/getaplotdev/evently-backend#readme",
+  "homepage": "https://github.com/EventlyApps/evently-backend#readme",
   "dependencies": {
     "@babel/plugin-proposal-object-rest-spread": "^7.12.1",
     "@googlemaps/google-maps-services-js": "^2.1.1",
