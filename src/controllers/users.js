@@ -858,17 +858,17 @@ class UserController {
         [Op.or]: [
           {
             userName: {
-              [Op.like]: `%${keywords.toLowerCase()}%`
+              [Op.iLike]: `%${keywords}%`
             }
           },
           {
             firstName: {
-              [Op.like]: `%${keywords.toLowerCase()}%`
+              [Op.iLike]: `%${keywords}%`
             }
           },
           {
             lastName: {
-              [Op.like]: `%${keywords.toLowerCase()}%`
+              [Op.iLike]: `%${keywords}%`
             }
           }
         ],
@@ -884,6 +884,7 @@ class UserController {
     }
     return res.status(200).json({
       status: 200,
+      count: users.length,
       users
     });
   }
