@@ -15,7 +15,7 @@ router.get(
   '/login/facebook/redirect',
   passport.authenticate('facebook', {
     session: false,
-    failureRedirect: '/facebook'
+    failureRedirect: '/login'
   }),
   asyncHandler(user.loginViaSocialMedia)
 );
