@@ -824,7 +824,7 @@ class UserController {
 
   async fetchUsers(req, res) {
     const allUsers = await User.findAll({
-      where: { role: 'USER', email: { [Op.not]: req.user.email } }
+      where: { role: 'USER', id: { [Op.not]: req.user.id } }
     });
 
     if (!allUsers.length) {
@@ -848,7 +848,6 @@ class UserController {
         if (alreadySentFriendRequest.dataValues.isFriend === true) {
           friendshipStatus = 'friends';
         } else if (alreadySentFriendRequest.dataValues.sentStatus === 'sent') {
-          console.log('11 Hello you are friends');
           friendshipStatus = 'Friend request has been already sent to you';
         }
       }
@@ -911,7 +910,7 @@ class UserController {
           }
         ],
         role: 'USER',
-        email: { [Op.not]: req.user.email }
+        id: { [Op.not]: req.user.id }
       }
     });
 
@@ -943,7 +942,6 @@ class UserController {
         if (alreadySentFriendRequest.dataValues.isFriend === true) {
           friendshipStatus = 'friends';
         } else if (alreadySentFriendRequest.dataValues.sentStatus === 'sent') {
-          console.log('11 Hello you are friends');
           friendshipStatus = 'Friend request has been already sent to you';
         }
       }
