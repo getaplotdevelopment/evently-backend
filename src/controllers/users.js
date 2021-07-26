@@ -13,7 +13,7 @@ import { getRole } from '../helpers/sendEmail/emailTemplates';
 import findOneHelper from '../helpers/rolesHelper/findOneHelper';
 
 dotenv.config();
-const { User, Roles, Follow, UserActivity, Experience } = models;
+const { User, Roles, Follow, UserActivity, Experience, Friend } = models;
 const { secretKey, MAILER_URL } = process.env;
 const includeUser = () => {
   return [
@@ -823,18 +823,56 @@ class UserController {
    */
 
   async fetchUsers(req, res) {
-    const users = await User.findAll({
-      where: { role: 'USER' }
+    const allUsers = await User.findAll({
+      where: { role: 'USER', email: { [Op.not]: req.user.email } }
     });
 
-    if (!users.length) {
+    if (!allUsers.length) {
       return res.status(404).json({
         status: 404,
         message: 'No users registered yet'
       });
     }
+
+    let users = [];
+
+    const promises = allUsers.map(async user => {
+      let friendshipStatus = 'none';
+
+      const alreadySentFriendRequest = await findOneHelper(Friend, {
+        from: user.id,
+        sentTo: req.user.id
+      });
+
+      if (alreadySentFriendRequest) {
+        if (alreadySentFriendRequest.dataValues.isFriend === true) {
+          friendshipStatus = 'friends';
+        } else if (alreadySentFriendRequest.dataValues.sentStatus === 'sent') {
+          console.log('11 Hello you are friends');
+          friendshipStatus = 'Friend request has been already sent to you';
+        }
+      }
+
+      const findFriendRequest = await findOneHelper(Friend, {
+        sentTo: user.id,
+        from: req.user.id
+      });
+
+      if (findFriendRequest) {
+        if (findFriendRequest.dataValues.isFriend === true) {
+          friendshipStatus = 'friends';
+        } else if (findFriendRequest.dataValues.sentStatus === 'sent') {
+          friendshipStatus = 'Friend request already sent';
+        }
+      }
+
+      return users.push({ friendshipStatus, user });
+    });
+    await Promise.all(promises);
+
     return res.status(200).json({
       status: 200,
+      count: users.length,
       users
     });
   }
@@ -853,7 +891,7 @@ class UserController {
         message: 'Please enter something in the search'
       });
     }
-    const users = await User.findAll({
+    const allUsers = await User.findAll({
       where: {
         [Op.or]: [
           {
@@ -872,16 +910,61 @@ class UserController {
             }
           }
         ],
-        role: 'USER'
+        role: 'USER',
+        email: { [Op.not]: req.user.email }
       }
     });
 
-    if (!users.length) {
+    if (!allUsers.length) {
       return res.status(404).json({
         status: 404,
         message: 'No search results found'
       });
     }
+
+    if (!allUsers.length) {
+      return res.status(404).json({
+        status: 404,
+        message: 'No users registered yet'
+      });
+    }
+
+    let users = [];
+
+    const promises = allUsers.map(async user => {
+      let friendshipStatus = 'none';
+
+      const alreadySentFriendRequest = await findOneHelper(Friend, {
+        from: user.id,
+        sentTo: req.user.id
+      });
+
+      if (alreadySentFriendRequest) {
+        if (alreadySentFriendRequest.dataValues.isFriend === true) {
+          friendshipStatus = 'friends';
+        } else if (alreadySentFriendRequest.dataValues.sentStatus === 'sent') {
+          console.log('11 Hello you are friends');
+          friendshipStatus = 'Friend request has been already sent to you';
+        }
+      }
+
+      const findFriendRequest = await findOneHelper(Friend, {
+        sentTo: user.id,
+        from: req.user.id
+      });
+
+      if (findFriendRequest) {
+        if (findFriendRequest.dataValues.isFriend === true) {
+          friendshipStatus = 'friends';
+        } else if (findFriendRequest.dataValues.sentStatus === 'sent') {
+          friendshipStatus = 'Friend request already sent';
+        }
+      }
+
+      return users.push({ friendshipStatus, user });
+    });
+    await Promise.all(promises);
+
     return res.status(200).json({
       status: 200,
       count: users.length,
