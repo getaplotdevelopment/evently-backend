@@ -234,7 +234,7 @@ export const getAllEvents = async (req, res) => {
   if (searchParams && searchParams.keywords) {
     filterBy = {
       title: {
-        [Op.like]: `%${searchParams.keywords.toLowerCase()}%`
+        [Op.iLike]: `%${searchParams.keywords}%`
       }
     };
   }
